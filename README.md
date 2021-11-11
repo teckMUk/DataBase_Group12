@@ -4,9 +4,9 @@ Course project for CS340- Project Dumpling, Dumpling is a restaurant management 
 
 
 #instruction on how to use this repo
-'''
+''''
 git clone https://github.com/teckMUk/DataBase_Group12.git
 git checkout -b rollnumber_Name
 git pull orgin main
 git push
-'''
+''''

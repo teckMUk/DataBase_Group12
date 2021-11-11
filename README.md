@@ -10,5 +10,5 @@ git checkout -b rollnumber_Name
 git pull orgin main
 git push
 ```
-#### to merge your code to main you would have to create a pull request and get 2 reveiws to approve your code then only you can merge always take a pull from main branch to your barch.
+#### to merge your code to main you would have to create a pull request and get 1 reveiwer to approve your code then only you can merge always take a pull from main branch to your barch.
 

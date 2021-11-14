@@ -18,7 +18,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "create": "node src/Service/Scripts/db.js" 
+    "create": "node src/Service/Scripts/db.js",
+    "seed": "node src/Service/Scripts/seed.js" 
   },
   "eslintConfig": {
     "extends": [

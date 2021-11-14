@@ -33,11 +33,11 @@ const createAccount = `CREATE TABLE IF NOT EXISTS dumpling.account(
     username VARCHAR(45) NOT NULL,
     accountType VARCHAR(45) NOT NULL,
     currentPassword VARCHAR(50) NOT NULL,
-    previousPassword VARCHAR(50) NOT NULL,
+    previousPassword VARCHAR(50),
     emailAddress VARCHAR(320) NOT NULL,
     securityQuestions VARCHAR(2000) NOT NULL,
     createdAt DATETIME NOT NULL,
-    updatedAt DATETIME NOT NULL,
+    updatedAt DATETIME,
     archived BIT(1) NOT NULL DEFAULT 0,
     PRIMARY KEY (accountId));`;
     const createEmpolyee = `CREATE TABLE IF NOT EXISTS dumpling.employee(
@@ -49,8 +49,8 @@ const createAccount = `CREATE TABLE IF NOT EXISTS dumpling.account(
         position VARCHAR(45) NOT NULL,
         salary INT NOT NULL,
         bankAccountNumber BIGINT(20) NOT NULL,
-        createdAt DATETIME(1) NOT NULL,
-        updatedAt DATETIME(1) NOT NULL,
+        createdAt DATETIME NOT NULL,
+        updatedAt DATETIME,
         archived BIT(1) NOT NULL DEFAULT 0,
         accountId INT NOT NULL,
         PRIMARY KEY (employeeId),
@@ -75,6 +75,7 @@ connectionString.connect((error)=>
                 createTable(createAccount);
                 createTable(createEmpolyee);
                 connectionString.end();
+                
                 //console.log(result);
             }
         });

@@ -1,2 +1,9 @@
+.reg-mid
+{
+    display: flex;
+    width: 100%;
+}
 
-
+.heading{
+    padding: 100px;
+}

@@ -77,6 +77,8 @@ export default function Forms()
 
     const ForgetPass = () =>{
 
+        let arr =["How old are you?", "when were you born"];
+
        return(
 
             <Container>

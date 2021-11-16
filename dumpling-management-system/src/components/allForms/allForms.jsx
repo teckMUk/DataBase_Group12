@@ -3,11 +3,9 @@ import {Container, Form, Button} from 'react-bootstrap';
 import { useState, useEffect } from "react";
 
 const initialState = {
-   
-    address: "",
     pw: "",
     cpw: "",
-    
+    security: ["", ""],
   };
 
 const errorCheck = {
@@ -25,11 +23,11 @@ export default function Forms()
 
     useEffect(() => {}, [newEmploye]);
 
+    
     const handle = e => {
         const {name, value} = e.target;
         setNewEmploye({...newEmploye, [name]: value});
         
-           
         if(name === "pw")
         {
             let moreThanMin = false;
@@ -82,49 +80,46 @@ export default function Forms()
        return(
 
             <Container>
-                <Form>
+                <Form onSubmit= {submitHandle}>
 
-                    <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                                <Form.Label>Email address</Form.Label>
-                                <Form.Control type="email" placeholder="name@example.com" name = 'email'/>
-                    </Form.Group>
+                <Form.Group className="mb-3" controlId="formBasicName">
+                    <Form.Label>How old are you? </Form.Label>
+                    <Form.Control type="text" placeholder="Enter Answer" />
+                </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="formBasicName">
-                            <Form.Label>How old are you? </Form.Label>
-                            <Form.Control type="text" placeholder="Enter Name" />
-                    </Form.Group>
+                <Form.Group className="mb-3" controlId="formBasicPassword">
+                    <Form.Label>Set Default Password</Form.Label>
+                    <Form.Control type="password" placeholder="Password" name = 'pw'  
+                    value = {newEmploye.pw} onChange = {handle}/>
+                </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="formBasicPassword">
-                            <Form.Label>Set Default Password</Form.Label>
-                            <Form.Control type="password" placeholder="Password" name = 'pw'  
-                            value = {newEmploye.pw} onChange = {handle}/>
-                        </Form.Group>
+                <Form.Group className="mb-3" controlId="formBasicPasswordc">
+                    <Form.Label>Enter Password Again</Form.Label>
+                    <Form.Control type="password" placeholder="Password" name = 'cpw'  
+                    value = {newEmploye.cpw} onChange = {handle}/>
+                </Form.Group>
+                <Form.Text>
+                    {!newEmployeErr.confirmPw ? (<div className = "text-danger" > passwords don't match!</div>) : (<div></div>)}
 
-                        <Form.Group className="mb-3" controlId="formBasicPasswordc">
-                            <Form.Label>Enter Password Again</Form.Label>
-                            <Form.Control type="password" placeholder="Password" name = 'cpw'  
-                            value = {newEmploye.cpw} onChange = {handle}/>
-                        </Form.Group>
-                        <Form.Text>
-                            {!newEmployeErr.confirmPw ? (<div className = "text-danger" > passwords don't match!</div>) : (<div></div>)}
+                </Form.Text>
 
-                        </Form.Text>
+                    <ul className="mb-4">
+                    <li className= {newEmployeErr.moreThanMin?  "text-success": "text-danger"}>Min 5 characters</li>
+                    <li className= {newEmployeErr.lessThanMax?  "text-success": "text-danger"}>Max 10 characters</li>
+                    <li className= {newEmployeErr.hasNum?  "text-success": "text-danger"}>At least one number</li>
+                    <li className= {newEmployeErr.hasUpper ?  "text-success": "text-danger"}>At least one upper case number</li>
+                
+                </ul>
 
-                            <ul className="mb-4">
-                            <li className= {newEmployeErr.moreThanMin?  "text-success": "text-danger"}>Min 5 characters</li>
-                            <li className= {newEmployeErr.lessThanMax?  "text-success": "text-danger"}>Max 10 characters</li>
-                            <li className= {newEmployeErr.hasNum?  "text-success": "text-danger"}>At least one number</li>
-                            <li className= {newEmployeErr.hasUpper ?  "text-success": "text-danger"}>At least one upper case number</li>
-                           
-                         </ul>
-                    
-                    <Button variant="primary" type="submit">
-                        Submit
-                    </Button>
-                </Form>
+            <Button variant="primary" type="submit" href="/">
+                Submit
+            </Button>
 
-            </Container>
-  
+                    </Form>
+                        
+
+                </Container>
+    
        );
     }
     return (

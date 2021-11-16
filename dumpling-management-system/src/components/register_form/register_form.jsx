@@ -154,7 +154,7 @@ export default function RegisterForm()
                            
                          </ul>
 
-                        <Button variant="primary" type="submit" disabled = {false}>
+                        <Button variant="primary" type="submit" disabled = {Object.values(newEmployeErr).includes(false)} href = "/dashboard">
                             Create Account
                         </Button>
 

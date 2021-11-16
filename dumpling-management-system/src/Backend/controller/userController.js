@@ -29,31 +29,17 @@ export const findUsers = (req,res)=>
             console.log("Error found");
             console.log(err);
             message = "Connect to db failed";
-            connectionString.end((err)=>
-            {
-                if(err)
+            res.send(
                 {
-                    console.log("Connection to db failed to close");
-                    res.send({
-                    'isSuccessful':false,
-                    'message':"Network error"
-                });
-                }
-                else
-                {
-                console.log("Connection successfully closed");
-                res.send({
                     'isSuccessful':isSuccessful,
-                    'message':message,
-                    'accountRole':role
-                });
-                
+                    'message':message
                 }
-            });
+            )
+            connectionString.end();
         }
         else
         {
-           let loginQuery = `Select account.currentPassword, account.accountType from account where account.emailAddress="${email}"`;
+           let loginQuery = `Select account.currentPassword, account.accountType FROM account WHERE account.emailAddress="${email}"`;
            connectionString.query(loginQuery,(err,result)=>{
                if(err)
                {
@@ -61,27 +47,12 @@ export const findUsers = (req,res)=>
                 console.log(err);
                 isSuccessful = false;
                 message = "No account with this email address found";
-                connectionString.end((err)=>
+                res.send(
                 {
-                    if(err)
-                    {
-                        console.log("Connection to db failed to close");
-                        res.send({
-                         'isSuccessful':false,
-                         'message':"Network error"
-                    });
-                    }
-                    else
-                    {
-                     console.log("Connection successfully closed");
-                     res.send({
-                         'isSuccessful':isSuccessful,
-                         'message':message,
-                         'accountRole':role
-                     });
-                     
-                    }
-                });          
+                    'isSuccessful':isSuccessful,
+                    'message':message
+                });
+                connectionString.end();
                }
                else
                {
@@ -94,60 +65,30 @@ export const findUsers = (req,res)=>
                         isSuccessful = true;
                         message = "Login successful";
                         role = accountType;
-                        connectionString.end((err)=>
-                        {
-                            if(err)
+                        res.send(
                             {
-                                console.log("Connection to db failed to close");
-                                res.send({
-                                'isSuccessful':false,
-                                'message':"Network error"
-                            });
-                            }
-                            else
-                            {
-                            console.log("Connection successfully closed");
-                            res.send({
-                                'isSuccessful':isSuccessful,
-                                'message':message,
-                                'accountRole':role
-                            });
-                            
-                            }
-                        });    
+                            'isSuccessful':isSuccessful,
+                            'message':message,
+                            'role':accountType
+                        });
+                        connectionString.end();
                     }
                     else
                     {
                         isSuccessful = false;
                         message = "Invalid Credentials";
-                        connectionString.end((err)=>
-                        {
-                            if(err)
+                        res.send(
                             {
-                                console.log("Connection to db failed to close");
-                                res.send({
-                                'isSuccessful':false,
-                                'message':"Network error"
-                            });
-                            }
-                            else
-                            {
-                            console.log("Connection successfully closed");
-                            res.send({
                                 'isSuccessful':isSuccessful,
                                 'message':message,
-                                'accountRole':role
-                            });
-                            
                             }
-                        });
-                    } 
-                     
+                        );
+                        connectionString.end();
+                    }    
                }
            });  
            
         }
-
        
     });
 }
@@ -208,14 +149,14 @@ export const addUser = (req,res)=>{
                 {
                     if(result.length === 0)
                     {
-                        console.log("validation passed");
+                        // console.log("validation passed");
                         connectionString.query(addAccountquery,(errUser,result)=>
                         {
                             if(errUser)
                             {
                                 console.log("Failed to create account");
                                 console.log(errUser);
-                                message="Failed to create user account";
+                                message ="Failed to create user account";
                                 res.send(
                                     {
                                         "isSuccessful":isSuccessful,
@@ -320,7 +261,7 @@ export const getSQ = (req,res)=>{
                 }
                 else
                 {
-                    if(result.length!==0)
+                    if(result.length!=0)
                     {
                         console.log(result);
                         message = "Questions found";

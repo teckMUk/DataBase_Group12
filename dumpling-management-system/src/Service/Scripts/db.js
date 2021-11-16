@@ -40,25 +40,25 @@ const createAccount = `CREATE TABLE IF NOT EXISTS dumpling.account(
     updatedAt DATETIME,
     archived BIT(1) NOT NULL DEFAULT 0,
     PRIMARY KEY (accountId));`;
-    const createEmpolyee = `CREATE TABLE IF NOT EXISTS dumpling.employee(
-        employeeId INT NOT NULL,
-        employeeName VARCHAR(100) NOT NULL,
-        dateOfBirth DATE NOT NULL,
-        phoneNumber VARCHAR(15) NOT NULL,
-        address VARCHAR(100) NOT NULL,
-        position VARCHAR(45) NOT NULL,
-        salary INT NOT NULL,
-        bankAccountNumber BIGINT(20) NOT NULL,
-        createdAt DATETIME NOT NULL,
-        updatedAt DATETIME,
-        archived BIT(1) NOT NULL DEFAULT 0,
-        accountId INT NOT NULL,
-        PRIMARY KEY (employeeId),
-        CONSTRAINT accountId
-            FOREIGN KEY (accountId)
-            REFERENCES dumpling.account (accountId)
-            ON DELETE CASCADE
-            ON UPDATE CASCADE);`;
+const createEmpolyee = `CREATE TABLE IF NOT EXISTS dumpling.employee(
+    employeeId INT NOT NULL,
+    employeeName VARCHAR(100) NOT NULL,
+    dateOfBirth DATE NOT NULL,
+    phoneNumber VARCHAR(15) NOT NULL,
+    address VARCHAR(100) NOT NULL,
+    position VARCHAR(45) NOT NULL,
+    salary INT NOT NULL,
+    bankAccountNumber BIGINT(20) NOT NULL,
+    createdAt DATETIME NOT NULL,
+    updatedAt DATETIME,
+    archived BIT(1) NOT NULL DEFAULT 0,
+    accountId INT NOT NULL,
+    PRIMARY KEY (employeeId),
+    CONSTRAINT accountId
+        FOREIGN KEY (accountId)
+        REFERENCES dumpling.account (accountId)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE);`;
 connectionString.connect((error)=>
 {
     if(!error)

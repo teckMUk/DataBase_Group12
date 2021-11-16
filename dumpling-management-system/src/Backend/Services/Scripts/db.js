@@ -8,7 +8,7 @@ var connectionString = mysql.createConnection(
     {
         host:'localhost',
         user: 'root',
-        password:'Emaan@123',
+        password:'Abdulmuizz30!'
     }
 );
 function createTable(q)
@@ -26,7 +26,7 @@ function createTable(q)
                 console.log("Table created");
                 //console.log(result);
             }
-        })
+        });
 }
 const createAccount = `CREATE TABLE IF NOT EXISTS dumpling.account(
     accountId INT NOT NULL AUTO_INCREMENT,

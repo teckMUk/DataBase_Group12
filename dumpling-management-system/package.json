@@ -2,6 +2,7 @@
   "name": "dumpling-management-system",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
@@ -23,9 +24,13 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "dev": "concurrently \"npm run server\" \"npm run start\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "create": "node src/Backend/Services/Scripts/db.js",
+    "seed": "node src/Backend/Services/Scripts/seed.js",
+    "server": "node src/Backend/server.js"
   },
   "eslintConfig": {
     "extends": [

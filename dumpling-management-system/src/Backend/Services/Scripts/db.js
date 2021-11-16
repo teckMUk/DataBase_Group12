@@ -1,14 +1,14 @@
-const mysql = require('mysql');
-const express = require('express');
-const bodyParser = require('body-parser');
-var app = express();
-app.use(bodyParser.urlencoded(true));
+import mysql from 'mysql';
+import express from 'express';
+import bodyParser from 'body-parser';
+const app = express();
+app.use(bodyParser.urlencoded({extended:true}));
 
 var connectionString = mysql.createConnection(
     {
         host:'localhost',
         user: 'root',
-        password:'Emaan@123',
+        password:'Abdulmuizz30!',
     }
 );
 function createTable(q)

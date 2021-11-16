@@ -294,12 +294,11 @@ export const changePassword = (req,res) =>{
         {
             host:'localhost',
             user: 'root',
-            password:'Pakistan_123',
+            password:'Abdulmuizz30!',
             database: 'dumpling'
 
         }
     );
-    // let email = req.body.email;
     let ID = req.body.ID;
     let newPassword = sha1(req.body.newPassword);
     let message ="";
@@ -322,6 +321,16 @@ export const changePassword = (req,res) =>{
         }
         else
         {
+            if(result.length === 0)
+            {
+                isSuccessful = false;
+                message = "the user does not exists";
+                res.send({
+                    'isSuccessful':isSuccessful,
+                    'message':message
+                });
+                connectionString.end();
+            }
             console.log(result);
             console.log(result[0].previousPassword);
             if(result[0].previousPassword !== null)
@@ -333,7 +342,7 @@ export const changePassword = (req,res) =>{
                     console.log("password matched");
                     prevPrevPassword = currentPassword;
                     currentPassword1 = newPassword;
-                    let updatePassQuery = `UPDATE dumpling.account SET account.currentPassword = "${currentPassword1}", account.previousPassword = "${previousPassword}",account.updatedAt = NOW() WHERE account.accountId = ${ID}`;
+                    let updatePassQuery = `UPDATE dumpling.account SET account.currentPassword = "${currentPassword1}", account.previousPassword = "${prevPrevPassword}",account.updatedAt = NOW() WHERE account.accountId = ${ID}`;
                     connectionString.query(updatePassQuery, (err,result)=>{
                     if(err)
                     {
@@ -358,6 +367,17 @@ export const changePassword = (req,res) =>{
                     }
                 });
                 }
+                else
+                {
+                    isSuccessful = false;
+                    message = "Password dont match";
+                    res.send({
+                        'isSuccessful':isSuccessful,
+                        'message':message
+
+                    });
+                    connectionString.end();
+                }
             }
                 else
                 {
@@ -367,7 +387,7 @@ export const changePassword = (req,res) =>{
                     {
                         console.log("password matched");
                         let prevPrevPassword = currentPassword;
-                        let currentPassword1 = newPassword;
+                        currentPassword1 = newPassword;
                         let updatePassQuery = `UPDATE dumpling.account SET account.currentPassword = "${currentPassword1}", account.previousPassword = "${prevPrevPassword}",account.updatedAt=NOW() WHERE account.accountId = ${ID}`;
                         connectionString.query(updatePassQuery, (err,result)=>{
                             if(err)
@@ -392,6 +412,16 @@ export const changePassword = (req,res) =>{
                                 connectionString.end();
                             }
                     });
+                }
+                else{
+                    isSuccessful = false;
+                    message = "Password dont match";
+                    res.send({
+                        'isSuccessful':isSuccessful,
+                        'message':message
+
+                    });
+                    connectionString.end();
                 }
 
 

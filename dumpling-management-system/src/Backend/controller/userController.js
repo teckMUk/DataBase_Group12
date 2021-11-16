@@ -2,7 +2,6 @@ import mysql from 'mysql';
 import express from 'express';
 import bodyParser from "body-parser";
 import sha1 from 'sha1';
-import express from 'express';
 const app = express();
 app.use(bodyParser.urlencoded({extended:true}));
 
@@ -12,7 +11,7 @@ export const findUsers = (req,res)=>
         {
             host:'localhost',
             user: 'root',
-            password:'Abdulmuizz30!',
+            password:'Emaan@123',
             database: 'dumpling'
             
         }
@@ -39,9 +38,6 @@ export const findUsers = (req,res)=>
         else
         {
            let loginQuery = `Select account.currentPassword, account.accountType from account where account.emailAddress="${email}"`;
-           let message ="";
-           let isSuccessful = false;
-           let role = "";
            connectionString.query(loginQuery,(err,result)=>{
                if(err)
                {
@@ -61,7 +57,7 @@ export const findUsers = (req,res)=>
                     console.log(result);
                     let queryPassword = result[0].currentPassword;
                     let accountType = result[0].accountType;
-                    if(sha1(password)==queryPassword)
+                    if(sha1(password)===queryPassword)
                     {
                         // res.send({
                         //     'isSuccessful':true,

@@ -13,7 +13,7 @@ export const findUsers = (req,res)=>
         {
             host:'localhost',
             user: 'root',
-            password:'Abdulmuizz30!',
+            password:'Emaan@123!',
             database: 'dumpling'
             
         }
@@ -156,7 +156,7 @@ export const addUser = (req,res)=>{
         {
             host:'localhost',
             user: 'root',
-            password:'Abdulmuizz30!',
+            password:'Emaan@123',
             database: 'dumpling'
             
         }
@@ -281,7 +281,7 @@ export const getSQ = (req,res)=>{
         {
             host:'localhost',
             user: 'root',
-            password:'Abdulmuizz30!',
+            password:'Emaan@123!',
             database: 'dumpling'
             
         }

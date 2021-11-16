@@ -28,7 +28,7 @@ function createTable(q)
             }
         })
 }
-const createAccount = `CREATE TABLE IF NOT EXISTS dumpling2.account(
+const createAccount = `CREATE TABLE IF NOT EXISTS dumpling.account(
     accountId INT NOT NULL,
     username VARCHAR(45) NOT NULL,
     accountType VARCHAR(45) NOT NULL,
@@ -40,7 +40,7 @@ const createAccount = `CREATE TABLE IF NOT EXISTS dumpling2.account(
     updatedAt DATETIME,
     archived BIT(1) NOT NULL DEFAULT 0,
     PRIMARY KEY (accountId));`;
-    const createEmpolyee = `CREATE TABLE IF NOT EXISTS dumpling2.employee(
+    const createEmpolyee = `CREATE TABLE IF NOT EXISTS dumpling.employee(
         employeeId INT NOT NULL,
         employeeName VARCHAR(100) NOT NULL,
         dateOfBirth DATE NOT NULL,
@@ -64,7 +64,7 @@ connectionString.connect((error)=>
     if(!error)
     {
         console.log("Connection has been established");
-        connectionString.query("CREATE DATABASE IF NOT EXISTS dumpling2", (err2,result) =>
+        connectionString.query("CREATE DATABASE IF NOT EXISTS dumpling", (err2,result) =>
         {
             if(err2)
             {

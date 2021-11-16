@@ -13,7 +13,7 @@ export const findUsers = (req,res)=>
             host:'localhost',
             user: 'root',
             password:'Abdulmuizz30!',
-            database: 'dumpling2'
+            database: 'dumpling'
             
         }
     );
@@ -120,7 +120,7 @@ export const addUser = (req,res)=>{
             host:'localhost',
             user: 'root',
             password:'Abdulmuizz30!',
-            database: 'dumpling2'
+            database: 'dumpling'
             
         }
     );

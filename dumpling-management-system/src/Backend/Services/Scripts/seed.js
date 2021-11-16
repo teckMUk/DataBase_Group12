@@ -10,7 +10,7 @@ var connectionString = mysql.createConnection(
         host:'localhost',
         user: 'root',
         password:'Abdulmuizz30!',
-        database:'dumpling2'
+        database:'dumpling'
     }
 );
 function seedData(q)
@@ -32,8 +32,8 @@ function seedData(q)
 }
 let password = "dumpling@123";
 let hash = sha1(password);
-const addAdminaccount = `INSERT INTO dumpling2.account VALUES(1,"admin","admin","${hash}",NULL,"dumpling@gmail.com","None",NOW(),NOW(),0);`;
-const addAmdinemployee = `INSERT INTO dumpling2.employee VALUES(1,"MEANE",'2001-7-01',"+92321456789","Street 10,DHA phase 5 lums","CEO",105000,011401533,NOW(),NOW(),0,(SELECT accountId from account where account.accountType="admin"));`;
+const addAdminaccount = `INSERT INTO dumpling.account VALUES(1,"admin","admin","${hash}",NULL,"dumpling@gmail.com","None",NOW(),NOW(),0);`;
+const addAmdinemployee = `INSERT INTO dumpling.employee VALUES(1,"MEANE",'2001-7-01',"+92321456789","Street 10,DHA phase 5 lums","CEO",105000,011401533,NOW(),NOW(),0,(SELECT accountId from account where account.accountType="admin"));`;
 connectionString.connect( (err)=>
 {
     if(err)

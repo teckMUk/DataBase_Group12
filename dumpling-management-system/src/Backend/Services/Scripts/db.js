@@ -8,7 +8,7 @@ var connectionString = mysql.createConnection(
     {
         host:'localhost',
         user: 'root',
-        password:'NewPassword'
+        password:'Pakistan_123'
     }
 );
 function createTable(q)
@@ -32,8 +32,8 @@ const createAccount = `CREATE TABLE IF NOT EXISTS dumpling.account(
     accountId INT NOT NULL AUTO_INCREMENT,
     userName VARCHAR(45) NOT NULL,
     accountType VARCHAR(45) NOT NULL,
-    currentPassword VARCHAR(50) NOT NULL,
-    previousPassword VARCHAR(50),
+    currentPassword VARCHAR(100) NOT NULL,
+    previousPassword VARCHAR(100),
     emailAddress VARCHAR(320) NOT NULL UNIQUE,
     securityQuestions VARCHAR(2000) NOT NULL,
     createdAt DATETIME NOT NULL,
@@ -75,7 +75,7 @@ connectionString.connect((error)=>
                 createTable(createAccount);
                 createTable(createEmpolyee);
                 connectionString.end();
-                
+
                 //console.log(result);
             }
         });

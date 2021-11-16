@@ -9,7 +9,7 @@ var connectionString = mysql.createConnection(
     {
         host:'localhost',
         user: 'root',
-        password:'NewPassword',
+        password:'Pakistan_123',
         database:'dumpling'
     }
 );

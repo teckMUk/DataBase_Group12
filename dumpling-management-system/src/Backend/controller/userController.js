@@ -13,12 +13,11 @@ export const findUsers = (req,res)=>
         {
             host:'localhost',
             user: 'root',
-            password:'Emaan@123',
+            password:'Abdulmuizz30!',
             database: 'dumpling'
             
         }
     );
-    // console.log(req);
     let email = req.body.email;
     let password = req.body.password;
     let message ="";
@@ -28,13 +27,29 @@ export const findUsers = (req,res)=>
         if(err)
         {
             console.log("Error found");
-            // res.send({
-            //     'isSuccessful':false,
-            //     'message': "Connect to db failed"
-            // });
             console.log(err);
             message = "Connect to db failed";
-            
+            connectionString.end((err)=>
+            {
+                if(err)
+                {
+                    console.log("Connection to db failed to close");
+                    res.send({
+                    'isSuccessful':false,
+                    'message':"Network error"
+                });
+                }
+                else
+                {
+                console.log("Connection successfully closed");
+                res.send({
+                    'isSuccessful':isSuccessful,
+                    'message':message,
+                    'accountRole':role
+                });
+                
+                }
+            });
         }
         else
         {
@@ -42,15 +57,31 @@ export const findUsers = (req,res)=>
            connectionString.query(loginQuery,(err,result)=>{
                if(err)
                {
-                   console.log("No user found");
-                   console.log(err);
-                //    res.send({
-                //        'isSuccessful':true,
-                //        'message':"No account with this email address found"
-                //    });
+                console.log("No user found");
+                console.log(err);
                 isSuccessful = false;
                 message = "No account with this email address found";
-                   
+                connectionString.end((err)=>
+                {
+                    if(err)
+                    {
+                        console.log("Connection to db failed to close");
+                        res.send({
+                         'isSuccessful':false,
+                         'message':"Network error"
+                    });
+                    }
+                    else
+                    {
+                     console.log("Connection successfully closed");
+                     res.send({
+                         'isSuccessful':isSuccessful,
+                         'message':message,
+                         'accountRole':role
+                     });
+                     
+                    }
+                });          
                }
                else
                {
@@ -60,51 +91,60 @@ export const findUsers = (req,res)=>
                     let accountType = result[0].accountType;
                     if(sha1(password)===queryPassword)
                     {
-                        // res.send({
-                        //     'isSuccessful':true,
-                        //     'message':"Login successful" ,
-                        //     'accountRole':accountType  
-                        // });
                         isSuccessful = true;
                         message = "Login successful";
                         role = accountType;
-
-                        
-                        
+                        connectionString.end((err)=>
+                        {
+                            if(err)
+                            {
+                                console.log("Connection to db failed to close");
+                                res.send({
+                                'isSuccessful':false,
+                                'message':"Network error"
+                            });
+                            }
+                            else
+                            {
+                            console.log("Connection successfully closed");
+                            res.send({
+                                'isSuccessful':isSuccessful,
+                                'message':message,
+                                'accountRole':role
+                            });
+                            
+                            }
+                        });    
                     }
                     else
                     {
-                        // res.send({
-                        //     'isSuccessful':false,
-                        //     'message':"Invalid Credentials"
-                        // });
                         isSuccessful = false;
                         message = "Invalid Credentials";
-                        
-                    } 
-                    connectionString.end((err)=>{
-                        if(err){
-                            console.log("Connection to db failed to close");
-                            res.send({
-                             'isSuccessful':false,
-                             'message':"Network error"
+                        connectionString.end((err)=>
+                        {
+                            if(err)
+                            {
+                                console.log("Connection to db failed to close");
+                                res.send({
+                                'isSuccessful':false,
+                                'message':"Network error"
                             });
-                        }
-                        else{
-                         console.log("Connection successfully closed");
-                         res.send({
-                             'isSuccessful':isSuccessful,
-                             'message':message,
-                             'accountRole':role
-                         });
-                         
-                        }
-                    });        
+                            }
+                            else
+                            {
+                            console.log("Connection successfully closed");
+                            res.send({
+                                'isSuccessful':isSuccessful,
+                                'message':message,
+                                'accountRole':role
+                            });
+                            
+                            }
+                        });
+                    } 
+                     
                }
-           });
-
-           
-           
+           });  
            
         }
 
@@ -116,7 +156,7 @@ export const addUser = (req,res)=>{
         {
             host:'localhost',
             user: 'root',
-            password:'Emaan@123',
+            password:'Abdulmuizz30!',
             database: 'dumpling'
             
         }
@@ -124,6 +164,7 @@ export const addUser = (req,res)=>{
     let message ="";
     let isSuccessful = false;
     let validateQuery =  `SELECT * FROM account WHERE emailAddress="${req.body.emailAddress}"`;
+    // let bankaccount = sha1(req.body.bankAccountNumber);
     let addAccountquery = 
     `INSERT INTO account (userName,accountType,currentPassword,emailAddress,securityQuestions,createdAt) 
         VALUES("${req.body.userName}","${req.body.accountType}","${req.body.currentPassword}","${req.body.emailAddress}","${req.body.securityQuestions}",NOW());`;
@@ -232,6 +273,77 @@ export const addUser = (req,res)=>{
                 }
             });
             
+        }
+    });
+}
+export const getSQ = (req,res)=>{
+    var connectionString = mysql.createConnection(
+        {
+            host:'localhost',
+            user: 'root',
+            password:'Abdulmuizz30!',
+            database: 'dumpling'
+            
+        }
+    );
+    let message = "";
+    let isSuccessful = false;
+    let emailAdress = req.body.email;
+    let emailQuery = `SELECT securityQuestions FROM account WHERE emailAddress="${emailAdress}"`;
+    connectionString.connect((err)=>{
+        if(err)
+        {
+            console.log(err);
+            message = "Network error";
+            res.send({
+                'isSuccessful':isSuccessful,
+                'message':message
+            });
+            connectionString.end()
+        }
+        else
+        {
+            connectionString.query(emailQuery,(err,result)=>{
+                console.log("Connection made with database");
+                if(err)
+                {
+                    console.log("Error found");
+                    // console.log(err);
+                    message = "Connect to db failed";
+                    res.send(
+                        {
+                            "isSuccessful":isSuccessful,
+                            "message":message
+                        }
+                    );
+                    connectionString.end();
+                }
+                else
+                {
+                    if(result.length!==0)
+                    {
+                        console.log(result);
+                        message = "Questions found";
+                        isSuccessful = true;
+                        res.send({
+                            'isSuccessful':isSuccessful,
+                            'message':message,
+                            'questions':result[0].securityQuestions
+                        });
+                        connectionString.end();
+                    }
+                    else
+                    {
+                        message = "No account with this email address exist";
+                        console.log("No User found");
+                        res.send({
+                            'isSuccessful':isSuccessful,
+                            'message':message
+                        });
+                    }
+                    
+                }
+            });
         }
     });
 }

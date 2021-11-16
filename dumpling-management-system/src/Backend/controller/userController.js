@@ -6,16 +6,15 @@ const app = express();
 app.use(bodyParser.urlencoded({extended:true}));
 
 
-
 export const findUsers = (req,res)=>
-{   
+{
     var connectionString = mysql.createConnection(
         {
             host:'localhost',
             user: 'root',
-            password:'Emaan@123!',
+            password:'Pakistan_123',
             database: 'dumpling'
-            
+
         }
     );
     let email = req.body.email;
@@ -47,7 +46,7 @@ export const findUsers = (req,res)=>
                     'message':message,
                     'accountRole':role
                 });
-                
+
                 }
             });
         }
@@ -79,9 +78,9 @@ export const findUsers = (req,res)=>
                          'message':message,
                          'accountRole':role
                      });
-                     
+
                     }
-                });          
+                });
                }
                else
                {
@@ -112,9 +111,9 @@ export const findUsers = (req,res)=>
                                 'message':message,
                                 'accountRole':role
                             });
-                            
+
                             }
-                        });    
+                        });
                     }
                     else
                     {
@@ -138,17 +137,17 @@ export const findUsers = (req,res)=>
                                 'message':message,
                                 'accountRole':role
                             });
-                            
+
                             }
                         });
-                    } 
-                     
+                    }
+
                }
-           });  
-           
+           });
+
         }
 
-       
+
     });
 }
 export const addUser = (req,res)=>{
@@ -156,18 +155,19 @@ export const addUser = (req,res)=>{
         {
             host:'localhost',
             user: 'root',
-            password:'Emaan@123',
+            password:'Pakistan_123',
             database: 'dumpling'
-            
+
         }
     );
     let message ="";
     let isSuccessful = false;
+    let currPass = sha1(req.body.currentPassword);
     let validateQuery =  `SELECT * FROM account WHERE emailAddress="${req.body.emailAddress}"`;
     // let bankaccount = sha1(req.body.bankAccountNumber);
-    let addAccountquery = 
-    `INSERT INTO account (userName,accountType,currentPassword,emailAddress,securityQuestions,createdAt) 
-        VALUES("${req.body.userName}","${req.body.accountType}","${req.body.currentPassword}","${req.body.emailAddress}","${req.body.securityQuestions}",NOW());`;
+    let addAccountquery =
+    `INSERT INTO account (userName,accountType,currentPassword,emailAddress,securityQuestions,createdAt)
+        VALUES("${req.body.userName}","${req.body.accountType}","${currPass}","${req.body.emailAddress}","${req.body.securityQuestions}",NOW());`;
     let addEmployeequery = `INSERT INTO dumpling.employee (employeeName,dateOfBirth,phoneNumber,address,position,salary,bankAccountNumber,createdAt,accountId)
     VALUES("${req.body.employeeName}","${req.body.dateOfBirth}","${req.body.phoneNumber}","${req.body.address}","${req.body.position}","${req.body.salary}","${req.body.bankAccountNumber}",NOW(),(SELECT accountId from account where account.emailAddress="${req.body.emailAddress}"));`
     connectionString.connect((err)=>
@@ -184,7 +184,7 @@ export const addUser = (req,res)=>{
                 }
             );
             connectionString.end();
-            
+
         }
         else
         {
@@ -254,7 +254,7 @@ export const addUser = (req,res)=>{
                                         );
                                         connectionString.end();
                                     }
-                                    
+
                                 });
                             }
                         });
@@ -272,7 +272,7 @@ export const addUser = (req,res)=>{
                     }
                 }
             });
-            
+
         }
     });
 }
@@ -281,9 +281,9 @@ export const getSQ = (req,res)=>{
         {
             host:'localhost',
             user: 'root',
-            password:'Emaan@123!',
+            password:'Pakistan_123',
             database: 'dumpling'
-            
+
         }
     );
     let message = "";
@@ -309,7 +309,7 @@ export const getSQ = (req,res)=>{
                 {
                     console.log("Error found");
                     // console.log(err);
-                    message = "Connect to db failed";
+                    message = "email not found";
                     res.send(
                         {
                             "isSuccessful":isSuccessful,
@@ -320,7 +320,7 @@ export const getSQ = (req,res)=>{
                 }
                 else
                 {
-                    if(result.length!==0)
+                    if(result.length!=0)
                     {
                         console.log(result);
                         message = "Questions found";
@@ -341,9 +341,122 @@ export const getSQ = (req,res)=>{
                             'message':message
                         });
                     }
-                    
+
                 }
             });
         }
+    });
+}
+
+export const changePassword = (req,res) =>{
+    var connectionString = mysql.createConnection(
+        {
+            host:'localhost',
+            user: 'root',
+            password:'Pakistan_123',
+            database: 'dumpling'
+
+        }
+    );
+    // let email = req.body.email;
+    let ID = req.body.ID;
+    let newPassword = sha1(req.body.newPassword);
+    let message ="";
+    let isSuccessful = false;
+    let role = "";
+    let currentPassword = sha1(req.body.currentPassword);
+
+    let validateID = `SELECT account.currentPassword,account.previousPassword FROM account WHERE account.accountId =${ID}`;
+    connectionString.query(validateID, (err,result)=>{
+        if (err)
+        {
+            console.log(err);
+            message = "user does not exist";
+            res.send({
+                'isSuccessful' : isSuccessful,
+                'message' : message
+
+            });
+            connectionString.end();
+        }
+        else
+        {
+            console.log(result);
+            console.log(result[0].previousPassword);
+            if(result[0].previousPassword !== null)
+            {
+                let prevPrevPassword = result[0].previousPassword;
+                let currentPassword1 = result[0].currentPassword;
+                if(currentPassword1 === currentPassword)
+                {
+                    console.log("password matched");
+                    prevPrevPassword = currentPassword;
+                    currentPassword1 = newPassword;
+                    let updatePassQuery = `UPDATE dumpling.account SET account.currentPassword = "${currentPassword1}", account.previousPassword = "${previousPassword}",account.updatedAt = NOW() WHERE account.accountId = ${ID}`;
+                    connectionString.query(updatePassQuery, (err,result)=>{
+                    if(err)
+                    {
+                        console.log(err);
+                        message = "updation failed";
+                        res.send({
+                            'isSuccessful':isSuccessful,
+                            'message':message
+
+                        });
+                        connectionString.end();
+                    }
+                    else
+                    {
+                        message = "updated successfully";
+                        isSuccessful = true;
+                        res.send({
+                            'isSuccessful' : isSuccessful,
+                            'message': message
+                        });
+                        connectionString.end();
+                    }
+                });
+                }
+            }
+                else
+                {
+                    console.log("password is NULL");
+                    let currentPassword1 = result[0].currentPassword;
+                    if(currentPassword1 === currentPassword)
+                    {
+                        console.log("password matched");
+                        let prevPrevPassword = currentPassword;
+                        let currentPassword1 = newPassword;
+                        let updatePassQuery = `UPDATE dumpling.account SET account.currentPassword = "${currentPassword1}", account.previousPassword = "${prevPrevPassword}",account.updatedAt=NOW() WHERE account.accountId = ${ID}`;
+                        connectionString.query(updatePassQuery, (err,result)=>{
+                            if(err)
+                            {
+                                console.log(err);
+                                message = "updation failed";
+                                res.send({
+                                    'isSuccessful':isSuccessful,
+                                    'message':message
+
+                                });
+                                connectionString.end();
+                            }
+                            else
+                            {
+                                message = "updated successfully";
+                                isSuccessful = true;
+                                res.send({
+                                    'isSuccessful' : isSuccessful,
+                                    'message': message
+                                });
+                                connectionString.end();
+                            }
+                    });
+                }
+
+
+            }
+
+    }
+
     });
 }

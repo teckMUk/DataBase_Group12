@@ -34,6 +34,18 @@ export const securityQuestions = async (Email) => {
     return await axios.post(`${Url}/userController/securityQuestions`, object3)
 }
 
+export const changePassword = async (ID, newPassword, currentPassword) => {
+    const object4 = {"ID" : ID,
+    "newPassword" : newPassword,
+    "currentPassword" : currentPassword
+    }
+    return await axios.post(`${Url}/userController/changePassword`, object4)
+}
+
+
+
+
+
 
 
 

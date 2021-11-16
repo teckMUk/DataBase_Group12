@@ -77,7 +77,7 @@ export default function Forms()
 
     const ForgetPass = () =>{
 
-        let arr =["How old are you?", "when were you born"];
+        //let arr =["How old are you?", "when were you born"];
 
        return(
 
@@ -88,7 +88,7 @@ export default function Forms()
                     <Form.Label>How old are you? </Form.Label>
                     <Form.Control type="text" placeholder="Enter Answer" />
                 </Form.Group>
-
+            
                 <Form.Group className="mb-3" controlId="formBasicPassword">
                     <Form.Label>Set Default Password</Form.Label>
                     <Form.Control type="password" placeholder="Password" name = 'pw'  

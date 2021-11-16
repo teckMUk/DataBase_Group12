@@ -8,7 +8,7 @@ var connectionString = mysql.createConnection(
     {
         host:'localhost',
         user: 'root',
-        password:'Abdulmuizz30!',
+        password:'Emaan@123',
     }
 );
 function createTable(q)
@@ -29,36 +29,36 @@ function createTable(q)
         })
 }
 const createAccount = `CREATE TABLE IF NOT EXISTS dumpling.account(
-    accountId INT NOT NULL,
-    username VARCHAR(45) NOT NULL,
+    accountId INT NOT NULL AUTO_INCREMENT,
+    userName VARCHAR(45) NOT NULL,
     accountType VARCHAR(45) NOT NULL,
     currentPassword VARCHAR(50) NOT NULL,
     previousPassword VARCHAR(50),
-    emailAddress VARCHAR(320) NOT NULL,
+    emailAddress VARCHAR(320) NOT NULL UNIQUE,
     securityQuestions VARCHAR(2000) NOT NULL,
     createdAt DATETIME NOT NULL,
     updatedAt DATETIME,
     archived BIT(1) NOT NULL DEFAULT 0,
     PRIMARY KEY (accountId));`;
-    const createEmpolyee = `CREATE TABLE IF NOT EXISTS dumpling.employee(
-        employeeId INT NOT NULL,
-        employeeName VARCHAR(100) NOT NULL,
-        dateOfBirth DATE NOT NULL,
-        phoneNumber VARCHAR(15) NOT NULL,
-        address VARCHAR(100) NOT NULL,
-        position VARCHAR(45) NOT NULL,
-        salary INT NOT NULL,
-        bankAccountNumber BIGINT(20) NOT NULL,
-        createdAt DATETIME NOT NULL,
-        updatedAt DATETIME,
-        archived BIT(1) NOT NULL DEFAULT 0,
-        accountId INT NOT NULL,
-        PRIMARY KEY (employeeId),
-        CONSTRAINT accountId
-            FOREIGN KEY (accountId)
-            REFERENCES dumpling.account (accountId)
-            ON DELETE CASCADE
-            ON UPDATE CASCADE);`;
+const createEmpolyee = `CREATE TABLE IF NOT EXISTS dumpling.employee(
+    employeeId INT NOT NULL AUTO_INCREMENT,
+    employeeName VARCHAR(100) NOT NULL,
+    dateOfBirth DATE NOT NULL,
+    phoneNumber VARCHAR(15) NOT NULL,
+    address VARCHAR(100) NOT NULL,
+    position VARCHAR(45) NOT NULL,
+    salary INT NOT NULL,
+    bankAccountNumber BIGINT(20) NOT NULL,
+    createdAt DATETIME NOT NULL,
+    updatedAt DATETIME,
+    archived BIT(1) NOT NULL DEFAULT 0,
+    accountId INT NOT NULL,
+    PRIMARY KEY (employeeId),
+    CONSTRAINT accountId
+        FOREIGN KEY (accountId)
+        REFERENCES dumpling.account (accountId)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE);`;
 connectionString.connect((error)=>
 {
     if(!error)

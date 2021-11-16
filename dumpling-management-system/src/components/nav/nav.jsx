@@ -14,13 +14,13 @@ export default function Nav2()
                     <Nav
                         className="me-auto my-2 my-lg-0"
                         style={{ maxHeight: '100px' }}
-                        navbarScroll
-                    >
+                        navbarScroll >
+                            
                         <Nav.Link href="#action1">Home</Nav.Link>
                         <Nav.Link href="#action2">Profile</Nav.Link>
                         <NavDropdown title="Settings" id="navbarScrollingDropdown">
                         <NavDropdown.Item href="/create_account"> Create Account </NavDropdown.Item>
-                        <NavDropdown.Item href="/create_account">Reset Password</NavDropdown.Item>
+                        <NavDropdown.Item href="/allForms">Reset Password</NavDropdown.Item>
                         <NavDropdown.Item href="#action5">
                             View Sales
                         </NavDropdown.Item>

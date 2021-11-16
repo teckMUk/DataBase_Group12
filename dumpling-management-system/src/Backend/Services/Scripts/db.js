@@ -8,7 +8,7 @@ var connectionString = mysql.createConnection(
     {
         host:'localhost',
         user: 'root',
-        password:'Abdulmuizz30!'
+        password:'Emaan@123!'
     }
 );
 function createTable(q)

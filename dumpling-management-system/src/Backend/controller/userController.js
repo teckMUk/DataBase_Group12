@@ -425,9 +425,9 @@ export const changePassword = (req,res) =>{
                     if(currentPassword1 === currentPassword)
                     {
                         console.log("password matched");
-                        prevPrevPassword = currentPassword;
-                        currentPassword1 = newPassword;
-                        let updatePassQuery = `UPDATE dumpling.account SET account.currentPassword = "${currentPassword1}", account.previousPassword = "${previousPassword}",account.updatedAt=NOW() WHERE account.accountId = ${ID}`;
+                        let prevPrevPassword = currentPassword;
+                        let currentPassword1 = newPassword;
+                        let updatePassQuery = `UPDATE dumpling.account SET account.currentPassword = "${currentPassword1}", account.previousPassword = "${prevPrevPassword}",account.updatedAt=NOW() WHERE account.accountId = ${ID}`;
                         connectionString.query(updatePassQuery, (err,result)=>{
                             if(err)
                             {

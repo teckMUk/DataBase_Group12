@@ -25,7 +25,7 @@ export default function Form()
                 <input type = "text"  name ="password" id = "password"  value = {password} onChange = {(p)=>setPassword(p.target.value)} />
             </div>
             <button>Log In</button>
-            <button> Forgot Password </button>
+           
             
         </form>
         </section>

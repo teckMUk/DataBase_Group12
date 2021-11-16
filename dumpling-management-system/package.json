@@ -2,16 +2,19 @@
   "name": "dumpling-management-system",
   "version": "0.1.0",
   "private": true,
+   "type": "module",
   "dependencies": {
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
+    "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.15",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
+    "sha1": "^1.1.1",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
@@ -19,7 +22,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "create": "node src/Service/Scripts/db.js"
+    "create": "node src/Backend/Services/Scripts/db.js",
+    "seed": "node src/Backend/Services/Scripts/seed.js",
+    "server": "node src/Backend/server.js"
   },
   "eslintConfig": {
     "extends": [

@@ -5,6 +5,8 @@ import sha1 from 'sha1';
 const app = express();
 app.use(bodyParser.urlencoded({extended:true}));
 
+
+
 export const findUsers = (req,res)=>
 {   
     var connectionString = mysql.createConnection(
@@ -22,7 +24,6 @@ export const findUsers = (req,res)=>
     let message ="";
     let isSuccessful = false;
     let role = "";
-    console.log(email,password);
     connectionString.connect((err)=>{
         if(err)
         {
@@ -87,7 +88,7 @@ export const findUsers = (req,res)=>
                             res.send({
                              'isSuccessful':false,
                              'message':"Network error"
-                            })
+                            });
                         }
                         else{
                          console.log("Connection successfully closed");
@@ -115,12 +116,122 @@ export const addUser = (req,res)=>{
         {
             host:'localhost',
             user: 'root',
-            password:'Abdulmuizz30!',
+            password:'Emaan@123',
             database: 'dumpling'
             
         }
     );
-    
-    let addAccountQuery = `INSERT INTO account VALUES(1,"${req.body.accountId}","${req.body.accountType}","${req.body.createPassword}","${req.body.previousPassword}","${req.body.emailAddress}",${req.body.securityQuestions},NOW(),NULL,0)`;
-    
+    let message ="";
+    let isSuccessful = false;
+    let validateQuery =  `SELECT * FROM account WHERE emailAddress="${req.body.emailAddress}"`;
+    let addAccountquery = 
+    `INSERT INTO account (userName,accountType,currentPassword,emailAddress,securityQuestions,createdAt) 
+        VALUES("${req.body.userName}","${req.body.accountType}","${req.body.currentPassword}","${req.body.emailAddress}","${req.body.securityQuestions}",NOW());`;
+    let addEmployeequery = `INSERT INTO dumpling.employee (employeeName,dateOfBirth,phoneNumber,address,position,salary,bankAccountNumber,createdAt,accountId)
+    VALUES("${req.body.employeeName}","${req.body.dateOfBirth}","${req.body.phoneNumber}","${req.body.address}","${req.body.position}","${req.body.salary}","${req.body.bankAccountNumber}",NOW(),(SELECT accountId from account where account.emailAddress="${req.body.emailAddress}"));`
+    connectionString.connect((err)=>
+    {
+        if(err)
+        {
+            console.log("Error found");
+            console.log(err);
+            message = "Connect to db failed";
+            res.send(
+                {
+                    "isSuccessful":isSuccessful,
+                    "message":message
+                }
+            );
+            connectionString.end();
+            
+        }
+        else
+        {
+            console.log("Connection made with database");
+            connectionString.query(validateQuery,(errval,result)=>
+            {
+                if(errval)
+                {
+                    console.log("validateQuery failed");
+                    console.log(errval)
+                    message = "Unable to validate email address atm";
+                    res.send(
+                        {
+                            "isSuccessful":isSuccessful,
+                            "message":message
+                        }
+                    );
+                    connectionString.end();
+                }
+                else
+                {
+                    if(result.length === 0)
+                    {
+                        console.log("validation passed");
+                        connectionString.query(addAccountquery,(errUser,result)=>
+                        {
+                            if(errUser)
+                            {
+                                console.log("Failed to create account");
+                                console.log(errUser);
+                                message="Failed to create user account";
+                                res.send(
+                                    {
+                                        "isSuccessful":isSuccessful,
+                                        "message":message
+                                    }
+                                );
+                                connectionString.end();
+                            }
+                            else
+                            {
+                                connectionString.query(addEmployeequery,(errUser,result)=>
+                                {
+                                    if(errUser)
+                                    {
+                                        console.log("Failed to create account");
+                                        console.log(errUser);
+                                        message="Failed to create user account";
+                                        res.send(
+                                            {
+                                                "isSuccessful":isSuccessful,
+                                                "message":message
+                                            }
+                                        );
+                                        connectionString.end();
+                                    }
+                                    else
+                                    {
+                                        console.log("User DataBase Created");
+                                        isSuccessful=true;
+                                        message="User has been created";
+                                        res.send(
+                                        {
+                                                "isSuccessful":isSuccessful,
+                                                "message":message
+                                        }
+                                        );
+                                        connectionString.end();
+                                    }
+                                    
+                                });
+                            }
+                        });
+                    }
+                    else{
+                        console.log("Account already exist");
+                        message = "Account with this email address already exist";
+                        res.send(
+                            {
+                                "isSuccessful":isSuccessful,
+                                "message":message
+                            }
+                        );
+                        connectionString.end();
+                    }
+                }
+            });
+            
+        }
+    });
 }

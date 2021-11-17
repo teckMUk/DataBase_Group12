@@ -11,7 +11,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 export const findUsers = (req,res)=>
 {
-    console.log(req.body);
+    // console.log(process.env.password);
+    // console.log(process.env.host);
+    // console.log(process.env.user);
+    // console.log(process.env.database);
     var connectionString = mysql.createConnection(
         {
             host:process.env.host,
@@ -120,10 +123,11 @@ export const addUser = (req,res)=>{
     let isSuccessful = false;
     let currPass = sha1(req.body.currentPassword);
     let validateQuery =  `SELECT * FROM account WHERE emailAddress="${req.body.emailAddress}"`;
-    // let bankaccount = sha1(req.body.bankAccountNumber);
+    let secQuestions = req.body.securityQuestions;
+    let stringifysecQuestions = JSON.stringify(secQuestions);
     let addAccountquery =
     `INSERT INTO account (userName,accountType,currentPassword,emailAddress,securityQuestions,createdAt)
-        VALUES("${req.body.userName}","${req.body.accountType}","${currPass}","${req.body.emailAddress}","${req.body.securityQuestions}",NOW());`;
+        VALUES("${req.body.userName}","${req.body.accountType}","${currPass}","${req.body.emailAddress}",${stringifysecQuestions},NOW());`;
     let addEmployeequery = `INSERT INTO dumpling.employee (employeeName,dateOfBirth,phoneNumber,address,position,salary,bankAccountNumber,createdAt,accountId)
     VALUES("${req.body.employeeName}","${req.body.dateOfBirth}","${req.body.phoneNumber}","${req.body.address}","${req.body.position}","${req.body.salary}","${req.body.bankAccountNumber}",NOW(),(SELECT accountId from account where account.emailAddress="${req.body.emailAddress}"));`
     connectionString.connect((err)=>
@@ -284,7 +288,7 @@ export const getSQ = (req,res)=>{
                         res.send({
                             'isSuccessful':isSuccessful,
                             'message':message,
-                            'questions':result[0].securityQuestions
+                            'questions':JSON.parse(result[0].securityQuestions)
                         });
                         connectionString.end();
                     }

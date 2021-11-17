@@ -117,7 +117,7 @@ export default function Forms()
                 
                 </ul>
 
-            <Button variant="primary" type="submit" href="/">
+            <Button variant="primary" type="submit" disabled = {Object.values(newEmployeErr).includes(false)} href="/">
                 Submit
             </Button>
 

@@ -1,7 +1,9 @@
+import dotenv from "dotenv";
 import mysql from 'mysql';
 import express from 'express';
 import bodyParser from "body-parser";
 import sha1 from 'sha1';
+dotenv.config();
 const app = express();
 app.use(bodyParser.urlencoded({extended:true}));
 
@@ -10,10 +12,10 @@ export const findUsers = (req,res)=>
 {
     var connectionString = mysql.createConnection(
         {
-            host:'localhost',
-            user: 'root',
-            password:'Abdulmuizz30!',
-            database: 'dumpling'
+            host:process.env.host,
+            user: process.env.user,
+            password:process.env.password,
+            database:process.env.database
 
         }
     );
@@ -94,10 +96,10 @@ export const findUsers = (req,res)=>
 export const addUser = (req,res)=>{
     var connectionString = mysql.createConnection(
         {
-            host:'localhost',
-            user: 'root',
-            password:'Abdulmuizz30!',
-            database: 'dumpling'
+            host:process.env.host,
+            user: process.env.user,
+            password:process.env.password,
+            database:process.env.database
 
         }
     );
@@ -220,10 +222,10 @@ export const addUser = (req,res)=>{
 export const getSQ = (req,res)=>{
     var connectionString = mysql.createConnection(
         {
-            host:'localhost',
-            user: 'root',
-            password:'Abdulmuizz30!',
-            database: 'dumpling'
+            host:process.env.host,
+            user: process.env.user,
+            password:process.env.password,
+            database:process.env.database
 
         }
     );
@@ -292,10 +294,10 @@ export const getSQ = (req,res)=>{
 export const changePassword = (req,res) =>{
     var connectionString = mysql.createConnection(
         {
-            host:'localhost',
-            user: 'root',
-            password:'Abdulmuizz30!',
-            database: 'dumpling'
+            host:process.env.host,
+            user: process.env.user,
+            password:process.env.password,
+            database:process.env.database
 
         }
     );

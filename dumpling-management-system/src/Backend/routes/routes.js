@@ -1,5 +1,7 @@
+import dotenv from "dotenv";
 import express from 'express';
 import {findUsers,addUser,getSQ,changePassword} from "../../Backend/controller/userController.js";
+dotenv.config();
 const route = express.Router();
 route.post("/api/userController/login",findUsers);
 route.post("/api/userController/createAccount",addUser);

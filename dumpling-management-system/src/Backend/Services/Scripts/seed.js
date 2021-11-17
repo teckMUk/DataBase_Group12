@@ -1,16 +1,18 @@
+import dotenv from "dotenv";
 import mysql from 'mysql';
 import express from 'express';
 import bodyParser from 'body-parser';
 import sha1 from 'sha1';
+dotenv.config();
 var app = express();
 app.use(bodyParser.urlencoded({extended:true}));
 
 var connectionString = mysql.createConnection(
     {
-        host:'localhost',
-        user: 'root',
-        password:'Abdulmuizz30!',
-        database:'dumpling'
+        host:process.env.host,
+        user: process.env.user,
+        password:process.env.password,
+        database:process.env.database
     }
 );
 function seedData(q)

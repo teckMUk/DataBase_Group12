@@ -3,7 +3,7 @@ import axios from 'axios'
 const Url = "http://localhost:3000/api"
 
 export const LogIn = async (Email, Password) => {
-    
+
     const object = {"email" : Email,
     "password":Password
     }

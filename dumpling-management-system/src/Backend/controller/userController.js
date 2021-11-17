@@ -261,7 +261,7 @@ export const getSQ = (req,res)=>{
                 }
                 else
                 {
-                    if(result.length!=0)
+                    if(result.length!==0)
                     {
                         console.log(result);
                         message = "Questions found";

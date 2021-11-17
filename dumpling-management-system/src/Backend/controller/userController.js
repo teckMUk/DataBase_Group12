@@ -3,11 +3,13 @@ import express from 'express';
 import bodyParser from "body-parser";
 import sha1 from 'sha1';
 const app = express();
-app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.json({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 export const findUsers = (req,res)=>
 {
+    console.log(req.body);
     var connectionString = mysql.createConnection(
         {
             host:'localhost',
@@ -21,10 +23,8 @@ export const findUsers = (req,res)=>
     let password = req.body.password;
     let message ="";
     let isSuccessful = false;
-    let role = "";
-    connectionString.connect((err)=>{
-        if(err)
-        {
+    connectionString.connect((err) => {
+        if (err) {
             console.log("Error found");
             console.log(err);
             message = "Connect to db failed";
@@ -40,113 +40,80 @@ export const findUsers = (req,res)=>
                 }
                 else
                 {
-                console.log("Connection successfully closed");
-                res.send({
-                    'isSuccessful':isSuccessful,
-                    'message':message,
-                    'accountRole':role
-                });
+                    res.send({
+                        
+                    })
+                    'isSuccessful': isSuccessful,
+                    'message': message
+                }
+            );
+            connectionString.end();
+        }
 
+        else {
+            let loginQuery = `SELECT account.accountId,account.currentPassword, account.accountType FROM account WHERE account.emailAddress="${email}"`;
+            connectionString.query(loginQuery, (err, result) => {
+                if (err) {
+                    console.log("No user found");
+                    console.log(err);
+                    isSuccessful = false;
+                    message = "Query execution failed";
+                    res.send(
+                        {
+                            'isSuccessful': isSuccessful,
+                            'message': message
+                        });
+                    connectionString.end();
+                }
+
+                else {
+                    if (result.length === 0) {
+                        isSuccessful = false;
+                        message = "No user found";
+                        res.send(
+                            {
+                                'isSuccessful': isSuccessful,
+                                'message': message
+                            }
+                        );
+                        connectionString.end();
+                    }
+
+                    else {
+                        console.log("User found");
+                        console.log(result);
+                        let queryPassword = result[0].currentPassword;
+                        let accountType = result[0].accountType;
+                        let ID = result[0].accountId;
+                        if (sha1(password) === queryPassword) {
+                            isSuccessful = true;
+                            message = "Login successful";
+                            res.send(
+                                {
+                                    'isSuccessful': isSuccessful,
+                                    'message': message,
+                                    'role': accountType,
+                                    'Id': ID
+                                });
+                            connectionString.end();
+                        }
+
+                        else {
+                            isSuccessful = false;
+                            message = "Invalid Credentials";
+                            res.send(
+                                {
+                                    'isSuccessful': isSuccessful,
+                                    'message': message,
+                                }
+                            );
+                            connectionString.end();
+                        }
+                    }
                 }
             });
-        }
-        else
-        {
-           let loginQuery = `Select account.currentPassword, account.accountType from account where account.emailAddress="${email}"`;
-           connectionString.query(loginQuery,(err,result)=>{
-               if(err)
-               {
-                console.log("No user found");
-                console.log(err);
-                isSuccessful = false;
-                message = "No account with this email address found";
-                connectionString.end((err)=>
-                {
-                    if(err)
-                    {
-                        console.log("Connection to db failed to close");
-                        res.send({
-                         'isSuccessful':false,
-                         'message':"Network error"
-                    });
-                    }
-                    else
-                    {
-                     console.log("Connection successfully closed");
-                     res.send({
-                         'isSuccessful':isSuccessful,
-                         'message':message,
-                         'accountRole':role
-                     });
-
-                    }
-                });
-               }
-               else
-               {
-                    console.log("User found");
-                    console.log(result);
-                    let queryPassword = result[0].currentPassword;
-                    let accountType = result[0].accountType;
-                    if(sha1(password)===queryPassword)
-                    {
-                        isSuccessful = true;
-                        message = "Login successful";
-                        role = accountType;
-                        connectionString.end((err)=>
-                        {
-                            if(err)
-                            {
-                                console.log("Connection to db failed to close");
-                                res.send({
-                                'isSuccessful':false,
-                                'message':"Network error"
-                            });
-                            }
-                            else
-                            {
-                            console.log("Connection successfully closed");
-                            res.send({
-                                'isSuccessful':isSuccessful,
-                                'message':message,
-                                'accountRole':role
-                            });
-
-                            }
-                        });
-                    }
-                    else
-                    {
-                        isSuccessful = false;
-                        message = "Invalid Credentials";
-                        connectionString.end((err)=>
-                        {
-                            if(err)
-                            {
-                                console.log("Connection to db failed to close");
-                                res.send({
-                                'isSuccessful':false,
-                                'message':"Network error"
-                            });
-                            }
-                            else
-                            {
-                            console.log("Connection successfully closed");
-                            res.send({
-                                'isSuccessful':isSuccessful,
-                                'message':message,
-                                'accountRole':role
-                            });
-
-                            }
-                        });
-                    }
-
-               }
-           });
 
         }
-
 
     });
 }
@@ -320,7 +287,7 @@ export const getSQ = (req,res)=>{
                 }
                 else
                 {
-                    if(result.length!=0)
+                    if(result.length!==0)
                     {
                         console.log(result);
                         message = "Questions found";

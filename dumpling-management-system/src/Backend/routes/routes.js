@@ -8,5 +8,8 @@ route.post("/api/userController/createAccount",addUser);
 route.post("/api/userController/securityQuestions",getSQ);
 route.post("/api/userController/changePassword",changePassword);
 route.post("/api/userController/forgetPassword",forgetPassword);
+route.post("/api/userController/accountExistence",accountExistence);
+
+
 
 export default route;

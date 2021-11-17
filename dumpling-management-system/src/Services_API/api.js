@@ -51,6 +51,14 @@ export const forgetPassword = async (email, newPass) => {
 }
 
 
+export const accountExistence = async (email) => {
+    const object6 = {
+    "email" : email
+    }
+    return await axios.post(`${Url}/userController/accountExistence`, object6)
+}
+
+
 
 
 

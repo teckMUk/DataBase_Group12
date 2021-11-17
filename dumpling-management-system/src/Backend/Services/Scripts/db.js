@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import mysql from 'mysql';
 import express from 'express';
 import bodyParser from 'body-parser';
-dotenv.config();
+dotenv.config({path:"./src/Backend/.env"});
 const app = express();
 app.use(bodyParser.urlencoded({extended:true}));
 

@@ -78,7 +78,6 @@ export default function Forms()
     const ForgetPass = () =>{
 
         //let arr =["How old are you?", "when were you born"];
-
        return(
 
             <Container>
@@ -86,6 +85,11 @@ export default function Forms()
 
                 <Form.Group className="mb-3" controlId="formBasicName">
                     <Form.Label>How old are you? </Form.Label>
+                    <Form.Control type="text" placeholder="Enter Answer" />
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="formBasicName">
+                    <Form.Label>sec question? </Form.Label>
                     <Form.Control type="text" placeholder="Enter Answer" />
                 </Form.Group>
             
@@ -117,10 +121,10 @@ export default function Forms()
                 Submit
             </Button>
 
-                    </Form>
+            </Form>
                         
 
-                </Container>
+             </Container>
     
        );
     }

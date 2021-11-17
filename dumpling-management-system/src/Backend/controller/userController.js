@@ -10,7 +10,10 @@ app.use(bodyParser.urlencoded({extended:true}));
 
 export const findUsers = (req,res)=>
 {
-    // console.log(process.env.password);
+    console.log(process.env.password);
+    console.log(process.env.host);
+    console.log(process.env.user);
+    console.log(process.env.database);
     var connectionString = mysql.createConnection(
         {
             host:process.env.host,
@@ -40,14 +43,14 @@ export const findUsers = (req,res)=>
         }
         else
         {
-           let loginQuery = `SELECT  account.accountID, account.currentPassword, account.accountType FROM account WHERE account.emailAddress="${email}"`;
+           let loginQuery = `SELECT account.accountId,account.currentPassword, account.accountType FROM account WHERE account.emailAddress="${email}"`;
            connectionString.query(loginQuery,(err,result)=>{
                if(err)
                {
                 console.log("No user found");
                 console.log(err);
                 isSuccessful = false;
-                message = "No account with this email address found";
+                message = "Query execution failed";
                 res.send(
                 {
                     'isSuccessful':isSuccessful,
@@ -60,19 +63,22 @@ export const findUsers = (req,res)=>
                    if(result.length===0)
                    {
                        isSuccessful = false;
-                       message = "NO user found"
+                       message = "No user found"
                        res.send(
                            {
                                 'isSuccessful':isSuccessful,
                                  'message':message
                            }
                        );
+                       connectionString.end();
                    }
+                   else
+                   {
                     console.log("User found");
                     console.log(result);
                     let queryPassword = result[0].currentPassword;
                     let accountType = result[0].accountType;
-                    let ID = result[0].accountID;
+                    let ID = result[0].accountId;
                     if(sha1(password)===queryPassword)
                     {
                         isSuccessful = true;
@@ -82,7 +88,7 @@ export const findUsers = (req,res)=>
                             'isSuccessful':isSuccessful,
                             'message':message,
                             'role':accountType,
-                            'ID':ID
+                            'Id':ID
                         });
                         connectionString.end();
                     }
@@ -98,6 +104,7 @@ export const findUsers = (req,res)=>
                         );
                         connectionString.end();
                     }    
+                   }  
                }
            });
 
@@ -317,8 +324,8 @@ export const changePassword = (req,res) =>{
     let newPassword = sha1(req.body.newPassword);
     let message ="";
     let isSuccessful = false;
-    let role = "";
     let currentPassword = sha1(req.body.currentPassword);
+    console.log(currentPassword);
 
     let validateID = `SELECT account.currentPassword,account.previousPassword FROM account WHERE account.accountId =${ID}`;
     connectionString.query(validateID, (err,result)=>{
@@ -335,6 +342,7 @@ export const changePassword = (req,res) =>{
         }
         else
         {
+            console.log(result);
             if(result.length === 0)
             {
                 isSuccessful = false;
@@ -345,23 +353,47 @@ export const changePassword = (req,res) =>{
                 });
                 connectionString.end();
             }
-            console.log(result);
-            console.log(result[0].previousPassword);
-            if(result[0].previousPassword !== null)
+            else
             {
-                let prevPrevPassword = result[0].previousPassword;
-                let currentPassword1 = result[0].currentPassword;
-                if(currentPassword1 === currentPassword)
+                console.log(result);
+                if(result[0].previousPassword !== null)
                 {
-                    console.log("password matched");
-                    prevPrevPassword = currentPassword;
-                    currentPassword1 = newPassword;
-                    let updatePassQuery = `UPDATE dumpling.account SET account.currentPassword = "${currentPassword1}", account.previousPassword = "${prevPrevPassword}",account.updatedAt = NOW() WHERE account.accountId = ${ID}`;
-                    connectionString.query(updatePassQuery, (err,result)=>{
-                    if(err)
+                    let prevPrevPassword = result[0].previousPassword;
+                    let currentPassword1 = result[0].currentPassword;
+                    if(currentPassword1 === currentPassword)
                     {
-                        console.log(err);
-                        message = "updation failed";
+                        console.log("password matched");
+                        prevPrevPassword = currentPassword;
+                        currentPassword1 = newPassword;
+                        let updatePassQuery = `UPDATE dumpling.account SET account.currentPassword = "${currentPassword1}", account.previousPassword = "${prevPrevPassword}",account.updatedAt = NOW() WHERE account.accountId = ${ID}`;
+                        connectionString.query(updatePassQuery, (err,result)=>{
+                        if(err)
+                        {
+                            console.log(err);
+                            message = "updation failed";
+                            res.send({
+                                'isSuccessful':isSuccessful,
+                                'message':message
+
+                            });
+                            connectionString.end();
+                        }
+                        else
+                        {
+                            message = "updated successfully";
+                            isSuccessful = true;
+                            res.send({
+                                'isSuccessful' : isSuccessful,
+                                'message': message
+                            });
+                            connectionString.end();
+                        }
+                        });
+                    }
+                    else
+                    {
+                        isSuccessful = false;
+                        message = "Password dont match";
                         res.send({
                             'isSuccessful':isSuccessful,
                             'message':message
@@ -369,34 +401,12 @@ export const changePassword = (req,res) =>{
                         });
                         connectionString.end();
                     }
-                    else
-                    {
-                        message = "updated successfully";
-                        isSuccessful = true;
-                        res.send({
-                            'isSuccessful' : isSuccessful,
-                            'message': message
-                        });
-                        connectionString.end();
-                    }
-                });
                 }
                 else
                 {
-                    isSuccessful = false;
-                    message = "Password dont match";
-                    res.send({
-                        'isSuccessful':isSuccessful,
-                        'message':message
-
-                    });
-                    connectionString.end();
-                }
-            }
-                else
-                {
-                    console.log("password is NULL");
+                    console.log("prevpassword is NULL");
                     let currentPassword1 = result[0].currentPassword;
+                    console.log(currentPassword1);
                     if(currentPassword1 === currentPassword)
                     {
                         console.log("password matched");
@@ -425,23 +435,25 @@ export const changePassword = (req,res) =>{
                                 });
                                 connectionString.end();
                             }
-                    });
+                        });
+                    }
+                    else
+                    {
+                        isSuccessful = false;
+                        message = "Password dont match";
+                        res.send({
+                            'isSuccessful':isSuccessful,
+                            'message':message
+
+                        });
+                        connectionString.end();
+                    }
+
+
                 }
-                else{
-                    isSuccessful = false;
-                    message = "Password dont match";
-                    res.send({
-                        'isSuccessful':isSuccessful,
-                        'message':message
-
-                    });
-                    connectionString.end();
-                }
-
-
             }
-
-    }
+            
+        }
 
     });
 }

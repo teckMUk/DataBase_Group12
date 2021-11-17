@@ -3,13 +3,14 @@ import mysql from 'mysql';
 import express from 'express';
 import bodyParser from "body-parser";
 import sha1 from 'sha1';
-dotenv.config();
+dotenv.config({path:"./src/Backend/.env"});
 const app = express();
 app.use(bodyParser.urlencoded({extended:true}));
 
 
 export const findUsers = (req,res)=>
 {
+    // console.log(process.env.password);
     var connectionString = mysql.createConnection(
         {
             host:process.env.host,
@@ -23,7 +24,6 @@ export const findUsers = (req,res)=>
     let password = req.body.password;
     let message ="";
     let isSuccessful = false;
-    let role = "";
     connectionString.connect((err)=>{
         if(err)
         {
@@ -40,7 +40,7 @@ export const findUsers = (req,res)=>
         }
         else
         {
-           let loginQuery = `Select account.currentPassword, account.accountType FROM account WHERE account.emailAddress="${email}"`;
+           let loginQuery = `SELECT  account.accountID, account.currentPassword, account.accountType FROM account WHERE account.emailAddress="${email}"`;
            connectionString.query(loginQuery,(err,result)=>{
                if(err)
                {
@@ -57,20 +57,32 @@ export const findUsers = (req,res)=>
                }
                else
                {
+                   if(result.length===0)
+                   {
+                       isSuccessful = false;
+                       message = "NO user found"
+                       res.send(
+                           {
+                                'isSuccessful':isSuccessful,
+                                 'message':message
+                           }
+                       );
+                   }
                     console.log("User found");
                     console.log(result);
                     let queryPassword = result[0].currentPassword;
                     let accountType = result[0].accountType;
+                    let ID = result[0].accountID;
                     if(sha1(password)===queryPassword)
                     {
                         isSuccessful = true;
                         message = "Login successful";
-                        role = accountType;
                         res.send(
                             {
                             'isSuccessful':isSuccessful,
                             'message':message,
-                            'role':accountType
+                            'role':accountType,
+                            'ID':ID
                         });
                         connectionString.end();
                     }

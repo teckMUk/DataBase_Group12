@@ -1,12 +1,24 @@
 import axios from 'axios'
 
-const Url = "http://localhost:3001/api"
+const Url = "http://localhost:3000/api"
 
 export const LogIn = async (Email, Password) => {
+
     const object = {"email" : Email,
     "password":Password
     }
-    return await axios.post(`${Url}/userController/login`, object)
+    // axios(
+    //     {
+    //         method: 'POST',
+    //         url: `${Url}/userController/login`,
+    //         data: object
+    //     }).then((response)=>{
+    //         console.log(response);
+    //     });
+    return await axios.post(`${Url}/userController/login`,object,{
+        'Accept': 'application/json',
+        'content-type':'application/json'
+    });
 }
 
 export const createAccount = async (userName, accountType, currentPassword, emailAddress, securityQuestions, employeeName, dateOfBirth, phoneNumber, address, position, salary,bankAccountNumber) => {
@@ -42,6 +54,21 @@ export const changePassword = async (ID, newPassword, currentPassword) => {
     return await axios.post(`${Url}/userController/changePassword`, object4)
 }
 
+export const forgetPassword = async (email, newPass) => {
+    const object5 = {
+    "email" : email,
+    "newPass" : newPass
+    }
+    return await axios.post(`${Url}/userController/forgetPassword`, object5)
+}
+
+
+export const accountExistence = async (email) => {
+    const object6 = {
+    "email" : email
+    }
+    return await axios.post(`${Url}/userController/accountExistence`, object6)
+}
 
 
 

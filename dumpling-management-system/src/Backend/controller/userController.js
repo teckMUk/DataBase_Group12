@@ -3,13 +3,15 @@ import mysql from 'mysql';
 import express from 'express';
 import bodyParser from "body-parser";
 import sha1 from 'sha1';
-dotenv.config();
+dotenv.config({path:"./src/Backend/.env"});
 const app = express();
-app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.json({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 export const findUsers = (req,res)=>
 {
+    console.log(req.body);
     var connectionString = mysql.createConnection(
         {
             host:process.env.host,
@@ -23,74 +25,85 @@ export const findUsers = (req,res)=>
     let password = req.body.password;
     let message ="";
     let isSuccessful = false;
-    let role = "";
-    connectionString.connect((err)=>{
-        if(err)
-        {
+    connectionString.connect((err) => {
+        if (err) {
             console.log("Error found");
             console.log(err);
             message = "Connect to db failed";
             res.send(
                 {
-                    'isSuccessful':isSuccessful,
-                    'message':message
+                    'isSuccessful': isSuccessful,
+                    'message': message
                 }
-            )
+            );
             connectionString.end();
         }
-        else
-        {
-           let loginQuery = `Select account.currentPassword, account.accountType FROM account WHERE account.emailAddress="${email}"`;
-           connectionString.query(loginQuery,(err,result)=>{
-               if(err)
-               {
-                console.log("No user found");
-                console.log(err);
-                isSuccessful = false;
-                message = "No account with this email address found";
-                res.send(
-                {
-                    'isSuccessful':isSuccessful,
-                    'message':message
-                });
-                connectionString.end();
-               }
-               else
-               {
-                    console.log("User found");
-                    console.log(result);
-                    let queryPassword = result[0].currentPassword;
-                    let accountType = result[0].accountType;
-                    if(sha1(password)===queryPassword)
-                    {
-                        isSuccessful = true;
-                        message = "Login successful";
-                        role = accountType;
-                        res.send(
-                            {
-                            'isSuccessful':isSuccessful,
-                            'message':message,
-                            'role':accountType
+
+        else {
+            let loginQuery = `SELECT account.accountId,account.currentPassword, account.accountType FROM account WHERE account.emailAddress="${email}"`;
+            connectionString.query(loginQuery, (err, result) => {
+                if (err) {
+                    console.log("No user found");
+                    console.log(err);
+                    isSuccessful = false;
+                    message = "Query execution failed";
+                    res.send(
+                        {
+                            'isSuccessful': isSuccessful,
+                            'message': message
                         });
-                        connectionString.end();
-                    }
-                    else
-                    {
+                    connectionString.end();
+                }
+
+                else {
+                    if (result.length === 0) {
                         isSuccessful = false;
-                        message = "Invalid Credentials";
+                        message = "No user found";
                         res.send(
                             {
-                                'isSuccessful':isSuccessful,
-                                'message':message,
+                                'isSuccessful': isSuccessful,
+                                'message': message
                             }
                         );
                         connectionString.end();
-                    }    
-               }
-           });
+                    }
+
+                    else {
+                        console.log("User found");
+                        console.log(result);
+                        let queryPassword = result[0].currentPassword;
+                        let accountType = result[0].accountType;
+                        let ID = result[0].accountId;
+                        if (sha1(password) === queryPassword) {
+                            isSuccessful = true;
+                            message = "Login successful";
+                            res.send(
+                                {
+                                    'isSuccessful': isSuccessful,
+                                    'message': message,
+                                    'role': accountType,
+                                    'Id': ID
+                                });
+                            connectionString.end();
+                        }
+
+                        else {
+                            isSuccessful = false;
+                            message = "Invalid Credentials";
+                            res.send(
+                                {
+                                    'isSuccessful': isSuccessful,
+                                    'message': message,
+                                }
+                            );
+                            connectionString.end();
+                        }
+                    }
+                }
+            });
 
         }
-       
+
     });
 }
 export const addUser = (req,res)=>{
@@ -107,10 +120,11 @@ export const addUser = (req,res)=>{
     let isSuccessful = false;
     let currPass = sha1(req.body.currentPassword);
     let validateQuery =  `SELECT * FROM account WHERE emailAddress="${req.body.emailAddress}"`;
-    // let bankaccount = sha1(req.body.bankAccountNumber);
+    let secQuestions = req.body.securityQuestions;
+    let stringifysecQuestions = JSON.stringify(secQuestions);
     let addAccountquery =
     `INSERT INTO account (userName,accountType,currentPassword,emailAddress,securityQuestions,createdAt)
-        VALUES("${req.body.userName}","${req.body.accountType}","${currPass}","${req.body.emailAddress}","${req.body.securityQuestions}",NOW());`;
+        VALUES("${req.body.userName}","${req.body.accountType}","${currPass}","${req.body.emailAddress}",${stringifysecQuestions},NOW());`;
     let addEmployeequery = `INSERT INTO dumpling.employee (employeeName,dateOfBirth,phoneNumber,address,position,salary,bankAccountNumber,createdAt,accountId)
     VALUES("${req.body.employeeName}","${req.body.dateOfBirth}","${req.body.phoneNumber}","${req.body.address}","${req.body.position}","${req.body.salary}","${req.body.bankAccountNumber}",NOW(),(SELECT accountId from account where account.emailAddress="${req.body.emailAddress}"));`
     connectionString.connect((err)=>
@@ -263,7 +277,7 @@ export const getSQ = (req,res)=>{
                 }
                 else
                 {
-                    if(result.length!=0)
+                    if(result.length!==0)
                     {
                         console.log(result);
                         message = "Questions found";
@@ -271,7 +285,7 @@ export const getSQ = (req,res)=>{
                         res.send({
                             'isSuccessful':isSuccessful,
                             'message':message,
-                            'questions':result[0].securityQuestions
+                            'questions':JSON.parse(result[0].securityQuestions)
                         });
                         connectionString.end();
                     }
@@ -305,8 +319,8 @@ export const changePassword = (req,res) =>{
     let newPassword = sha1(req.body.newPassword);
     let message ="";
     let isSuccessful = false;
-    let role = "";
     let currentPassword = sha1(req.body.currentPassword);
+    console.log(currentPassword);
 
     let validateID = `SELECT account.currentPassword,account.previousPassword FROM account WHERE account.accountId =${ID}`;
     connectionString.query(validateID, (err,result)=>{
@@ -323,6 +337,7 @@ export const changePassword = (req,res) =>{
         }
         else
         {
+            console.log(result);
             if(result.length === 0)
             {
                 isSuccessful = false;
@@ -333,23 +348,47 @@ export const changePassword = (req,res) =>{
                 });
                 connectionString.end();
             }
-            console.log(result);
-            console.log(result[0].previousPassword);
-            if(result[0].previousPassword !== null)
+            else
             {
-                let prevPrevPassword = result[0].previousPassword;
-                let currentPassword1 = result[0].currentPassword;
-                if(currentPassword1 === currentPassword)
+                console.log(result);
+                if(result[0].previousPassword !== null)
                 {
-                    console.log("password matched");
-                    prevPrevPassword = currentPassword;
-                    currentPassword1 = newPassword;
-                    let updatePassQuery = `UPDATE dumpling.account SET account.currentPassword = "${currentPassword1}", account.previousPassword = "${prevPrevPassword}",account.updatedAt = NOW() WHERE account.accountId = ${ID}`;
-                    connectionString.query(updatePassQuery, (err,result)=>{
-                    if(err)
+                    let prevPrevPassword = result[0].previousPassword;
+                    let currentPassword1 = result[0].currentPassword;
+                    if(currentPassword1 === currentPassword)
                     {
-                        console.log(err);
-                        message = "updation failed";
+                        console.log("password matched");
+                        prevPrevPassword = currentPassword;
+                        currentPassword1 = newPassword;
+                        let updatePassQuery = `UPDATE dumpling.account SET account.currentPassword = "${currentPassword1}", account.previousPassword = "${prevPrevPassword}",account.updatedAt = NOW() WHERE account.accountId = ${ID}`;
+                        connectionString.query(updatePassQuery, (err,result)=>{
+                        if(err)
+                        {
+                            console.log(err);
+                            message = "updation failed";
+                            res.send({
+                                'isSuccessful':isSuccessful,
+                                'message':message
+
+                            });
+                            connectionString.end();
+                        }
+                        else
+                        {
+                            message = "updated successfully";
+                            isSuccessful = true;
+                            res.send({
+                                'isSuccessful' : isSuccessful,
+                                'message': message
+                            });
+                            connectionString.end();
+                        }
+                        });
+                    }
+                    else
+                    {
+                        isSuccessful = false;
+                        message = "Password dont match";
                         res.send({
                             'isSuccessful':isSuccessful,
                             'message':message
@@ -357,34 +396,12 @@ export const changePassword = (req,res) =>{
                         });
                         connectionString.end();
                     }
-                    else
-                    {
-                        message = "updated successfully";
-                        isSuccessful = true;
-                        res.send({
-                            'isSuccessful' : isSuccessful,
-                            'message': message
-                        });
-                        connectionString.end();
-                    }
-                });
                 }
                 else
                 {
-                    isSuccessful = false;
-                    message = "Password dont match";
-                    res.send({
-                        'isSuccessful':isSuccessful,
-                        'message':message
-
-                    });
-                    connectionString.end();
-                }
-            }
-                else
-                {
-                    console.log("password is NULL");
+                    console.log("prevpassword is NULL");
                     let currentPassword1 = result[0].currentPassword;
+                    console.log(currentPassword1);
                     if(currentPassword1 === currentPassword)
                     {
                         console.log("password matched");
@@ -413,23 +430,99 @@ export const changePassword = (req,res) =>{
                                 });
                                 connectionString.end();
                             }
-                    });
+                        });
+                    }
+                    else
+                    {
+                        isSuccessful = false;
+                        message = "Password dont match";
+                        res.send({
+                            'isSuccessful':isSuccessful,
+                            'message':message
+
+                        });
+                        connectionString.end();
+                    }
+
+
                 }
-                else{
-                    isSuccessful = false;
-                    message = "Password dont match";
+            }
+
+        }
+
+    });
+}
+export const validateSecurity = (req,res)=>{
+    var connectionString = mysql.createConnection(
+        {
+            host:process.env.host,
+            user: process.env.user,
+            password:process.env.password,
+            database:process.env.database
+
+        }
+    );
+
+    let answerOne = req.body.answerOne;
+    let answerTwo = req.body.answerTwo;
+    let message = "";
+    let email = req.body.email;
+    let isSuccessful = false;
+    let queryValidate = `SELECT securityQuestions from dumpling.account WHERE account.emailAddress="${email}"`;
+    connectionString.query(queryValidate,(err,result)=>{
+        if(err)
+        {
+            message = "No email address found";
+            res.send({
+                'isSuccessful':isSuccessful,
+                'message':message
+            });
+            connectionString.end();
+        }
+        else
+        {
+            if(result.length === 0)
+            {
+                message = "No user exists";
+                res.send({
+                    'isSuccessful':isSuccessful,
+                    'message':message
+                });
+                connectionString.end();
+            }
+            else{
+                // let securityQuestions = JSON.parse(result[0].securityQuestions);
+                // console.log();
+                let securityQuestions = JSON.parse(result[0].securityQuestions);
+                console.log(securityQuestions);
+                let answers = Object.values(securityQuestions);
+                console.log(answers);
+                var test1 = false;
+                var test2 = false;
+                if(answers[0]===answerOne && answerTwo === answers[1])
+                {
+                    message= "Answers matched";
+                    isSuccessful = true;
                     res.send({
                         'isSuccessful':isSuccessful,
                         'message':message
+                    });
+                    connectionString.end();
 
+                }
+                else
+                {
+                    message = "Answers dont match";
+                    isSuccessful = false;
+                    res.send({
+                        'isSuccessful':isSuccessful,
+                        'message':message
                     });
                     connectionString.end();
                 }
 
-
             }
-
-    }
-
+        }
     });
+
 }

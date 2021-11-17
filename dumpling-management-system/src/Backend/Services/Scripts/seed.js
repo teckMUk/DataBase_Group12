@@ -3,7 +3,7 @@ import mysql from 'mysql';
 import express from 'express';
 import bodyParser from 'body-parser';
 import sha1 from 'sha1';
-dotenv.config();
+dotenv.config({path:"./src/Backend/.env"});
 var app = express();
 app.use(bodyParser.urlencoded({extended:true}));
 

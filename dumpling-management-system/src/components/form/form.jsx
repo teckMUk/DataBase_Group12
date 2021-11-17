@@ -2,7 +2,7 @@ import './form.css';
 import {Container, Form, Button} from 'react-bootstrap';
 import { useState, useEffect } from "react";
 import { LogIn } from '../../Services_API/api';
-
+import {useNavigate} from 'react-router-dom';
 const initialState = {
    
     email: "",
@@ -12,20 +12,38 @@ const initialState = {
 
 export default function FormLogin()
 {
+    let navigate = useNavigate();
     const [newEmploye, setNewEmploye] = useState(initialState);
-    
     useEffect(() => {}, [newEmploye]);
 
     const handle = e => {
+        e.preventDefault();
         const {name, value} = e.target;
         setNewEmploye({...newEmploye, [name]: value});
+      
      
        
     }
     
-    const onLogin = () =>{
-        console.log(newEmploye);
-        console.log(LogIn(newEmploye.email,newEmploye.pw ));
+    const onLogin = (e) =>{
+        e.preventDefault();
+        LogIn(newEmploye.email,newEmploye.pw ).then( (response) =>
+        {
+            
+            console.log(response.data.isSuccessful);
+            if(response.data.isSuccessful)
+            {
+                console.log(response.data.message);
+                console.log(response.data.Id);
+                navigate("/dashboard");
+            }
+            else
+            {
+                console.log(response.data.message);
+            }
+        });
+
+        
 
     }
     
@@ -35,16 +53,16 @@ export default function FormLogin()
     return (
        
         <Container >
-        <Form >
+        <Form>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                 <Form.Label>Email address</Form.Label>
-                <Form.Control type="email" placeholder="name@example.com" name = 'email'  
+                <Form.Control type="email" placeholder="name@example.com" name = 'email'
                 value = {newEmploye.email} onChange = {handle}/>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicPassword">
                     <Form.Label>Enter Password</Form.Label>
-                    <Form.Control type="password" placeholder="Password" name = 'pw'  
+                    <Form.Control type="password" placeholder="Password" name = 'pw' 
                     value = {newEmploye.pw} onChange = {handle}/>
             </Form.Group>
 

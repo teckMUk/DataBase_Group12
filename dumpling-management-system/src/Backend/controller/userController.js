@@ -5,15 +5,13 @@ import bodyParser from "body-parser";
 import sha1 from 'sha1';
 dotenv.config({path:"./src/Backend/.env"});
 const app = express();
-app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.json({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 export const findUsers = (req,res)=>
 {
-    console.log(process.env.password);
-    console.log(process.env.host);
-    console.log(process.env.user);
-    console.log(process.env.database);
+    console.log(req.body);
     var connectionString = mysql.createConnection(
         {
             host:process.env.host,
@@ -27,89 +25,85 @@ export const findUsers = (req,res)=>
     let password = req.body.password;
     let message ="";
     let isSuccessful = false;
-    connectionString.connect((err)=>{
-        if(err)
-        {
+    connectionString.connect((err) => {
+        if (err) {
             console.log("Error found");
             console.log(err);
             message = "Connect to db failed";
             res.send(
                 {
-                    'isSuccessful':isSuccessful,
-                    'message':message
+                    'isSuccessful': isSuccessful,
+                    'message': message
                 }
-            )
+            );
             connectionString.end();
         }
-        else
-        {
-           let loginQuery = `SELECT account.accountId,account.currentPassword, account.accountType FROM account WHERE account.emailAddress="${email}"`;
-           connectionString.query(loginQuery,(err,result)=>{
-               if(err)
-               {
-                console.log("No user found");
-                console.log(err);
-                isSuccessful = false;
-                message = "Query execution failed";
-                res.send(
-                {
-                    'isSuccessful':isSuccessful,
-                    'message':message
-                });
-                connectionString.end();
-               }
-               else
-               {
-                   if(result.length===0)
-                   {
-                       isSuccessful = false;
-                       message = "No user found"
-                       res.send(
-                           {
-                                'isSuccessful':isSuccessful,
-                                 'message':message
-                           }
-                       );
-                       connectionString.end();
-                   }
-                   else
-                   {
-                    console.log("User found");
-                    console.log(result);
-                    let queryPassword = result[0].currentPassword;
-                    let accountType = result[0].accountType;
-                    let ID = result[0].accountId;
-                    if(sha1(password)===queryPassword)
-                    {
-                        isSuccessful = true;
-                        message = "Login successful";
-                        res.send(
-                            {
-                            'isSuccessful':isSuccessful,
-                            'message':message,
-                            'role':accountType,
-                            'Id':ID
+
+        else {
+            let loginQuery = `SELECT account.accountId,account.currentPassword, account.accountType FROM account WHERE account.emailAddress="${email}"`;
+            connectionString.query(loginQuery, (err, result) => {
+                if (err) {
+                    console.log("No user found");
+                    console.log(err);
+                    isSuccessful = false;
+                    message = "Query execution failed";
+                    res.send(
+                        {
+                            'isSuccessful': isSuccessful,
+                            'message': message
                         });
-                        connectionString.end();
-                    }
-                    else
-                    {
+                    connectionString.end();
+                }
+
+                else {
+                    if (result.length === 0) {
                         isSuccessful = false;
-                        message = "Invalid Credentials";
+                        message = "No user found";
                         res.send(
                             {
-                                'isSuccessful':isSuccessful,
-                                'message':message,
+                                'isSuccessful': isSuccessful,
+                                'message': message
                             }
                         );
                         connectionString.end();
-                    }    
-                   }  
-               }
-           });
+                    }
+
+                    else {
+                        console.log("User found");
+                        console.log(result);
+                        let queryPassword = result[0].currentPassword;
+                        let accountType = result[0].accountType;
+                        let ID = result[0].accountId;
+                        if (sha1(password) === queryPassword) {
+                            isSuccessful = true;
+                            message = "Login successful";
+                            res.send(
+                                {
+                                    'isSuccessful': isSuccessful,
+                                    'message': message,
+                                    'role': accountType,
+                                    'Id': ID
+                                });
+                            connectionString.end();
+                        }
+
+                        else {
+                            isSuccessful = false;
+                            message = "Invalid Credentials";
+                            res.send(
+                                {
+                                    'isSuccessful': isSuccessful,
+                                    'message': message,
+                                }
+                            );
+                            connectionString.end();
+                        }
+                    }
+                }
+            });
 
         }
-       
+
     });
 }
 export const addUser = (req,res)=>{

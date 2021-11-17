@@ -1,14 +1,16 @@
+import dotenv from "dotenv";
 import mysql from 'mysql';
 import express from 'express';
 import bodyParser from 'body-parser';
+dotenv.config();
 const app = express();
 app.use(bodyParser.urlencoded({extended:true}));
 
 var connectionString = mysql.createConnection(
-    {
-        host:'localhost',
-        user: 'root',
-        password:'Abdulmuizz30!'
+    { 
+        host:process.env.host,
+        user: process.env.user,
+        password:process.env.password
     }
 );
 function createTable(q)

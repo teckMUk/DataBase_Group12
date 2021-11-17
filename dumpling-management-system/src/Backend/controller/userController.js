@@ -310,6 +310,78 @@ export const getSQ = (req,res)=>{
     });
 }
 
+export const forgetPassword = (req,res)=>{
+    var connectionString = mysql.createConnection(
+        {
+            host:process.env.host,
+            user: process.env.user,
+            password:process.env.password,
+            database:process.env.database
+
+        }
+    );
+    let email = req.body.email;
+    let newPass = sha1(req.body.newPass);
+    let message = "";
+    let isSuccessful = false;
+    let queryPass = `SELECT account.currentPassword, account.previousPassword FROM account WHERE account.emailAddress="${email}"`;
+    connectionString.query(queryPass,(err,result)=>{
+        if(err)
+        {  
+            message = "Query execution failed";
+            res.send({
+                'isSuccessful':isSuccessful,
+                'message':message
+            });
+            connectionString.end();
+
+        }
+        else
+        {
+            if(result.length === 0)
+            {
+                message = "No user found with the email given";
+                res.send({
+                    'isSuccessful':isSuccessful,
+                    'message':message
+                });
+                connectionString.end();
+            }
+            else
+            {
+                let prevPass = result[0].currentPassword;
+                let queryUpdatePass = `UPDATE dumpling.account SET account.currentPassword="${newPass}",account.previousPassword="${prevPass}",account.createdAt=NOW() WHERE account.emailAddress="${email}"`;
+                connectionString.query(queryUpdatePass,(err,result)=>{
+                    if(err)
+                    {
+                        message = "Updation failed";
+                        res.send({
+                            'isSuccessful':isSuccessful,
+                            'message':message
+                        });
+                        connectionString.end();
+                    }
+                    else
+                    {
+                       message = "Updation Succeeded";
+                       isSuccessful = true;
+                       res.send({
+                           'isSuccessful':isSuccessful,
+                           'message':message
+                       });
+                       connectionString.end();
+                    }
+
+           
+                });
+            }
+        }
+    });
+   
+
+}
+
+
 export const changePassword = (req,res) =>{
     var connectionString = mysql.createConnection(
         {

@@ -1,7 +1,9 @@
+import dotenv from "dotenv";
 import mysql from 'mysql';
 import express from 'express';
 import bodyParser from "body-parser";
 import sha1 from 'sha1';
+dotenv.config({path:"./src/Backend/.env"});
 const app = express();
 app.use(bodyParser.json({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -12,10 +14,10 @@ export const findUsers = (req,res)=>
     console.log(req.body);
     var connectionString = mysql.createConnection(
         {
-            host:'localhost',
-            user: 'root',
-            password:'Pakistan_123',
-            database: 'dumpling'
+            host:process.env.host,
+            user: process.env.user,
+            password:process.env.password,
+            database:process.env.database
 
         }
     );
@@ -28,21 +30,8 @@ export const findUsers = (req,res)=>
             console.log("Error found");
             console.log(err);
             message = "Connect to db failed";
-            connectionString.end((err)=>
-            {
-                if(err)
+            res.send(
                 {
-                    console.log("Connection to db failed to close");
-                    res.send({
-                    'isSuccessful':false,
-                    'message':"Network error"
-                });
-                }
-                else
-                {
-                    res.send({
-                        
-                    })
                     'isSuccessful': isSuccessful,
                     'message': message
                 }
@@ -120,10 +109,10 @@ export const findUsers = (req,res)=>
 export const addUser = (req,res)=>{
     var connectionString = mysql.createConnection(
         {
-            host:'localhost',
-            user: 'root',
-            password:'Pakistan_123',
-            database: 'dumpling'
+            host:process.env.host,
+            user: process.env.user,
+            password:process.env.password,
+            database:process.env.database
 
         }
     );
@@ -175,14 +164,14 @@ export const addUser = (req,res)=>{
                 {
                     if(result.length === 0)
                     {
-                        console.log("validation passed");
+                        // console.log("validation passed");
                         connectionString.query(addAccountquery,(errUser,result)=>
                         {
                             if(errUser)
                             {
                                 console.log("Failed to create account");
                                 console.log(errUser);
-                                message="Failed to create user account";
+                                message ="Failed to create user account";
                                 res.send(
                                     {
                                         "isSuccessful":isSuccessful,
@@ -246,10 +235,10 @@ export const addUser = (req,res)=>{
 export const getSQ = (req,res)=>{
     var connectionString = mysql.createConnection(
         {
-            host:'localhost',
-            user: 'root',
-            password:'Pakistan_123',
-            database: 'dumpling'
+            host:process.env.host,
+            user: process.env.user,
+            password:process.env.password,
+            database:process.env.database
 
         }
     );
@@ -318,20 +307,19 @@ export const getSQ = (req,res)=>{
 export const changePassword = (req,res) =>{
     var connectionString = mysql.createConnection(
         {
-            host:'localhost',
-            user: 'root',
-            password:'Pakistan_123',
-            database: 'dumpling'
+            host:process.env.host,
+            user: process.env.user,
+            password:process.env.password,
+            database:process.env.database
 
         }
     );
-    // let email = req.body.email;
     let ID = req.body.ID;
     let newPassword = sha1(req.body.newPassword);
     let message ="";
     let isSuccessful = false;
-    let role = "";
     let currentPassword = sha1(req.body.currentPassword);
+    console.log(currentPassword);
 
     let validateID = `SELECT account.currentPassword,account.previousPassword FROM account WHERE account.accountId =${ID}`;
     connectionString.query(validateID, (err,result)=>{
@@ -349,22 +337,57 @@ export const changePassword = (req,res) =>{
         else
         {
             console.log(result);
-            console.log(result[0].previousPassword);
-            if(result[0].previousPassword !== null)
+            if(result.length === 0)
             {
-                let prevPrevPassword = result[0].previousPassword;
-                let currentPassword1 = result[0].currentPassword;
-                if(currentPassword1 === currentPassword)
+                isSuccessful = false;
+                message = "the user does not exists";
+                res.send({
+                    'isSuccessful':isSuccessful,
+                    'message':message
+                });
+                connectionString.end();
+            }
+            else
+            {
+                console.log(result);
+                if(result[0].previousPassword !== null)
                 {
-                    console.log("password matched");
-                    prevPrevPassword = currentPassword;
-                    currentPassword1 = newPassword;
-                    let updatePassQuery = `UPDATE dumpling.account SET account.currentPassword = "${currentPassword1}", account.previousPassword = "${previousPassword}",account.updatedAt = NOW() WHERE account.accountId = ${ID}`;
-                    connectionString.query(updatePassQuery, (err,result)=>{
-                    if(err)
+                    let prevPrevPassword = result[0].previousPassword;
+                    let currentPassword1 = result[0].currentPassword;
+                    if(currentPassword1 === currentPassword)
                     {
-                        console.log(err);
-                        message = "updation failed";
+                        console.log("password matched");
+                        prevPrevPassword = currentPassword;
+                        currentPassword1 = newPassword;
+                        let updatePassQuery = `UPDATE dumpling.account SET account.currentPassword = "${currentPassword1}", account.previousPassword = "${prevPrevPassword}",account.updatedAt = NOW() WHERE account.accountId = ${ID}`;
+                        connectionString.query(updatePassQuery, (err,result)=>{
+                        if(err)
+                        {
+                            console.log(err);
+                            message = "updation failed";
+                            res.send({
+                                'isSuccessful':isSuccessful,
+                                'message':message
+
+                            });
+                            connectionString.end();
+                        }
+                        else
+                        {
+                            message = "updated successfully";
+                            isSuccessful = true;
+                            res.send({
+                                'isSuccessful' : isSuccessful,
+                                'message': message
+                            });
+                            connectionString.end();
+                        }
+                        });
+                    }
+                    else
+                    {
+                        isSuccessful = false;
+                        message = "Password dont match";
                         res.send({
                             'isSuccessful':isSuccessful,
                             'message':message
@@ -372,28 +395,17 @@ export const changePassword = (req,res) =>{
                         });
                         connectionString.end();
                     }
-                    else
-                    {
-                        message = "updated successfully";
-                        isSuccessful = true;
-                        res.send({
-                            'isSuccessful' : isSuccessful,
-                            'message': message
-                        });
-                        connectionString.end();
-                    }
-                });
                 }
-            }
                 else
                 {
-                    console.log("password is NULL");
+                    console.log("prevpassword is NULL");
                     let currentPassword1 = result[0].currentPassword;
+                    console.log(currentPassword1);
                     if(currentPassword1 === currentPassword)
                     {
                         console.log("password matched");
                         let prevPrevPassword = currentPassword;
-                        let currentPassword1 = newPassword;
+                        currentPassword1 = newPassword;
                         let updatePassQuery = `UPDATE dumpling.account SET account.currentPassword = "${currentPassword1}", account.previousPassword = "${prevPrevPassword}",account.updatedAt=NOW() WHERE account.accountId = ${ID}`;
                         connectionString.query(updatePassQuery, (err,result)=>{
                             if(err)
@@ -417,18 +429,28 @@ export const changePassword = (req,res) =>{
                                 });
                                 connectionString.end();
                             }
-                    });
+                        });
+                    }
+                    else
+                    {
+                        isSuccessful = false;
+                        message = "Password dont match";
+                        res.send({
+                            'isSuccessful':isSuccessful,
+                            'message':message
+
+                        });
+                        connectionString.end();
+                    }
+
+
                 }
-
-
             }
 
-    }
+        }
 
     });
 }
-
-
 export const validateSecurity = (req,res)=>{
     var connectionString = mysql.createConnection(
         {
@@ -501,4 +523,5 @@ export const validateSecurity = (req,res)=>{
             }
         }
     });
+
 }

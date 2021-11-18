@@ -4,11 +4,8 @@ import "./nav.css";
 
 export default function Nav2()
 {
-    const Logout = () =>{
-        localStorage.removeItem("Securityquestion");
-    }
-
-
+    
+    
     return (
         <div className= 'box'>
            <Navbar bg="light" expand="lg">

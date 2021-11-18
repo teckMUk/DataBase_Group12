@@ -88,7 +88,7 @@ export default function Forms()
                     <Form.Control type="text" placeholder="Enter Answer" />
                 </Form.Group>
 
-                <Form.Group className="mb-3" controlId="formBasicName">
+                <Form.Group className="mb-3" controlId="formBasicname">
                     <Form.Label>sec question? </Form.Label>
                     <Form.Control type="text" placeholder="Enter Answer" />
                 </Form.Group>

@@ -6,6 +6,7 @@ import Email from "./components/email/email";
 import Questions from './components/questions/questions';
 import CreateAccount from "./pages/create_account/create_account";
 import { BrowserRouter as Router , Routes, Route} from 'react-router-dom';
+import ResetPw from "./components/resetpw/resetpw";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -19,6 +20,7 @@ const App = () => {
       <Route path='/dashboard' element={<Dashboard/>} />
       <Route path='/create_account' element={<CreateAccount/>} />
       <Route path='/allForms' element={<Form2/>} />
+      <Route path='/resetpw' element={<ResetPw/>} />
       <Route path='/email' element={<Email/>} />
       <Route path='/questions' element={<Questions/>} />
       </Routes>

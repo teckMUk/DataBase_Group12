@@ -3,6 +3,7 @@ import Dashboard from "./pages/dashboard/dashboard";
 import Login from "./pages/login/login";
 import Form2 from "./components/allForms/allForms";
 import Email from "./components/email/email";
+import Questions from './components/questions/questions';
 import CreateAccount from "./pages/create_account/create_account";
 import { BrowserRouter as Router , Routes, Route} from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -19,6 +20,7 @@ const App = () => {
       <Route path='/create_account' element={<CreateAccount/>} />
       <Route path='/allForms' element={<Form2/>} />
       <Route path='/email' element={<Email/>} />
+      <Route path='/questions' element={<Questions/>} />
       </Routes>
     </div>
     </Router>

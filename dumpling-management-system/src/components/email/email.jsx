@@ -1,7 +1,7 @@
 import React from 'react';
 import {Container, Form, Button} from 'react-bootstrap';
 import { useState, useEffect } from "react";
-import {accountExistence} from '../../Services_API/api';
+import {securityQuestions} from '../../Services_API/api';
 import {useNavigate} from 'react-router-dom';
 const initialState = {
    
@@ -22,20 +22,20 @@ export default function Forms()
 
     const submitHandle = e => {
         e.preventDefault();
-        console.log(newEmploye);
+      
       
     }
     const onValidateEmail = (e) =>
     {
         
         e.preventDefault();
-        accountExistence(newEmploye.email).then((Response)=>
+        securityQuestions(newEmploye.email).then((Response)=>
         {
             console.log(Response.data.isSuccessful);
             if(Response.data.isSuccessful)
             {
                 console.log(Response.data);
-                navigate("/allForms")
+                navigate("/questions")
             }
             else
             {

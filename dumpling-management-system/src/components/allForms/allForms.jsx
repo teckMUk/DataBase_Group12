@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 const initialState = {
     pw: "",
     cpw: "",
-    security: ["", ""],
+   
   };
 
 const errorCheck = {
@@ -83,16 +83,6 @@ export default function Forms()
             <Container>
                 <Form onSubmit= {submitHandle}>
 
-                <Form.Group className="mb-3" controlId="formBasicName">
-                    <Form.Label>How old are you? </Form.Label>
-                    <Form.Control type="text" placeholder="Enter Answer" />
-                </Form.Group>
-
-                <Form.Group className="mb-3" controlId="formBasicname">
-                    <Form.Label>sec question? </Form.Label>
-                    <Form.Control type="text" placeholder="Enter Answer" />
-                </Form.Group>
-            
                 <Form.Group className="mb-3" controlId="formBasicPassword">
                     <Form.Label>Set Default Password</Form.Label>
                     <Form.Control type="password" placeholder="Password" name = 'pw'  

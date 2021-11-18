@@ -1,7 +1,7 @@
 import React from 'react';
 import {Container, Form, Button} from 'react-bootstrap';
 import { useState, useEffect } from "react";
-import {forgetPassword } from  '../../Services_API/api.js';
+import {changePassword } from  '../../Services_API/api.js';
 import {useNavigate} from 'react-router-dom';
 
 const initialState = {
@@ -28,9 +28,10 @@ export default function Resetpw()
 
     
     const handle = e => {
+        //e.preventDefault();
         const {name, value} = e.target;
         setNewEmploye({...newEmploye, [name]: value});
-        
+     
         if(name === "pw")
         {
             let moreThanMin = false;
@@ -69,7 +70,7 @@ export default function Resetpw()
             setNewEmployeErr({...newEmployeErr, confirmPw: true });
             }
           }
-
+        
     }
 
 
@@ -78,6 +79,31 @@ export default function Resetpw()
         e.preventDefault();
         console.log(newEmploye);
       
+    }
+    const onResetpass = (e)=>{
+        e.preventDefault();
+        let ID = localStorage.getItem("dumplingUserId");
+        if (ID!=null)
+        {
+            changePassword(ID,newEmploye.cpw,newEmploye.oldPw).then((response)=>{
+                if(response.data.isSuccessful)
+                {
+                    alert(response.data.message);
+                    navigate("/dashboard");
+                }
+                else
+                {
+                    alert(response.data.message);
+                    navigate("/");
+                }
+
+            });
+        }
+        else
+        {
+            navigate("/");
+        }
+       
     }
 
     const ResetPass = () =>{
@@ -88,12 +114,11 @@ export default function Resetpw()
         <Container>
             <Form onSubmit= {submitHandle}>
 
-                <Form.Group className="mb-3" controlId="formBasicPassword">
+                <Form.Group className="mb-3" controlId="formBasicPasswordold">
                     <Form.Label>Enter previous Password</Form.Label>
-                    <Form.Control type="password" placeholder="Password" name = 'pw'  
-                    value = {newEmploye.pw} onChange = {handle}/>
+                    <Form.Control type="password" placeholder="Password" name = 'oldPw'  
+                    value = {newEmploye.oldPw} onChange = {handle}/>
                 </Form.Group>
-
 
                 <Form.Group className="mb-3" controlId="formBasicPassword">
                     <Form.Label>Set New Password</Form.Label>
@@ -119,7 +144,7 @@ export default function Resetpw()
                 
                 </ul>
 
-            <Button variant="primary" type="submit" disabled = {Object.values(newEmployeErr).includes(false)}>
+            <Button variant="primary"  onClick = {onResetpass} type="submit" disabled = {Object.values(newEmployeErr).includes(false)}>
                 Submit
             </Button>
 

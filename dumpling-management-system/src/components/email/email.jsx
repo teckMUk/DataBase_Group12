@@ -36,6 +36,7 @@ export default function Forms()
             {
                 console.log(Response.data.questions);
                 localStorage.setItem("Securityquestion",JSON.stringify(Response.data.questions));
+                localStorage.setItem("emailForgetPw",newEmploye.email);
                 navigate("/questions")
             }
             else

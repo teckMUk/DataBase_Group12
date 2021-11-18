@@ -1,6 +1,8 @@
 import React from 'react';
 import {Container, Form, Button} from 'react-bootstrap';
 import { useState, useEffect } from "react";
+import {forgetPassword } from  '../../Services_API/api.js';
+import {useNavigate} from 'react-router-dom';
 
 const initialState = {
     pw: "",
@@ -20,7 +22,7 @@ export default function Forms()
 {
     const [newEmploye, setNewEmploye] = useState(initialState);
     const [newEmployeErr, setNewEmployeErr] = useState(errorCheck);
-
+    let navigate = useNavigate();
     useEffect(() => {}, [newEmploye]);
 
     
@@ -69,6 +71,31 @@ export default function Forms()
 
     }
 
+
+    const onUpdatePw = (e) =>{
+        e.preventDefault();
+        let email = localStorage.getItem("emailForgetPw");
+        forgetPassword(email, newEmploye.pw).then((response)=>{
+
+            if(response.data.isSuccessful)
+            {
+                alert(response.data.message);
+                localStorage.removeItem("emailForgetPw");
+                localStorage.removeItem("Securityquestion");
+                navigate('/');
+            }
+            else{
+                alert(response.data.message);
+                localStorage.removeItem("emailForgetPw");
+                localStorage.removeItem("Securityquestion");
+                navigate('/');
+            }
+
+        });
+        
+
+    }
+
     const submitHandle = e => {
         e.preventDefault();
         console.log(newEmploye);
@@ -107,7 +134,7 @@ export default function Forms()
                 
                 </ul>
 
-            <Button variant="primary" type="submit" disabled = {Object.values(newEmployeErr).includes(false)} href="/">
+            <Button variant="primary" type="submit" disabled = {Object.values(newEmployeErr).includes(false)} onClick = {onUpdatePw}>
                 Submit
             </Button>
 
@@ -121,7 +148,7 @@ export default function Forms()
     return (
       
             <>  
-            <ForgetPass/>
+                <ForgetPass/>
             </>
       
     )

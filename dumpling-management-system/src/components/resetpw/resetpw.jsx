@@ -1,7 +1,7 @@
 import React from 'react';
 import {Container, Form, Button} from 'react-bootstrap';
 import { useState, useEffect } from "react";
-import {forgetPassword } from  '../../Services_API/api.js';
+//import {forgetPassword } from  '../../Services_API/api.js';
 import {useNavigate} from 'react-router-dom';
 
 const initialState = {
@@ -88,12 +88,11 @@ export default function Resetpw()
         <Container>
             <Form onSubmit= {submitHandle}>
 
-                <Form.Group className="mb-3" controlId="formBasicPassword">
+                <Form.Group className="mb-3" controlId="formBasicPasswordold">
                     <Form.Label>Enter previous Password</Form.Label>
-                    <Form.Control type="password" placeholder="Password" name = 'pw'  
-                    value = {newEmploye.pw} onChange = {handle}/>
+                    <Form.Control type="password" placeholder="Password" name = 'oldPw'  
+                    value = {newEmploye.oldPw} onChange = {handle}/>
                 </Form.Group>
-
 
                 <Form.Group className="mb-3" controlId="formBasicPassword">
                     <Form.Label>Set New Password</Form.Label>

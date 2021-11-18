@@ -4,6 +4,8 @@ import "./nav.css";
 
 export default function Nav2()
 {
+    
+    
     return (
         <div className= 'box'>
            <Navbar bg="light" expand="lg">
@@ -28,7 +30,7 @@ export default function Nav2()
                     </Nav>
 
                     <NavDropdown title="Logout" id="navbarScrollingDropdown">
-                        <NavDropdown.Item href="#action3">Logout</NavDropdown.Item>
+                        <NavDropdown.Item>Logout</NavDropdown.Item>
                       
                         </NavDropdown>
                     

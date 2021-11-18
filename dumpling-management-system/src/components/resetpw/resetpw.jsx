@@ -30,7 +30,7 @@ export default function Resetpw()
     const handle = e => {
         const {name, value} = e.target;
         setNewEmploye({...newEmploye, [name]: value});
-        
+     
         if(name === "pw")
         {
             let moreThanMin = false;
@@ -69,7 +69,7 @@ export default function Resetpw()
             setNewEmployeErr({...newEmployeErr, confirmPw: true });
             }
           }
-
+        
     }
 
 
@@ -118,7 +118,6 @@ export default function Resetpw()
                     <Form.Control type="password" placeholder="Password" name = 'oldPw'  
                     value = {newEmploye.oldPw} onChange = {handle}/>
                 </Form.Group>
-
 
                 <Form.Group className="mb-3" controlId="formBasicPassword">
                     <Form.Label>Set New Password</Form.Label>

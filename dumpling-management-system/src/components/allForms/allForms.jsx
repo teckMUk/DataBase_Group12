@@ -22,14 +22,16 @@ export default function Forms()
 {
     const [newEmploye, setNewEmploye] = useState(initialState);
     const [newEmployeErr, setNewEmployeErr] = useState(errorCheck);
+
     let navigate = useNavigate();
     useEffect(() => {}, [newEmploye]);
 
     
     const handle = e => {
+      
         const {name, value} = e.target;
         setNewEmploye({...newEmploye, [name]: value});
-        
+       
         if(name === "pw")
         {
             let moreThanMin = false;
@@ -97,7 +99,7 @@ export default function Forms()
     }
 
     const submitHandle = e => {
-        e.preventDefault();
+        //e.preventDefault();
         console.log(newEmploye);
       
     }
@@ -111,9 +113,9 @@ export default function Forms()
                 <Form onSubmit= {submitHandle}>
 
                 <Form.Group className="mb-3" controlId="formBasicPassword">
-                    <Form.Label>Set Default Password</Form.Label>
+                    <Form.Label>Enter Password</Form.Label>
                     <Form.Control type="password" placeholder="Password" name = 'pw'  
-                    value = {newEmploye.pw} onChange = {handle}/>
+                    value = {newEmploye.pw} onChage = {handle}/>
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formBasicPasswordc">
@@ -121,6 +123,7 @@ export default function Forms()
                     <Form.Control type="password" placeholder="Password" name = 'cpw'  
                     value = {newEmploye.cpw} onChange = {handle}/>
                 </Form.Group>
+
                 <Form.Text>
                     {!newEmployeErr.confirmPw ? (<div className = "text-danger" > passwords don't match!</div>) : (<div></div>)}
 

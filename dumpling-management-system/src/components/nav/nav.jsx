@@ -6,6 +6,7 @@ import "./nav.css";
 
 export default function Nav2()
 {
+<<<<<<< HEAD
     const Logout2 = () =>
     {
         if(localStorage.getItem("dumplingUserId"))
@@ -13,6 +14,10 @@ export default function Nav2()
             localStorage.removeItem("dumplingUserId");
         }
     }
+=======
+    
+    
+>>>>>>> b90b5503d1544669d42dd3fdcced646d649273de
     return (
         <div className= 'box'>
            <Navbar bg="light" expand="lg">
@@ -37,7 +42,11 @@ export default function Nav2()
                     </Nav>
 
                     <NavDropdown title="Logout" id="navbarScrollingDropdown">
+<<<<<<< HEAD
                         <NavDropdown.Item href="/" onClick = {Logout2}>Logout</NavDropdown.Item>
+=======
+                        <NavDropdown.Item>Logout</NavDropdown.Item>
+>>>>>>> b90b5503d1544669d42dd3fdcced646d649273de
                       
                         </NavDropdown>
                     

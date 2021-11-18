@@ -14,7 +14,8 @@ const initialState = {
   export default function Questions() {
     let navigate = useNavigate();
     const [newEmploye, setNewEmploye] = useState(initialState);
-  
+    let securityQuestion = JSON.parse(localStorage.getItem("Securityquestion"));
+    console.log(securityQuestion[0])
      useEffect(() => {}, [newEmploye]);
 
      const handle = e => {
@@ -38,14 +39,14 @@ const initialState = {
             <Form onSubmit= {submitHandle}>
 
                 <Form.Group className="mb-3" controlId="formBasicName">
-                    <Form.Label>How old are you? </Form.Label>
+                    <Form.Label>{securityQuestion[0]} </Form.Label>
                     <Form.Control type="text" placeholder="Enter Answer" name = 'security1' 
                     value = {newEmploye.security1} onChange = {handle}  
                     /> 
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formBasicName">
-                    <Form.Label>sec question? </Form.Label>
+                    <Form.Label>{securityQuestion[1]} </Form.Label>
                     <Form.Control type="text" placeholder="Enter Answer" name = 'security2'  
                     value = {newEmploye.security2} onChange = {handle}/>
                 </Form.Group>

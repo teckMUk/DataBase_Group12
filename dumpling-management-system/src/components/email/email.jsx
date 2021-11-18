@@ -34,7 +34,8 @@ export default function Forms()
             console.log(Response.data.isSuccessful);
             if(Response.data.isSuccessful)
             {
-                console.log(Response.data);
+                console.log(Response.data.questions);
+                localStorage.setItem("Securityquestion",JSON.stringify(Response.data.questions));
                 navigate("/questions")
             }
             else

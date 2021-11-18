@@ -280,12 +280,13 @@ export const getSQ = (req,res)=>{
                     if(result.length!==0)
                     {
                         console.log(result);
+                        let questions = Object.keys(JSON.parse(result[0].securityQuestions));
                         message = "Questions found";
                         isSuccessful = true;
                         res.send({
                             'isSuccessful':isSuccessful,
                             'message':message,
-                            'questions':JSON.parse(result[0].securityQuestions)
+                            'questions': questions
                         });
                         connectionString.end();
                     }

@@ -70,6 +70,14 @@ export const accountExistence = async (email) => {
     return await axios.post(`${Url}/userController/accountExistence`, object6)
 }
 
+export const validateSecurity = async(email, answerOne,answerTwo)=>{
+    const obj = {
+        "answerOne":answerOne,
+        "answerTwo":answerTwo,
+        "email" : email
+    }
+    return await axios.post(`${Url}/userController/validateSecurity`,obj);
+}
 
 
 

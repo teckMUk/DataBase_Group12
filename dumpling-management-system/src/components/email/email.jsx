@@ -1,7 +1,8 @@
 import React from 'react';
 import {Container, Form, Button} from 'react-bootstrap';
 import { useState, useEffect } from "react";
-
+import {accountExistence} from '../../Services_API/api';
+import {useNavigate} from 'react-router-dom';
 const initialState = {
    
     email: "",
@@ -10,6 +11,7 @@ const initialState = {
 
 export default function Forms()
 {
+    let navigate = useNavigate();
     const [newEmploye, setNewEmploye] = useState(initialState);
 
     useEffect(() => {}, [newEmploye]);
@@ -23,6 +25,26 @@ export default function Forms()
         console.log(newEmploye);
       
     }
+    const onValidateEmail = (e) =>
+    {
+        
+        e.preventDefault();
+        accountExistence(newEmploye.email).then((Response)=>
+        {
+            console.log(Response.data.isSuccessful);
+            if(Response.data.isSuccessful)
+            {
+                console.log(Response.data);
+                navigate("/allForms")
+            }
+            else
+            {
+                alert(Response.data.message);
+                console.log(Response.data.message);
+            }
+        });
+        
+    }
 
     return (
       
@@ -35,7 +57,7 @@ export default function Forms()
                         value = {newEmploye.email} onChange = {handle}/>
             </Form.Group>
 
-            <Button variant="primary" type="submit" href = "/allForms"> 
+            <Button variant="primary" type="submit" onClick={onValidateEmail}> 
                 Submit
             </Button>
         </Form>

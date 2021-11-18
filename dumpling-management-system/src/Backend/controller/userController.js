@@ -497,8 +497,6 @@ export const validateSecurity = (req,res)=>{
                 console.log(securityQuestions);
                 let answers = Object.values(securityQuestions);
                 console.log(answers);
-                var test1 = false;
-                var test2 = false;
                 if(answers[0]===answerOne && answerTwo === answers[1])
                 {
                     message= "Answers matched";

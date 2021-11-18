@@ -33,12 +33,15 @@ export default function FormLogin()
             console.log(response.data.isSuccessful);
             if(response.data.isSuccessful)
             {
-                console.log(response.data.message);
-                console.log(response.data.Id);
+                console.log(response.data.message);                
+                localStorage.setItem('dumplingUserId',response.data.Id);
+                alert(response.data.message);
+                console.log(localStorage.getItem('dumplingUserId'));
                 navigate("/dashboard");
             }
             else
             {
+                alert(response.data.message);
                 console.log(response.data.message);
             }
         });

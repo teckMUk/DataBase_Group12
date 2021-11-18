@@ -28,6 +28,7 @@ export default function Resetpw()
 
     
     const handle = e => {
+        //e.preventDefault();
         const {name, value} = e.target;
         setNewEmploye({...newEmploye, [name]: value});
      

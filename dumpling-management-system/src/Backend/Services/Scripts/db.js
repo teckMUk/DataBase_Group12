@@ -30,6 +30,20 @@ function createTable(q)
             }
         });
 }
+
+const createOrdersLog = `CREATE TABLE IF NOT EXISTS dumpling.account(
+    orderId INT NOT NULL AUTO_INCREMENT,
+     VARCHAR(45) NOT NULL,
+    accountType VARCHAR(45) NOT NULL,
+    currentPassword VARCHAR(100) NOT NULL,
+    previousPassword VARCHAR(100),
+    emailAddress VARCHAR(320) NOT NULL UNIQUE,
+    securityQuestions VARCHAR(2000) NOT NULL,
+    createdAt DATETIME NOT NULL,
+    updatedAt DATETIME,
+    archived BIT(1) NOT NULL DEFAULT 0,
+    PRIMARY KEY (accountId));`;
+
 const createAccount = `CREATE TABLE IF NOT EXISTS dumpling.account(
     accountId INT NOT NULL AUTO_INCREMENT,
     userName VARCHAR(45) NOT NULL,

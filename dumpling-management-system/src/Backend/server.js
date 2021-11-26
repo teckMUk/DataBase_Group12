@@ -16,6 +16,7 @@ app.post("/api/userController/changePassword",route);
 app.post("/api/userController/forgetPassword",route);
 app.post("/api/userController/validateSecurity", route);
 app.post("/api/userController/accountExistence", route);
+app.post("/api/chefController/removeMenuItem",route);
 
 
 const PORT =  process.env.PORT || 3000;

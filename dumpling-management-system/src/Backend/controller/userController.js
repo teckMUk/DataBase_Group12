@@ -656,4 +656,3 @@ export const forgetPassword = (req,res)=>{
 
 }
 
-

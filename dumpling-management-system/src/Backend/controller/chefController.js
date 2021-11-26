@@ -8,22 +8,6 @@ const app = express();
 app.use(bodyParser.json({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
-export const addMenuItem = (req,res)=>
-{
-    var connectionString = mysql.createConnection(
-        {
-            host:process.env.host,
-            user: process.env.user,
-            password:process.env.password,
-            database:process.env.database
-
-        }
-    );
-
-
-
-}
 export const removeMenuItem = (req,res)=>
 {
     var connectionString = mysql.createConnection(
@@ -62,3 +46,4 @@ export const removeMenuItem = (req,res)=>
         }
     });
 }
+

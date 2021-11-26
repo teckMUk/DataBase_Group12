@@ -1,16 +1,18 @@
+import dotenv from "dotenv";
 import mysql from 'mysql';
 import express from 'express';
 import bodyParser from 'body-parser';
 import sha1 from 'sha1';
+dotenv.config({path:"./src/Backend/.env"});
 var app = express();
 app.use(bodyParser.urlencoded({extended:true}));
 
 var connectionString = mysql.createConnection(
     {
-        host:'localhost',
-        user: 'root',
-        password:'Emaan@123!',
-        database:'dumpling'
+        host:process.env.host,
+        user: process.env.user,
+        password:process.env.password,
+        database:process.env.database
     }
 );
 function seedData(q)
@@ -32,8 +34,10 @@ function seedData(q)
 }
 let password = "dumpling@123";
 let hash = sha1(password);
+let x = JSON.stringify({"I love cats":"Yes" , "I hate cats":"No"});
+
 const addAdminaccount = `INSERT INTO dumpling.account (userName,accountType,currentPassword,emailAddress,securityQuestions,createdAt)
- VALUES("admin","admin","${hash}","dumpling@gmail.com","None",NOW());`;
+ VALUES("admin","admin","${hash}","dumpling@gmail.com","none",NOW());`;
 const addAmdinemployee = `INSERT INTO dumpling.employee (employeeName,dateOfBirth,phoneNumber,address,position,salary,bankAccountNumber,createdAt,accountId)
 VALUES("MEANE",'2001-7-01',"+92321456789","Street 10,DHA phase 5 lums","CEO",105000,011401533,NOW(),(SELECT accountId from account where account.accountType="admin"));`;
 connectionString.connect( (err)=>

@@ -1,10 +1,11 @@
 import React from 'react';
 import {Container, Form, Button} from 'react-bootstrap';
 import { useState, useEffect } from "react";
-import {forgetPassword } from  '../../Services_API/api.js';
+import {changePassword } from  '../../Services_API/api.js';
 import {useNavigate} from 'react-router-dom';
 
 const initialState = {
+    oldPw: "",
     pw: "",
     cpw: "",
    
@@ -18,20 +19,19 @@ const errorCheck = {
     confirmPw : false,
 };
 
-export default function Forms()
+export default function Resetpw()
 {
     const [newEmploye, setNewEmploye] = useState(initialState);
     const [newEmployeErr, setNewEmployeErr] = useState(errorCheck);
-
     let navigate = useNavigate();
     useEffect(() => {}, [newEmploye]);
 
     
     const handle = e => {
-      
+        //e.preventDefault();
         const {name, value} = e.target;
         setNewEmploye({...newEmploye, [name]: value});
-       
+     
         if(name === "pw")
         {
             let moreThanMin = false;
@@ -70,60 +70,67 @@ export default function Forms()
             setNewEmployeErr({...newEmployeErr, confirmPw: true });
             }
           }
-
-    }
-
-
-    const onUpdatePw = (e) =>{
-        e.preventDefault();
-        let email = localStorage.getItem("emailForgetPw");
-        forgetPassword(email, newEmploye.pw).then((response)=>{
-
-            if(response.data.isSuccessful)
-            {
-                alert(response.data.message);
-                localStorage.removeItem("emailForgetPw");
-                localStorage.removeItem("Securityquestion");
-                navigate('/');
-            }
-            else{
-                alert(response.data.message);
-                localStorage.removeItem("emailForgetPw");
-                localStorage.removeItem("Securityquestion");
-                navigate('/');
-            }
-
-        });
         
-
     }
 
+
+    
     const submitHandle = e => {
-        //e.preventDefault();
+        e.preventDefault();
         console.log(newEmploye);
       
     }
+    const onResetpass = (e)=>{
+        e.preventDefault();
+        let ID = localStorage.getItem("dumplingUserId");
+        if (ID!=null)
+        {
+            changePassword(ID,newEmploye.cpw,newEmploye.oldPw).then((response)=>{
+                if(response.data.isSuccessful)
+                {
+                    alert(response.data.message);
+                    navigate("/dashboard");
+                }
+                else
+                {
+                    alert(response.data.message);
+                    navigate("/");
+                }
 
-    const ForgetPass = () =>{
+            });
+        }
+        else
+        {
+            navigate("/");
+        }
+       
+    }
+
+    const ResetPass = () =>{
 
         //let arr =["How old are you?", "when were you born"];
        return(
 
-            <Container>
-                <Form onSubmit= {submitHandle}>
+        <Container>
+            <Form onSubmit= {submitHandle}>
+
+                <Form.Group className="mb-3" controlId="formBasicPasswordold">
+                    <Form.Label>Enter previous Password</Form.Label>
+                    <Form.Control type="password" placeholder="Password" name = 'oldPw'  
+                    value = {newEmploye.oldPw} onChange = {handle}/>
+                </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formBasicPassword">
-                    <Form.Label>Enter Password</Form.Label>
+                    <Form.Label>Set New Password</Form.Label>
                     <Form.Control type="password" placeholder="Password" name = 'pw'  
-                    value = {newEmploye.pw} onChage = {handle}/>
+                    value = {newEmploye.pw} onChange = {handle}/>
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formBasicPasswordc">
-                    <Form.Label>Enter Password Again</Form.Label>
+                    <Form.Label>Enter new Password Again</Form.Label>
                     <Form.Control type="password" placeholder="Password" name = 'cpw'  
                     value = {newEmploye.cpw} onChange = {handle}/>
                 </Form.Group>
-
                 <Form.Text>
                     {!newEmployeErr.confirmPw ? (<div className = "text-danger" > passwords don't match!</div>) : (<div></div>)}
 
@@ -137,7 +144,7 @@ export default function Forms()
                 
                 </ul>
 
-            <Button variant="primary" type="submit" disabled = {Object.values(newEmployeErr).includes(false)} onClick = {onUpdatePw}>
+            <Button variant="primary"  onClick = {onResetpass} type="submit" disabled = {Object.values(newEmployeErr).includes(false)}>
                 Submit
             </Button>
 
@@ -151,7 +158,7 @@ export default function Forms()
     return (
       
             <>  
-                <ForgetPass/>
+                <ResetPass/>
             </>
       
     )

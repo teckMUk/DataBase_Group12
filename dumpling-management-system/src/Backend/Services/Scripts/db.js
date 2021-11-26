@@ -1,14 +1,16 @@
+import dotenv from "dotenv";
 import mysql from 'mysql';
 import express from 'express';
 import bodyParser from 'body-parser';
+dotenv.config({path:"./src/Backend/.env"});
 const app = express();
 app.use(bodyParser.urlencoded({extended:true}));
 
 var connectionString = mysql.createConnection(
-    {
-        host:'localhost',
-        user: 'root',
-        password:'Emaan@123!'
+    { 
+        host:process.env.host,
+        user: process.env.user,
+        password:process.env.password
     }
 );
 function createTable(q)
@@ -32,8 +34,8 @@ const createAccount = `CREATE TABLE IF NOT EXISTS dumpling.account(
     accountId INT NOT NULL AUTO_INCREMENT,
     userName VARCHAR(45) NOT NULL,
     accountType VARCHAR(45) NOT NULL,
-    currentPassword VARCHAR(50) NOT NULL,
-    previousPassword VARCHAR(50),
+    currentPassword VARCHAR(100) NOT NULL,
+    previousPassword VARCHAR(100),
     emailAddress VARCHAR(320) NOT NULL UNIQUE,
     securityQuestions VARCHAR(2000) NOT NULL,
     createdAt DATETIME NOT NULL,
@@ -75,7 +77,7 @@ connectionString.connect((error)=>
                 createTable(createAccount);
                 createTable(createEmpolyee);
                 connectionString.end();
-                
+
                 //console.log(result);
             }
         });

@@ -14,6 +14,9 @@ const initialState = {
     cpw: "",
     bd: "",
     num : "",
+    bankAccount: "",
+    salary : "",
+    employeeName: "",
   };
 
 const errorCheck = {
@@ -22,6 +25,7 @@ const errorCheck = {
     hasNum: false,
     lessThanMax: false,
     confirmPw : false,
+    
 };
 
 export default function RegisterForm()
@@ -95,7 +99,7 @@ export default function RegisterForm()
                         </Form.Group>
 
                         <Form.Group className="mb-3" controlId="formBasicID">
-                            <Form.Label>Employee ID</Form.Label>
+                            <Form.Label>accountType</Form.Label>
                             <Form.Control type="text" placeholder="Employee Status" name = 'id'
                             value = {newEmploye.id} onChange = {handle}/>
                         </Form.Group>
@@ -106,10 +110,29 @@ export default function RegisterForm()
                             value = {newEmploye.status} onChange = {handle}/>
                         </Form.Group>
 
+
+                        <Form.Group className="mb-3" controlId="formBasicName">
+                            <Form.Label>Employee Name</Form.Label>
+                            <Form.Control type="text" placeholder="Employee Status" name = 'status' 
+                            value = {newEmploye.employeeName} onChange = {handle}/>
+                        </Form.Group>
+
                         <Form.Group className="mb-3" controlId="formBasicNum">
                             <Form.Label>Phone Number</Form.Label>
                             <Form.Control type="text" placeholder="number" name = 'num' 
                             value = {newEmploye.num} onChange = {handle}/>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3" controlId="formBasicNum">
+                            <Form.Label>Salary</Form.Label>
+                            <Form.Control type="text" placeholder="number" name = 'num' 
+                            value = {newEmploye.salary} onChange = {handle}/>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3" controlId="formBasicNum">
+                            <Form.Label>Bank account Number</Form.Label>
+                            <Form.Control type="text" placeholder="number" name = 'num' 
+                            value = {newEmploye.bankAccount} onChange = {handle}/>
                         </Form.Group>
 
                         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
@@ -154,7 +177,7 @@ export default function RegisterForm()
                            
                          </ul>
 
-                        <Button variant="primary" type="submit" disabled = {false}>
+                        <Button variant="primary" type="submit" disabled = {Object.values(newEmployeErr).includes(false)} href = "/dashboard">
                             Create Account
                         </Button>
 

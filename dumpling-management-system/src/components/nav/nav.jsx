@@ -2,8 +2,17 @@ import React from 'react';
 import {Container, Navbar, Nav, NavDropdown} from "react-bootstrap";
 import "./nav.css";
 
+
+
 export default function Nav2()
 {
+    const Logout2 = () =>
+    {
+        if(localStorage.getItem("dumplingUserId"))
+        {
+            localStorage.removeItem("dumplingUserId");
+        }
+    }
     return (
         <div className= 'box'>
            <Navbar bg="light" expand="lg">
@@ -20,15 +29,15 @@ export default function Nav2()
                         <Nav.Link href="#action2">Profile</Nav.Link>
                         <NavDropdown title="Settings" id="navbarScrollingDropdown">
                         <NavDropdown.Item href="/create_account"> Create Account </NavDropdown.Item>
-                        <NavDropdown.Item href="/allForms">Reset Password</NavDropdown.Item>
+                        <NavDropdown.Item href="/resetpw">Reset Password</NavDropdown.Item>
                         <NavDropdown.Item href="#action5">
                             View Sales
                         </NavDropdown.Item>
                         </NavDropdown>
                     </Nav>
 
-                    <NavDropdown title="Logout" id="navbarScrollingDropdown">
-                        <NavDropdown.Item href="#action3">Logout</NavDropdown.Item>
+                    <NavDropdown title="Logout" id="navbarScrollingDropdown"> 
+                        <NavDropdown.Item href="/" onClick = {Logout2}>Logout</NavDropdown.Item>
                       
                         </NavDropdown>
                     

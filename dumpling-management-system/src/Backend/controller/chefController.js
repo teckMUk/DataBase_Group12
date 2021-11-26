@@ -162,6 +162,7 @@ export const fetchDishIds = (req,res)=>
                     'message':message 
                 }
             );
+            connectionString.end();
         }
         else
         {
@@ -184,6 +185,7 @@ export const fetchDishIds = (req,res)=>
                     'dishNames':dishNames
                 }
             );
+            connectionString.end();
         }
     });
 }

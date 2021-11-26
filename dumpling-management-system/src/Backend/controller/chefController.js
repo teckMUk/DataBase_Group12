@@ -76,19 +76,14 @@ export const addMenuItem = (req,res)=>
                     res.send(
 
                         {
+                            "isSuccessful":isSuccessful,
 
-                                "isSuccessful":isSuccessful,
-
-                                "message":message
-
+                            "message":message
                         }
 
                     );
 
                     connectionString.end();
-
-                
-
                 }
 
             });
@@ -142,7 +137,8 @@ export const removeMenuItem = (req,res)=>
 
 }
 
-export const addOrderItem = (req,res)=>{
+export const fetchDishIds = (req,res)=>
+{
     var connectionString = mysql.createConnection(
         {
             host:process.env.host,
@@ -152,44 +148,42 @@ export const addOrderItem = (req,res)=>{
 
         }
     );
-
-    let message ="";
     let isSuccessful = false;
-    let dishName = req.body.dishName;
-    let dishType = req.body.dishType;
-    let preparationTime = req.body.preparationTime;
-    let calories = req.body.calories;
-    let dishOfday = req.body.dishOfday;
-    let allergens = req.body.allergens;
-    let image = req.body.image;
-    
-
-    let addDishQuery = 
-    `INSERT INTO dumpling.menu (dishName,dishType,preparationTime,calories,dishOfday,allergens,image,createdAt)
-    VALUES(${dishName},${dishType},${preparationTime},${calories},${dishOfday},${allergens},${image},NOW());`;
-    
-
-    connectionString.query(addDishQuery,(err,result)=>
+    let message = "";
+    let fetchIds = `SELECT dishId, dishName from dumpling.menu`;
+    connectionString.query(fetchIds,(err,result)=>
     {
         if(err)
         {
-            message = "Dish with the Id specified doesnt exist";
-            res.send({
-                'isSuccessful':isSuccessful,
-                'message':message
-            });
-            connectionString.end();
+            message = "There are no dishes in the menu";
+            res.send(
+                {
+                    'isSuccessful':isSuccessful,
+                    'message':message 
+                }
+            );
         }
         else
         {
-            message = "Dish Successfully deleted";
+            message = "Found all the dishes";
             isSuccessful = true;
-            res.send({
-                'isSuccessful':isSuccessful,
-                'message':message
-            });
-            connectionString.end();
+            console.log(result);
+            let dishIds = [];
+            let dishNames = [];
+            for(var i =0;i<result.length;i++)
+            {
+                dishIds.push(result[i].dishId);
+                dishNames.push(result[i].dishName);
+
+            }
+            res.send(
+                {
+                    'isSuccessful':isSuccessful,
+                    'message':message,
+                    'dishIDs':dishIds,
+                    'dishNames':dishNames
+                }
+            );
         }
     });
 }
-

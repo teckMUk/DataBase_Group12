@@ -18,8 +18,7 @@ app.post("/api/userController/validateSecurity", route);
 app.post("/api/userController/accountExistence", route);
 app.post("/api/chefController/removeMenuItem",route);
 app.post("/api/chefController/addMenuItem", route);
-
-
+app.post("/api/chefController/fetchDishIds", route);
 
 const PORT =  process.env.PORT || 3000;
 app.listen(PORT,()=>{

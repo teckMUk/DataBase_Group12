@@ -77,7 +77,7 @@ const createAccount = `CREATE TABLE IF NOT EXISTS dumpling.account(
     updatedAt DATETIME,
     archived BIT(1) NOT NULL DEFAULT 0,
     PRIMARY KEY (accountId));`;
-    
+
 const createEmpolyee = `CREATE TABLE IF NOT EXISTS dumpling.employee(
     employeeId INT NOT NULL AUTO_INCREMENT,
     employeeName VARCHAR(100) NOT NULL,
@@ -98,7 +98,7 @@ const createEmpolyee = `CREATE TABLE IF NOT EXISTS dumpling.employee(
         ON DELETE CASCADE
         ON UPDATE CASCADE);`;
 const createMenu = `CREATE TABLE IF NOT EXISTS dumpling.menu (
-    dishId INT NOT NULL,
+    dishId INT NOT NULL AUTO_INCREMENT,
     dishName VARCHAR(45) NOT NULL,
     dishType VARCHAR(45) NOT NULL,
     preparationTime INT NOT NULL,

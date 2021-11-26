@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 .section-heading {
     text-align:center;
     color:#102C4E;
@@ -46,53 +45,4 @@
   .project-8 {
     
     background-color:white;
-=======
-.section-heading {
-    text-align:center;
-    color:#102C4E;
-    margin-top: 150px;
-    margin-bottom:70px;
-    font-size: 35px;
-  }
-  .column-4 {
-    float: left;
-    width: 21%;
-    padding: 10px;
-    margin:20px;
-    height: 250px;
-  }
-
-  .project-1 {
-    
-    background-size: cover;
-  }
-  
-  .project-2 {
-    background-color:white;
-  }
-  
-  .project-3 {
-    background-color:white;
-  }
-  
-  .project-4 {
-    background-color:white;
-  }
-  
-  .project-5 {
-    background-color:white;
-  }
-  
-  .project-6 {
-    background-color:white;
-  }
-  
-  .project-7 {
-      background-color:white;
-  }
-  
-  .project-8 {
-    
-    background-color:white;
->>>>>>> e2f58de7a7c3b352b3012da2c0e66267bdd46e2c
   }

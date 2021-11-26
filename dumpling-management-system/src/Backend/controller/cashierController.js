@@ -9,7 +9,7 @@ app.use(bodyParser.json({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-export const orderPlacement = (req,res)=>
+export const addMenuItem = (req,res)=>
 {
     var connectionString = mysql.createConnection(
         {
@@ -20,7 +20,7 @@ export const orderPlacement = (req,res)=>
 
         }
     );
-    
+
 
 
 }

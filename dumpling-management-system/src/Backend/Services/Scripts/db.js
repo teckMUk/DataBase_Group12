@@ -105,8 +105,6 @@ connectionString.connect((error)=>
                 createTable(createEmpolyee);
                 createTable(createMenu);
                 createTable(createCoupoun);
-                createTable(createOrder);
-                createTable(createSalesRecord);
                 connectionString.end();
 
                 //console.log(result);

@@ -30,6 +30,41 @@ function createTable(q)
             }
         });
 }
+
+const createSalesRecord = `CREATE TABLE IF NOT EXISTS dumpling.salesrecord (
+    salesId INT NOT NULL,
+    orderId INT NOT NULL,
+    date DATE NOT NULL,
+    createdAt DATETIME NOT NULL,
+    updateAt DATETIME DEFAULT NULL,
+    archived BIT(1) NOT NULL,
+    PRIMARY KEY (salesId),
+    INDEX orderId_idx (orderId ASC) VISIBLE,
+    CONSTRAINT orderId
+        FOREIGN KEY (orderId)
+        REFERENCES dumpling.order (orderId)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE);`;
+
+
+const createOrder = `CREATE TABLE IF NOT EXISTS dumpling.order (
+    orderId INT NOT NULL ,
+    couponId INT NULL,
+    typeOfOrder VARCHAR(45) NOT NULL,
+    OrderStatus VARCHAR(45) NOT NULL,
+    totalBill DECIMAL NOT NULL,
+    createdAt DATETIME NOT NULL,
+    updatedAt DATETIME DEFAULT NULL,
+    archived BIT(1) NOT NULL DEFAULT 0,
+    PRIMARY KEY (orderId),
+    INDEX couponId_idx (couponId ASC) VISIBLE,
+    CONSTRAINT couponId
+        FOREIGN KEY (couponId)
+        REFERENCES dumpling.coupons (couponId)
+        ON DELETE SET NULL
+        ON UPDATE SET NULL);`;
+
+
 const createAccount = `CREATE TABLE IF NOT EXISTS dumpling.account(
     accountId INT NOT NULL AUTO_INCREMENT,
     userName VARCHAR(45) NOT NULL,
@@ -39,9 +74,11 @@ const createAccount = `CREATE TABLE IF NOT EXISTS dumpling.account(
     emailAddress VARCHAR(320) NOT NULL UNIQUE,
     securityQuestions VARCHAR(2000) NOT NULL,
     createdAt DATETIME NOT NULL,
-    updatedAt DATETIME,
+    updatedAt DATETIME DEFAULT NULL,
     archived BIT(1) NOT NULL DEFAULT 0,
     PRIMARY KEY (accountId));`;
+
+    
 const createEmpolyee = `CREATE TABLE IF NOT EXISTS dumpling.employee(
     employeeId INT NOT NULL AUTO_INCREMENT,
     employeeName VARCHAR(100) NOT NULL,
@@ -52,7 +89,7 @@ const createEmpolyee = `CREATE TABLE IF NOT EXISTS dumpling.employee(
     salary INT NOT NULL,
     bankAccountNumber BIGINT(20) NOT NULL,
     createdAt DATETIME NOT NULL,
-    updatedAt DATETIME,
+    updatedAt DATETIME DEFAULT NULL,
     archived BIT(1) NOT NULL DEFAULT 0,
     accountId INT NOT NULL,
     PRIMARY KEY (employeeId),
@@ -61,6 +98,30 @@ const createEmpolyee = `CREATE TABLE IF NOT EXISTS dumpling.employee(
         REFERENCES dumpling.account (accountId)
         ON DELETE CASCADE
         ON UPDATE CASCADE);`;
+const createMenu = `CREATE TABLE IF NOT EXISTS dumpling.menu (
+    dishId INT NOT NULL AUTO_INCREMENT,
+    dishName VARCHAR(45) NOT NULL,
+    dishType VARCHAR(45) NOT NULL,
+    preparationTime INT NOT NULL,
+    calories INT NOT NULL,
+    dishOfday INT NOT NULL,
+    allergens VARCHAR(450) NULL,
+    image VARCHAR(45) NULL,
+    createdAt DATETIME NOT NULL,
+    updateAt DATETIME DEFAULT NULL,
+    archived BIT(1) NOT NULL DEFAULT 0,
+    PRIMARY KEY (dishId));`;
+
+const createCoupoun = `CREATE TABLE IF NOT EXISTS dumpling.coupons (
+    couponId INT NOT NULL,
+    couponName VARCHAR(45) NOT NULL,
+    discount INT NOT NULL,
+    issueDate DATE NOT NULL,
+    expiryDate DATE NOT NULL,
+    createdAt DATETIME NOT NULL,
+    updatedAt DATETIME DEFAULT NULL,
+    archived BIT(1) NOT NULL DEFAULT 0,
+    PRIMARY KEY (couponId));`;
 connectionString.connect((error)=>
 {
     if(!error)
@@ -72,10 +133,15 @@ connectionString.connect((error)=>
             {
                 console.log(err2);
             }
-            else{
+            else
+            {
                 console.log("Database Created");
                 createTable(createAccount);
                 createTable(createEmpolyee);
+                createTable(createMenu);
+                createTable(createCoupoun);
+                createTable(createOrder);
+                createTable(createSalesRecord);
                 connectionString.end();
 
                 //console.log(result);

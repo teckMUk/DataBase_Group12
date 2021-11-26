@@ -47,7 +47,6 @@ const createSalesRecord = `CREATE TABLE IF NOT EXISTS dumpling.salesrecord (
         ON UPDATE CASCADE);`;
 
 
-
 const createOrder = `CREATE TABLE IF NOT EXISTS dumpling.order (
     orderId INT NOT NULL,
     couponId INT NULL,
@@ -64,6 +63,7 @@ const createOrder = `CREATE TABLE IF NOT EXISTS dumpling.order (
         REFERENCES dumpling.coupons (couponId)
         ON DELETE SET NULL
         ON UPDATE SET NULL);`;
+
 
 const createAccount = `CREATE TABLE IF NOT EXISTS dumpling.account(
     accountId INT NOT NULL AUTO_INCREMENT,

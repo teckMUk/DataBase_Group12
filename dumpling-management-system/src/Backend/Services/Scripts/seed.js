@@ -40,7 +40,12 @@ const addAdminaccount = `INSERT INTO dumpling.account (userName,accountType,curr
  VALUES("admin","admin","${hash}","dumpling@gmail.com","none",NOW());`;
 const addAmdinemployee = `INSERT INTO dumpling.employee (employeeName,dateOfBirth,phoneNumber,address,position,salary,bankAccountNumber,createdAt,accountId)
 VALUES("MEANE",'2001-7-01',"+92321456789","Street 10,DHA phase 5 lums","CEO",105000,011401533,NOW(),(SELECT accountId from account where account.accountType="admin"));`;
-const addMenuItem = `INSERT INTO dumpling.menu ()
+const addMenuItem = `INSERT INTO dumpling.menu (dishName,dishType,preparationTime,calories,dishOfday,allergens,image,createdAt)
+VALUES("Spaghetti Meatballs", "Italian", 15, 450, 0,"None","https://hips.hearstapps.com/del.h-cdn.co/assets/17/39/1600x2399/gallery-1506456122-delish-spaghetti-meatballs-2.jpg?resize=768:*",NOW());
+INSERT INTO dumpling.menu (dishName,dishType,preparationTime,calories,dishOfday,allergens,image,createdAt)
+VALUES("Grilled Chicken Panini with Latiano Sauce", "American", 10, 550, 0,"None","https://hips.hearstapps.com/del.h-cdn.co/assets/17/39/1600x2399/gallery-1506456122-delish-spaghetti-meatballs-2.jpg?resize=768:*",NOW());
+INSERT INTO dumpling.menu (dishName,dishType,preparationTime,calories,dishOfday,allergens,image,createdAt)
+VALUES("Cream of mushroom", "Greek", 13, 650, 0,"None","https://hips.hearstapps.com/del.h-cdn.co/assets/17/39/1600x2399/gallery-1506456122-delish-spaghetti-meatballs-2.jpg?resize=768:*",NOW());`;
 
 
 connectionString.connect( (err)=>

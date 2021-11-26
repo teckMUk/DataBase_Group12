@@ -154,27 +154,26 @@ export const addOrderItem = (req,res)=>{
 
     let message ="";
     let isSuccessful = false;
-    let dishName = req.body.dishName;
-    let dishType = req.body.dishType;
-    let preparationTime = req.body.preparationTime;
-    let calories = req.body.calories;
-    let dishOfday = req.body.dishOfday;
-    let allergens = req.body.allergens;
-    let image = req.body.image;
+    let orderId = req.body.orderId;
+    let couponId = req.body.couponId;
+    let typeOfOrder = req.body.typeOfOrder;
+    let OrderStatus = req.body.OrderStatus;
+    let totalBill = req.body.totalBill;
+    
     
 
-    let addDishQuery = 
-    `INSERT INTO dumpling.menu (dishName,dishType,preparationTime,calories,dishOfday,allergens,image,createdAt)
-    VALUES(${dishName},${dishType},${preparationTime},${calories},${dishOfday},${allergens},${image},NOW());`;
+    let addOrderQuery = 
+    `INSERT INTO dumpling.order (orderId,couponId,typeOfOrder,OrderStatus,totalBill,createdAt)
+    VALUES(${orderId},${couponId},${typeOfOrder},${OrderStatus},${totalBill},NOW());`;
     
 
-    connectionString.query(addDishQuery,(err,result)=>
+    connectionString.query(addOrderQuery,(err,result)=>
     {
         if(err)
         {
             console.log("Error found");
             // console.log(err);
-            message = "Failed to insert Into menu";
+            message = "Failed to place order";
             res.send(
                 {
                     "isSuccessful":isSuccessful,
@@ -186,9 +185,9 @@ export const addOrderItem = (req,res)=>{
         }
         else
         {
-            console.log("Dish added to the menu successfully");
+            console.log("Order placed successfully");
             isSuccessful=true;
-            message="Dish has been added";
+            message="Order Placed";
             res.send(
                 {
                         "isSuccessful":isSuccessful,

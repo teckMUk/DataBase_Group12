@@ -31,18 +31,46 @@ function createTable(q)
         });
 }
 
-const createOrdersLog = `CREATE TABLE IF NOT EXISTS dumpling.account(
-    orderId INT NOT NULL AUTO_INCREMENT,
-     VARCHAR(45) NOT NULL,
-    accountType VARCHAR(45) NOT NULL,
-    currentPassword VARCHAR(100) NOT NULL,
-    previousPassword VARCHAR(100),
-    emailAddress VARCHAR(320) NOT NULL UNIQUE,
-    securityQuestions VARCHAR(2000) NOT NULL,
+const createSalesRecord = `CREATE TABLE IF NOT EXISTS dumpling.salesrecord (
+    salesId INT NOT NULL,
+    orderId INT NOT NULL,
+    date DATE NOT NULL,
+    totalBill DECIMAL(10,0) NOT NULL,
     createdAt DATETIME NOT NULL,
-    updatedAt DATETIME,
+    updateAt DATETIME NULL,
+    archived BIT(1) NOT NULL,
+    PRIMARY KEY (salesId),
+    INDEX orderId_idx (orderId ASC) VISIBLE,
+    INDEX totalBill_idx (totalBill ASC) VISIBLE,
+    CONSTRAINT orderId
+        FOREIGN KEY (orderId)
+        REFERENCES dumpling.order (orderId)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    CONSTRAINT totalBill
+        FOREIGN KEY (totalBill)
+        REFERENCES dumpling.order (totalBill)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE);`;
+
+
+
+const createOrder = `CREATE TABLE IF NOT EXISTS dumpling.order (
+    orderId INT NOT NULL,
+    couponId INT NULL,
+    typeOfOrder VARCHAR(45) NOT NULL,
+    OrderStatus VARCHAR(45) NOT NULL,
+    totalBill DECIMAL NOT NULL,
+    createdAt DATETIME NOT NULL,
+    updatedAt DATETIME NULL,
     archived BIT(1) NOT NULL DEFAULT 0,
-    PRIMARY KEY (accountId));`;
+    PRIMARY KEY (orderId),
+    INDEX couponId_idx (couponId ASC) VISIBLE,
+    CONSTRAINT couponId
+        FOREIGN KEY (couponId)
+        REFERENCES dumpling.coupons (couponId)
+        ON DELETE SET NULL
+        ON UPDATE SET NULL);`;
 
 const createAccount = `CREATE TABLE IF NOT EXISTS dumpling.account(
     accountId INT NOT NULL AUTO_INCREMENT,

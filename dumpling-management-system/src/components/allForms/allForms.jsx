@@ -115,7 +115,7 @@ export default function Forms()
                 <Form.Group className="mb-3" controlId="formBasicPassword">
                     <Form.Label>Enter Password</Form.Label>
                     <Form.Control type="password" placeholder="Password" name = 'pw'  
-                    value = {newEmploye.pw} onChage = {handle}/>
+                    value = {newEmploye.pw} onChange = {handle}/>
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formBasicPasswordc">

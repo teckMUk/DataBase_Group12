@@ -61,6 +61,30 @@ const createEmpolyee = `CREATE TABLE IF NOT EXISTS dumpling.employee(
         REFERENCES dumpling.account (accountId)
         ON DELETE CASCADE
         ON UPDATE CASCADE);`;
+const createMenu = `CREATE TABLE IF NOT EXISTS dumpling.menu (
+    dishId INT NOT NULL,
+    dishName VARCHAR(45) NOT NULL,
+    dishType VARCHAR(45) NOT NULL,
+    preparationTime INT NOT NULL,
+    calories INT NOT NULL,
+    dishOfday INT NOT NULL,
+    allergens VARCHAR(450) NULL,
+    image VARCHAR(45) NULL,
+    createdAt DATETIME NOT NULL,
+    updateAt DATETIME NOT NULL,
+    archived BIT(1) NOT NULL DEFAULT 0,
+    PRIMARY KEY (dishId));`;
+
+const createCoupoun = `CREATE TABLE IF NOT EXISTS dumpling.coupons (
+    couponId INT NOT NULL,
+    couponName VARCHAR(45) NOT NULL,
+    discount INT NOT NULL,
+    issueDate DATE NOT NULL,
+    expiryDate DATE NOT NULL,
+    createdAt DATETIME NOT NULL,
+    updatedAt DATETIME NULL,
+    archived BIT(1) NOT NULL DEFAULT 0,
+    PRIMARY KEY (couponId));`;
 connectionString.connect((error)=>
 {
     if(!error)
@@ -72,10 +96,13 @@ connectionString.connect((error)=>
             {
                 console.log(err2);
             }
-            else{
+            else
+            {
                 console.log("Database Created");
                 createTable(createAccount);
                 createTable(createEmpolyee);
+                createTable(createMenu);
+                createTable(createCoupoun);
                 connectionString.end();
 
                 //console.log(result);

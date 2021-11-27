@@ -3,10 +3,12 @@ import mysql from 'mysql';
 import express from 'express';
 import bodyParser from "body-parser";
 import sha1 from 'sha1';
+import { v4 as uuidv4 } from 'uuid';
 dotenv.config({path:"./src/Backend/.env"});
 const app = express();
 app.use(bodyParser.json({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
+
 
 
 export const addMenuItem = (req,res)=>
@@ -187,7 +189,50 @@ export const fetchDishIds = (req,res)=>
     });
 }
 
+function fetchMaxId(connectionString) {
 
+
+    let findMax = 
+    `SELECT MAX(orderId) FROM dumpling.order`;
+    connectionString.query(findMax,(err2,result)=>
+        {
+            if(err2)
+            {
+                console.log("Failed to fetch order ID");
+                console.log(err2);
+                return -1;
+            }
+            else
+            {
+                console.log("Order ID fetched");
+                //console.log(result);
+                return result;
+            }
+         });
+
+
+  }
+
+  function insertDishAssignment(connectionString,q) {
+
+    connectionString.query(q,(err2,result)=>
+        {
+            if(err2)
+            {
+                
+                console.log(err2);
+                return -1;
+            }
+            else
+            {
+                
+                return 1;
+            }
+         });
+
+
+  }
+  
 
 
 
@@ -207,75 +252,91 @@ export const addOrderItem = (req,res)=>{
 
     let message ="";
     let isSuccessful = false;
-    let couponId = req.body.couponId;
     let typeOfOrder = req.body.typeOfOrder;
-    let OrderStatus = req.body.OrderStatus;
+    let OrderStatus = req.body.orderStatus;
     let totalBill = req.body.totalBill;
-    let listOrders = req.body.listOrders;//list orders is an array of order IDs that the user wishes to place an order of 
+    let listOrders = req.body.listOrders;//list orders is an array of order IDs that the user wishes to place an order of
+    let dishIds = Object.values(JSON.parse(listOrders));
+    //console.log(dishIds[0]);
+    let finalDishIds = dishIds[0];
+    let noOfOrders = finalDishIds.length;
+
+    //console.log("This is the number of orders",noOfOrders);
+    //list orders is an array of order IDs that the user wishes to place an order of 
     
     //insert into orders table first
     
-
-    let addOrderQuery = 
-    `INSERT INTO dumpling.order (couponId,typeOfOrder,OrderStatus,totalBill,createdAt)
-    VALUES(${couponId},${typeOfOrder},${OrderStatus},${totalBill},NOW());`;
-    
-    connectionString.connect((error)=>{
-    if(error)
+    let checkUnique = 1;
+    let orderId = 0
+    let checkQuery =`SELECT * FROM dumpling.order WHERE order.orderId = ${orderId}`;
+    while(checkUnique)
     {
-        console.log(err);
-
-    }
-    else
-    {
-        connectionString.query(addOrderQuery,(err,result)=>{
-            if(err)
+        orderId =uuidv4();
+        connectionString.connect((error)=>{
+            if(error)
             {
-                    console.log("Error found");
-                    // console.log(err);
-                    message = "Failed to place order";
-                    res.send(
-                    {
-                        "isSuccessful":isSuccessful,
-                        "message":message
-                    }
-                );
-                connectionString.end();
-
+                console.log(err);
+        
             }
-
             else
             {
-                console.log("Order placed successfully");
-                isSuccessful=true;
-                message="Order Placed";
-                res.send(
+                connectionString.query(checkQuery,(err,result)=>{
+                    if(result.length===0)
                     {
-                            "isSuccessful":isSuccessful,
-                            "message":message
+                        checkUnique = 0;
                     }
-                );
-                connectionString.end();
 
-        
+
+                });
+
             }
 
         });
+        connectionString.end();
+
 
 
     }
+
+
+    let addOrderQuery = 
+    `INSERT INTO dumpling.order (orderId,couponId,typeOfOrder,OrderStatus,totalBill,createdAt)
+    VALUES(${orderId},${couponId},${typeOfOrder},${OrderStatus},${totalBill},NOW());`;
+    let checkAdditionOrder = 0;
+    //now we should add into the orders table first
+    connectionString.connect((error)=>{
+        if(error)
+        {
+            console.log(err);
+    
+        }
+        else
+        {
+            connectionString.query(addOrderQuery,(err,result) => {
+                if(err)
+                {
+                    console.log("Failed to add order into the order tab");
+                    console.log(err);
+
+                }
+                else
+                {
+                    checkAdditionOrder = 1;
+                }
+               
+
+            });
+            
+
+
+        }
+        connectionString.end();
+
 });
-
-
-    //after this point u have added into the orders table
-    let message ="";
-    let isSuccessful = false;
-
-    let findMax = 
-    `SELECT MAX(orderId) FROM dumpling.order`;
-
-    isSuccessful = false;
-    let maxOrderId = -1;
+isSuccessful = true;
+let addDishAssignment = "";
+if(checkAdditionOrder ===1)
+{
 
     connectionString.connect((error)=>{
         if(error)
@@ -285,153 +346,58 @@ export const addOrderItem = (req,res)=>{
         }
         else
         {
-            connectionString.query(findMax,(err,result)=>{
-                if(err)
-                {
-                    console.log("Error found");
-                    // console.log(err);
-                    message = "Failed to fetch order ID";
-                    res.send(
-                        {
-                            "isSuccessful":isSuccessful,
-                            "message":message
-                        }
-                    );
-                    connectionString.end();
-
-                }
-
-                else
-                {
-                    console.log("Order ID fetched successfully");
-                    isSuccessful=true;
-                    message="Order ID fetched";
-                    maxOrderId = result;
-                    res.send(
-                        {
-                                
-                                "isSuccessful":isSuccessful,
-                                "message":message,
-                                //"recendDishId":result
-                        }
-                    );
-                    connectionString.end();
-
-        
-                }
+            for (let i = 0; i < noOfOrders; i++) 
+            {
+                addDishAssignment = 
+                `INSERT INTO dumpling.dishAssignment (orderId,dishId) 
+                VALUES(${orderId},${finalDishIds[i]},NOW());`;
+                connectionString.query(addDishAssignment,(err,result) => {
+                    if(err)
+                    {
+                        console.log("Failed to add dish into the dish assignment table");
+                        console.log(err);
+                        isSuccessful = false;
+                        break;
+    
+                    }
+                    
+                   
+    
+                });
+                
+                
 
 
 
 
-
-
-            });
-
-
+                
+            }
+            
+            
         }
+        connectionString.end();
+
     });
 
 
 
 
-    //maxOrderId contains the id of the recently inserted order
-    //listOrders is the array of dish IDs
-    let numberOrders = listOrders.length;
-    for (let i = 0; i < numberOrders; i++)
-    {
-        let addDishQuery = 
-        `INSERT INTO dumpling.dishssignment (orderNo, dishNo)
-        VALUES(${maxOrderId},${listOrders[i]});`;
-        connectionString.connect((error)=>{
-            if(error)
-            {
-                console.log(err);
-        
-            }
-            else
-            {
-                connectionString.query(addDishQuery,(err,result)=>{
 
-                    if(err)
-                    {
-                        console.log("Error found");
-                        console.log(err);
-                        message = "Failed to place order item";
-                        res.send(
-                            {
-                                "isSuccessful":isSuccessful,
-                                "message":message
-                            }
-    
-                        );
-    
-                        connectionString.end();
-    
-                    }
-                    else
-                    {
-                        console.log("Order item placed");
-    
-                        isSuccessful=true;
-    
-                        message="Order has been placed";
-    
-                        res.send(
-    
-                            {
-                                "isSuccessful":isSuccessful,
-    
-                                "message":message
-                            }
-    
-                        );
-    
-                        connectionString.end();
+}
+
+if(isSuccessful===false || checkAdditionOrder===0)
+{
+    res.send(
+
+        {
+            "isSuccessful":false,
+
+            "message":"Order has been placed successfully"
+        }
+
+    );
+
+}
 
 
-
-                    }
-
-
-
-
-                });
-
-            }
-
-
-        });
-
-
-
-
-
-    }
-
-
-    
-
-
-
-
-    
-
-
-
-
-
-
-
-    
-    
-
-
-
-
-
-
-
-
-
-
-            }
+}

@@ -12,7 +12,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 export const addMenuItem = (req,res)=>
 
 {
-    console.log("adding menu item");
     var connectionString = mysql.createConnection(
         {
             host:process.env.host,
@@ -58,8 +57,6 @@ export const addMenuItem = (req,res)=>
                     );
 
                     connectionString.end();
-
-
 
                 }
 
@@ -188,4 +185,67 @@ export const fetchDishIds = (req,res)=>
             connectionString.end();
         }
     });
+}
+
+
+
+export const addOrderItem = (req,res)=>{
+    var connectionString = mysql.createConnection(
+        {
+            host:process.env.host,
+            user: process.env.user,
+            password:process.env.password,
+            database:process.env.database
+
+        }
+    );
+
+    let message ="";
+    let isSuccessful = false;
+    let orderId = req.body.orderId;
+    let couponId = req.body.couponId;
+    let typeOfOrder = req.body.typeOfOrder;
+    let OrderStatus = req.body.OrderStatus;
+    let totalBill = req.body.totalBill;
+    
+    
+
+    let addOrderQuery = 
+    `INSERT INTO dumpling.order (orderId,couponId,typeOfOrder,OrderStatus,totalBill,createdAt)
+    VALUES(${orderId},${couponId},${typeOfOrder},${OrderStatus},${totalBill},NOW());`;
+    
+
+    connectionString.query(addOrderQuery,(err,result)=>
+    {
+        if(err)
+        {
+            console.log("Error found");
+            // console.log(err);
+            message = "Failed to place order";
+            res.send(
+                {
+                    "isSuccessful":isSuccessful,
+                    "message":message
+                }
+            );
+            connectionString.end();
+
+        }
+        else
+        {
+            console.log("Order placed successfully");
+            isSuccessful=true;
+            message="Order Placed";
+            res.send(
+                {
+                        "isSuccessful":isSuccessful,
+                        "message":message
+                }
+            );
+            connectionString.end();
+
+        
+        }
+    });
+
 }

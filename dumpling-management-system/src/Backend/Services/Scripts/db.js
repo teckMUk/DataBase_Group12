@@ -48,8 +48,8 @@ const createSalesRecord = `CREATE TABLE IF NOT EXISTS dumpling.salesrecord (
 
 
 const createOrder = `CREATE TABLE IF NOT EXISTS dumpling.order (
-    orderId INT NOT NULL ,
-    couponId INT NULL,
+    orderId INT NOT NULL AUTO_INCREMENT,
+    couponId INT DEFAULT NULL,
     typeOfOrder VARCHAR(45) NOT NULL,
     OrderStatus VARCHAR(45) NOT NULL,
     totalBill DECIMAL NOT NULL,

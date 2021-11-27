@@ -779,3 +779,121 @@ export const updateAccount = (req,res) =>
     }
 
 }
+
+
+export const deleteAccount = (req,res) =>
+{
+   
+    var connectionString = mysql.createConnection(
+        {
+            host:process.env.host,
+            user: process.env.user,
+            password:process.env.password,
+            database:process.env.database
+
+        }
+    );
+    //check if person is admin
+    let position = req.body.id;
+    let emailCheck =  `SELECT * FROM account WHERE emailAddress="${req.body.emailAddress}"`;
+    let updateQuery = `UPDATE account
+                    SET archived   = 1
+                    WHERE emailAddress = "${req.body.emailAddress}";`;
+
+    let message ="";
+    let isSuccessful = false;
+    console.log(emailCheck);
+   
+        connectionString.connect((err) => {
+
+            if(err)
+            {
+                console.log("Error found");
+                console.log(err);
+                message = "Connect to db failed";
+                res.send(
+                    {
+                        "isSuccessful":isSuccessful,
+                        "message":message
+                    }
+                );
+                connectionString.end();                
+            }
+            else{
+
+           
+            connectionString.query(emailCheck,(errEmail,result)=>{
+
+                if(errEmail)
+                {
+                    console.log("validateQuery failed");
+               
+                    message = "Unable to validate email address atm";
+                    res.send(
+                        {
+                            "isSuccessful":isSuccessful,
+                            "message":message
+                        }
+                    );
+                    connectionString.end();
+                }
+                else
+                {
+                    if(result.length !== 0)
+                    {
+                        connectionString.query(updateQuery ,(errUser,result1)=>{
+                            if(errUser)
+                            {
+                                console.log("Failed to delete account");
+                                console.log(errUser);
+                                message ="Failed to delete user account";
+                                res.send(
+                                    {
+                                        "isSuccessful":isSuccessful,
+                                        "message":message
+                                    }
+                                );
+                                connectionString.end();
+                            }
+                            else{
+
+                                    //email exists so update employee here
+                                    console.log("User account deleted");
+                                    isSuccessful=true;
+                                    message="User has been deleted";
+                                    res.send(
+                                    {
+                                            "isSuccessful":isSuccessful,
+                                            "message":message
+                                    }
+                                    );
+                                    connectionString.end();
+                            }
+                        });
+                        
+                    }
+                    else{
+                        console.log(result)
+                        console.log("no email");
+                        message = "this employee does not exist";
+                        res.send(
+                            {
+                                "isSuccessful":isSuccessful,
+                                "message":message
+                            }
+                        );
+                        connectionString.end(); 
+                    }
+
+                }
+
+
+             });
+            //if it is admin write update query 
+           
+            }
+        });
+    
+}
+   
+           

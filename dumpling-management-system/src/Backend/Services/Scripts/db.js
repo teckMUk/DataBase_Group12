@@ -98,6 +98,7 @@ const createEmpolyee = `CREATE TABLE IF NOT EXISTS dumpling.employee(
         REFERENCES dumpling.account (accountId)
         ON DELETE CASCADE
         ON UPDATE CASCADE);`;
+
 const createMenu = `CREATE TABLE IF NOT EXISTS dumpling.menu (
     dishId INT NOT NULL AUTO_INCREMENT,
     dishName VARCHAR(45) NOT NULL,
@@ -106,7 +107,7 @@ const createMenu = `CREATE TABLE IF NOT EXISTS dumpling.menu (
     calories INT NOT NULL,
     dishOfday INT NOT NULL,
     allergens VARCHAR(450) NULL,
-    image VARCHAR(45) NULL,
+    image VARCHAR(450) NULL,
     createdAt DATETIME NOT NULL,
     updateAt DATETIME DEFAULT NULL,
     archived BIT(1) NOT NULL DEFAULT 0,
@@ -143,8 +144,6 @@ connectionString.connect((error)=>
                 createTable(createOrder);
                 createTable(createSalesRecord);
                 connectionString.end();
-
-                //console.log(result);
             }
         });
     }

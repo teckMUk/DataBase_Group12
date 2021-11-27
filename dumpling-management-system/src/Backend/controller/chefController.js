@@ -189,6 +189,11 @@ export const fetchDishIds = (req,res)=>
 
 
 
+
+
+
+
+
 export const addOrderItem = (req,res)=>{
     var connectionString = mysql.createConnection(
         {
@@ -202,50 +207,231 @@ export const addOrderItem = (req,res)=>{
 
     let message ="";
     let isSuccessful = false;
-    let orderId = req.body.orderId;
     let couponId = req.body.couponId;
     let typeOfOrder = req.body.typeOfOrder;
     let OrderStatus = req.body.OrderStatus;
     let totalBill = req.body.totalBill;
+    let listOrders = req.body.listOrders;//list orders is an array of order IDs that the user wishes to place an order of 
     
+    //insert into orders table first
     
 
     let addOrderQuery = 
-    `INSERT INTO dumpling.order (orderId,couponId,typeOfOrder,OrderStatus,totalBill,createdAt)
-    VALUES(${orderId},${couponId},${typeOfOrder},${OrderStatus},${totalBill},NOW());`;
+    `INSERT INTO dumpling.order (couponId,typeOfOrder,OrderStatus,totalBill,createdAt)
+    VALUES(${couponId},${typeOfOrder},${OrderStatus},${totalBill},NOW());`;
     
-
-    connectionString.query(addOrderQuery,(err,result)=>
+    connectionString.connect((error)=>{
+    if(error)
     {
-        if(err)
-        {
-            console.log("Error found");
-            // console.log(err);
-            message = "Failed to place order";
-            res.send(
-                {
-                    "isSuccessful":isSuccessful,
-                    "message":message
-                }
-            );
-            connectionString.end();
+        console.log(err);
 
+    }
+    else
+    {
+        connectionString.query(addOrderQuery,(err,result)=>{
+            if(err)
+            {
+                    console.log("Error found");
+                    // console.log(err);
+                    message = "Failed to place order";
+                    res.send(
+                    {
+                        "isSuccessful":isSuccessful,
+                        "message":message
+                    }
+                );
+                connectionString.end();
+
+            }
+
+            else
+            {
+                console.log("Order placed successfully");
+                isSuccessful=true;
+                message="Order Placed";
+                res.send(
+                    {
+                            "isSuccessful":isSuccessful,
+                            "message":message
+                    }
+                );
+                connectionString.end();
+
+        
+            }
+
+        });
+
+
+    }
+});
+
+
+    //after this point u have added into the orders table
+    let message ="";
+    let isSuccessful = false;
+
+    let findMax = 
+    `SELECT MAX(orderId) FROM dumpling.order`;
+
+    isSuccessful = false;
+    let maxOrderId = -1;
+
+    connectionString.connect((error)=>{
+        if(error)
+        {
+            console.log(err);
+    
         }
         else
         {
-            console.log("Order placed successfully");
-            isSuccessful=true;
-            message="Order Placed";
-            res.send(
+            connectionString.query(findMax,(err,result)=>{
+                if(err)
                 {
-                        "isSuccessful":isSuccessful,
-                        "message":message
+                    console.log("Error found");
+                    // console.log(err);
+                    message = "Failed to fetch order ID";
+                    res.send(
+                        {
+                            "isSuccessful":isSuccessful,
+                            "message":message
+                        }
+                    );
+                    connectionString.end();
+
                 }
-            );
-            connectionString.end();
+
+                else
+                {
+                    console.log("Order ID fetched successfully");
+                    isSuccessful=true;
+                    message="Order ID fetched";
+                    maxOrderId = result;
+                    res.send(
+                        {
+                                
+                                "isSuccessful":isSuccessful,
+                                "message":message,
+                                //"recendDishId":result
+                        }
+                    );
+                    connectionString.end();
 
         
+                }
+
+
+
+
+
+
+            });
+
+
         }
     });
 
-}
+
+
+
+    //maxOrderId contains the id of the recently inserted order
+    //listOrders is the array of dish IDs
+    let numberOrders = listOrders.length;
+    for (let i = 0; i < numberOrders; i++)
+    {
+        let addDishQuery = 
+        `INSERT INTO dumpling.dishssignment (orderNo, dishNo)
+        VALUES(${maxOrderId},${listOrders[i]});`;
+        connectionString.connect((error)=>{
+            if(error)
+            {
+                console.log(err);
+        
+            }
+            else
+            {
+                connectionString.query(addDishQuery,(err,result)=>{
+
+                    if(err)
+                    {
+                        console.log("Error found");
+                        console.log(err);
+                        message = "Failed to place order item";
+                        res.send(
+                            {
+                                "isSuccessful":isSuccessful,
+                                "message":message
+                            }
+    
+                        );
+    
+                        connectionString.end();
+    
+                    }
+                    else
+                    {
+                        console.log("Order item placed");
+    
+                        isSuccessful=true;
+    
+                        message="Order has been placed";
+    
+                        res.send(
+    
+                            {
+                                "isSuccessful":isSuccessful,
+    
+                                "message":message
+                            }
+    
+                        );
+    
+                        connectionString.end();
+
+
+
+                    }
+
+
+
+
+                });
+
+            }
+
+
+        });
+
+
+
+
+
+    }
+
+
+    
+
+
+
+
+    
+
+
+
+
+
+
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+            }

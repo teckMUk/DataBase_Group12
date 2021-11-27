@@ -11,6 +11,7 @@ app.use(cors());
 
 app.post("/api/userController/login",route);
 app.post("/api/userController/createAccount",route);
+app.post("/api/userController/updateAccount",route);
 app.post("/api/userController/securityQuestions",route);
 app.post("/api/userController/changePassword",route);
 app.post("/api/userController/forgetPassword",route);

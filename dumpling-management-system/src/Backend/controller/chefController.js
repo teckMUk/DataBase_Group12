@@ -63,7 +63,7 @@ export const addMenuItem = (req,res)=>
 
         {
 
-            console.log(err);
+            console.log(error);
 
         }
 

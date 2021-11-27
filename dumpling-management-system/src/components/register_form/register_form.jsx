@@ -8,7 +8,7 @@ import {useNavigate} from 'react-router-dom';
 
 const initialState = {
     name: "",
-    id: "",
+    accountType: "",
     email: "",
     status: "",
     address: "",
@@ -19,6 +19,7 @@ const initialState = {
     bankAccount: "",
     salary : "",
     employeeName: "",
+    
   };
 
 const errorCheck = {
@@ -37,6 +38,7 @@ export default function RegisterForm()
 
     useEffect(() => {}, [newEmploye]);
 
+    let navigate = useNavigate();
     const handle = e => {
         const {name, value} = e.target;
         setNewEmploye({...newEmploye, [name]: value});
@@ -90,14 +92,27 @@ export default function RegisterForm()
     }
 
 
-    const oncreate = (e) =>{
+    const onCreate = (e) =>{
         e.preventDefault();
-        let email = localStorage.getItem("emailForgetPw");
-        createAccount(newEmploye.name, accountType, currentPassword, emailAddress, securityQuestions, employeeName, dateOfBirth, 
-            phoneNumber, address, position, salary,bankAccountNumber).then((response)=>{
+        createAccount(newEmploye.name, newEmploye.accountType, newEmploye.cpw, newEmploye.email, null, 
+            newEmploye.employeeName, newEmploye.bd, 
+            newEmploye.num, newEmploye.address, newEmploye.status, newEmploye.salary,newEmploye.bankAccount).then((response)=>{
 
+                if(response.data.isSuccessful)
+                {
+                    alert(response.data.message);
+                    // localStorage.removeItem("emailForgetPw");
+                    // localStorage.removeItem("Securityquestion");
+                    navigate('/dashboard');
+                }
+                else{
+                    alert(response.data.message);
+                    // localStorage.removeItem("emailForgetPw");
+                    // localStorage.removeItem("Securityquestion");
+                    navigate('/dashboard');
+                }
     
-
+    
         });
         
 
@@ -116,7 +131,7 @@ export default function RegisterForm()
                         <Form.Group className="mb-3" controlId="formBasicID">
                             <Form.Label>accountType</Form.Label>
                             <Form.Control type="text" placeholder="Employee Status" name = 'id'
-                            value = {newEmploye.id} onChange = {handle}/>
+                            value = {newEmploye.accountType} onChange = {handle}/>
                         </Form.Group>
 
                         <Form.Group className="mb-3" controlId="formBasicPos">
@@ -192,7 +207,8 @@ export default function RegisterForm()
                            
                          </ul>
 
-                        <Button variant="primary" type="submit" disabled = {Object.values(newEmployeErr).includes(false)} href = "/dashboard">
+                        <Button variant="primary" type="submit" disabled = {Object.values(newEmployeErr).includes(false)} 
+                        onClick= {onCreate}>
                             Create Account
                         </Button>
 

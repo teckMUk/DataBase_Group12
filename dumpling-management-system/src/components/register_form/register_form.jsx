@@ -3,6 +3,8 @@ import React from "react";
 import {Container, Form, Button} from 'react-bootstrap';
 import { useState, useEffect } from "react";
 //import  {Link} from 'react-router-dom';
+import {createAccount} from  '../../Services_API/api.js';
+import {useNavigate} from 'react-router-dom';
 
 const initialState = {
     name: "",
@@ -87,7 +89,20 @@ export default function RegisterForm()
       
     }
 
+
+    const oncreate = (e) =>{
+        e.preventDefault();
+        let email = localStorage.getItem("emailForgetPw");
+        createAccount(newEmploye.name, accountType, currentPassword, emailAddress, securityQuestions, employeeName, dateOfBirth, 
+            phoneNumber, address, position, salary,bankAccountNumber).then((response)=>{
+
     
+
+        });
+        
+
+    }
+
     return(
                <Container id="main-container" className="d-grid h-100">
                    <Form className= 'text-center' onSubmit= {submitHandle}>

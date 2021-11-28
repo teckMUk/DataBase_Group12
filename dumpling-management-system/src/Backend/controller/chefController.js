@@ -214,7 +214,7 @@ export const viewPlacedOrders = (req,res)=>
         }
     );
     let orderPlaced = "placed";
-    let placedOrderQuery = `SELECT * from dumpling.menu WHERE menu.orderStatus = ${orderPlaced}`;
+    let placedOrderQuery = `SELECT * from dumpling.orders WHERE orders.orderStatus = "${orderPlaced}"`;
     let message = "";
     let isSuccessful = false;
     connectionString.query(placedOrderQuery,(err,result)=>
@@ -222,6 +222,7 @@ export const viewPlacedOrders = (req,res)=>
         if(err)
         {
             message = "Nothing is fetched from the db";
+            console.log(err);
             res.send(
                 {
                     "isSuccessful":isSuccessful,

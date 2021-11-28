@@ -49,6 +49,14 @@ export const updateAccount = async (accountType, position, emailAddress) => {
     return await axios.post(`${Url}/userController/updateAccount`, object2)
 }
 
+export const deleteAccount = async(emailAddress) =>
+{
+    const obj = {
+        "emailAddress": emailAddress
+    }
+    return await axios.post(`${Url}/userController/deleteAccount`,obj);
+}
+
 export const securityQuestions = async (Email) => {
     const object3 = {"email" : Email
     }

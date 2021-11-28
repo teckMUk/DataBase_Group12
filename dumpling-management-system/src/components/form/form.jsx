@@ -2,7 +2,7 @@ import './form.css';
 import {Container, Form, Button} from 'react-bootstrap';
 import { useState, useEffect } from "react";
 import { LogIn } from '../../Services_API/api';
-import {useNavigate} from 'react-router-dom';
+import {createSearchParams, useNavigate} from 'react-router-dom';
 const initialState = {
    
     email: "",
@@ -38,7 +38,9 @@ export default function FormLogin()
                 localStorage.setItem('',response.data.role);
                 alert(response.data.message);
                 console.log(localStorage.getItem('dumplingUserId'));
-                navigate("/dashboard");
+                const prams = {"role":response.data.role};
+                navigate({pathname:'/dashboard',
+                search: `?${createSearchParams(prams)}`});
             }
             else
             {

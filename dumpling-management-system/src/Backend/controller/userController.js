@@ -122,7 +122,7 @@ export const addUser = (req,res)=>{
     `INSERT INTO account (userName,accountType,currentPassword,emailAddress,securityQuestions,createdAt)
         VALUES("${req.body.userName}","${req.body.accountType}","${currPass}","${req.body.emailAddress}",${stringifysecQuestions},NOW());`;
     let addEmployeequery = `INSERT INTO dumpling.employee (employeeName,dateOfBirth,phoneNumber,address,position,salary,bankAccountNumber,createdAt,accountId)
-    VALUES("${req.body.employeeName}","${req.body.dateOfBirth}","${req.body.phoneNumber}","${req.body.address}","${req.body.position}","${req.body.salary}","${req.body.bankAccountNumber}",NOW(),(SELECT accountId from account where account.emailAddress="${req.body.emailAddress}"));`
+    VALUES("${req.body.employeeName}","${req.body.dateOfBirth}","${req.body.phoneNumber}","${req.body.address}","${req.body.position}","${req.body.salary}","${req.body.bankAccountNumber}",NOW(),(SELECT accountId from account where account.emailAddress="${req.body.emailAddress}" and archived=0));`
     connectionString.connect((err)=>
     {
         if(err)
@@ -242,7 +242,7 @@ export const getSQ = (req,res)=>{
     let message = "";
     let isSuccessful = false;
     let emailAdress = req.body.email;
-    let emailQuery = `SELECT securityQuestions FROM account WHERE emailAddress="${emailAdress}"`;
+    let emailQuery = `SELECT securityQuestions FROM account WHERE emailAddress="${emailAdress}" and archived=0`;
     connectionString.connect((err)=>{
         if(err)
         {
@@ -465,7 +465,7 @@ export const validateSecurity = (req,res)=>{
     let message = "";
     let email = req.body.email;
     let isSuccessful = false;
-    let queryValidate = `SELECT securityQuestions from dumpling.account WHERE account.emailAddress="${email}"`;
+    let queryValidate = `SELECT securityQuestions from dumpling.account WHERE account.emailAddress="${email}"  and archived=0`;
     connectionString.query(queryValidate,(err,result)=>{
         if(err)
         {
@@ -536,7 +536,7 @@ export const accountExistence = (req, res) =>{
     let message = "";
     let testEmail = req.body.email;
     let isSuccessful = false;
-    let checkExistence = `SELECT account.emailAddress FROM account WHERE account.emailAddress = "${testEmail}"`;
+    let checkExistence = `SELECT account.emailAddress FROM account WHERE account.emailAddress = "${testEmail}" and archived=0`;
     connectionString.query(checkExistence,(err,result)=>{
 
         if(err)
@@ -596,7 +596,7 @@ export const forgetPassword = (req,res)=>{
     let newPass = sha1(req.body.newPass);
     let message = "";
     let isSuccessful = false;
-    let queryPass = `SELECT account.currentPassword, account.previousPassword FROM account WHERE account.emailAddress="${email}"`;
+    let queryPass = `SELECT account.currentPassword, account.previousPassword FROM account WHERE account.emailAddress="${email}"  and archived=0`;
     connectionString.query(queryPass,(err,result)=>{
         if(err)
         {  
@@ -622,9 +622,9 @@ export const forgetPassword = (req,res)=>{
             else
             {
                 let prevPass = result[0].currentPassword;
-                let queryUpdatePass = `UPDATE dumpling.account SET account.currentPassword="${newPass}",account.previousPassword="${prevPass}",account.createdAt=NOW() WHERE account.emailAddress="${email}"`;
+                let queryUpdatePass = `UPDATE dumpling.account SET account.currentPassword="${newPass}",account.previousPassword="${prevPass}",account.createdAt=NOW() WHERE account.emailAddress="${email}"  and archived=0`;
                 connectionString.query(queryUpdatePass,(err,result)=>{
-                    if(err)
+                    if(err) 
                     {
                         message = "Updation failed";
                         res.send({
@@ -667,7 +667,7 @@ export const updateAccount = (req,res) =>
     //check if person is admin
     
     let position = req.body.id;
-    let emailCheck =  `SELECT * FROM account WHERE emailAddress="${req.body.emailAddress}"`;
+    let emailCheck =  `SELECT * FROM account WHERE emailAddress="${req.body.emailAddress}"  and archived=0`;
     let updateQuery = `UPDATE account
                         SET accountType  = "${req.body.empPosition}",  updatedAt= NOW()
                         WHERE emailAddress = "${req.body.emailAddress}";`;
@@ -791,13 +791,13 @@ export const deleteAccount = (req,res) =>
     );
     //check if person is admin
   
-    let emailCheck =  `SELECT * FROM account WHERE emailAddress="${req.body.emailAddress}"`;
+    let emailCheck =  `SELECT * FROM account WHERE emailAddress="${req.body.emailAddress}"  and archived=0`;
     let updateQuery = `UPDATE account
                     SET archived=1
                     WHERE emailAddress="${req.body.emailAddress}";`;
     let updateEmp = `UPDATE employee
                     SET archived=1
-                    WHERE accountId in (SELECT accountId FROM account WHERE emailAddress="${req.body.emailAddress}");`
+                    WHERE accountId in (SELECT accountId FROM account WHERE emailAddress="${req.body.emailAddress}"  and archived=0);`
 
     let message ="";
     let isSuccessful = false;

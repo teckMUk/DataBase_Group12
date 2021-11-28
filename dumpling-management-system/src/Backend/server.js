@@ -22,8 +22,6 @@ app.post("/api/chefController/removeMenuItem",route);
 app.post("/api/chefController/addMenuItem", route);
 app.post("/api/chefController/fetchDishIds", route);
 app.post("/api/chefController/viewPlacedOrders",route);
-app.post("/api/cashierController/addOrderItems",route)
-app.post("/api/managerController/updateEmployeeSalary",route);
 app.post("/api/managerController/updateEmployeeSalary",route);
 app.post("/api/managerController/fetchAllEmployee",route);
 app.post("/api/managerController/giveBonuses",route);

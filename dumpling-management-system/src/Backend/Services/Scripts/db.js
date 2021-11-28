@@ -43,8 +43,8 @@ const createSalesRecord = `CREATE TABLE IF NOT EXISTS dumpling.salesrecord (
     CONSTRAINT orderId
         FOREIGN KEY (orderId)
         REFERENCES dumpling.orders(orderId)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE);`;
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION);`;
 
 const createbonuses= `CREATE TABLE IF NOT EXISTS dumpling.bonus(
     bonusId INT NOT NULL AUTO_INCREMENT,
@@ -58,12 +58,12 @@ const createbonuses= `CREATE TABLE IF NOT EXISTS dumpling.bonus(
     CONSTRAINT employeeId
       FOREIGN KEY (employeeId)
       REFERENCES dumpling.employee (employeeId)
-      ON DELETE CASCADE
-      ON UPDATE CASCADE);`;
+      ON DELETE NO ACTION
+      ON UPDATE NO ACTION);`;
 
 const createOrder = `CREATE TABLE IF NOT EXISTS dumpling.orders(
     orderId VARCHAR(50) NOT NULL,
-    couponId INT NOT NULL DEFAULT -1,
+    couponId INT DEFAULT NULL,
     typeOfOrder VARCHAR(45) NOT NULL,
     orderStatus VARCHAR(45) NOT NULL,
     totalBill DECIMAL NOT NULL,
@@ -75,8 +75,8 @@ const createOrder = `CREATE TABLE IF NOT EXISTS dumpling.orders(
     CONSTRAINT couponId
         FOREIGN KEY (couponId)
         REFERENCES dumpling.coupons (couponId)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE);`;
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION);`;
 const createDishAssignment = `CREATE TABLE IF NOT EXISTS dumpling.dishassignment (
     orderNo VARCHAR(50) NOT NULL,
     dishNo int NOT NULL,
@@ -88,13 +88,13 @@ const alterdishAssignment2=
 ADD CONSTRAINT orderNo
   FOREIGN KEY (orderNo)
   REFERENCES dumpling.orders(orderId)
-  ON DELETE CASCADE
-  ON UPDATE CASCADE,
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
 ADD CONSTRAINT dishNo
   FOREIGN KEY (dishNo)
   REFERENCES dumpling.menu(dishId)
-  ON DELETE CASCADE
-  ON UPDATE CASCADE;`;
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;`;
 const createChefAssignment = `CREATE TABLE dumpling.chefassignment(
     dishID INT NOT NULL,
     chefId INT NOT NULL,
@@ -103,13 +103,13 @@ const createChefAssignment = `CREATE TABLE dumpling.chefassignment(
     CONSTRAINT chefId
       FOREIGN KEY (chefId)
       REFERENCES dumpling.employee(employeeId)
-      ON DELETE CASCADE
-      ON UPDATE CASCADE,
+      ON DELETE NO ACTION
+      ON UPDATE NO ACTION,
     CONSTRAINT dishId
       FOREIGN KEY (dishID)
       REFERENCES dumpling.menu(dishId)
-      ON DELETE CASCADE
-      ON UPDATE CASCADE);`;
+      ON DELETE NO ACTION
+      ON UPDATE NO ACTION);`;
 
 const createAccount = `CREATE TABLE IF NOT EXISTS dumpling.account(
     accountId INT NOT NULL AUTO_INCREMENT,
@@ -142,8 +142,8 @@ const createEmpolyee = `CREATE TABLE IF NOT EXISTS dumpling.employee(
     CONSTRAINT accountId
         FOREIGN KEY (accountId)
         REFERENCES dumpling.account (accountId)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE);`;
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION);`;
 
 const createMenu = `CREATE TABLE IF NOT EXISTS dumpling.menu (
     dishId INT NOT NULL AUTO_INCREMENT,
@@ -161,7 +161,7 @@ const createMenu = `CREATE TABLE IF NOT EXISTS dumpling.menu (
     PRIMARY KEY (dishId));`;
 
 const createCoupoun = `CREATE TABLE IF NOT EXISTS dumpling.coupons (
-    couponId INT NOT NULL DEFAULT -1,
+    couponId INT NOT NULL,
     couponName VARCHAR(45) NOT NULL,
     discount INT NOT NULL,
     issueDate DATE NOT NULL,

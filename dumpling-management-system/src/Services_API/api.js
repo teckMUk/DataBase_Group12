@@ -87,7 +87,7 @@ export const validateSecurity = async(email, answerOne,answerTwo)=>{
 
 export const placeOrder = async(typeOfOrder,orderStatus,totalBill,listOrders) =>{
     const obj={
-        "orderStatus" : orderStatus,
+      
         "typeOfOrder" : typeOfOrder,
         "totalBill" : totalBill,
         "listOrders" : listOrders     

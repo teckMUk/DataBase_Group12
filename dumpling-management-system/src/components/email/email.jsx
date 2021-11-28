@@ -9,8 +9,9 @@ const initialState = {
   };
 
 
-export default function Forms()
+export default function Forms(props)
 {
+    let isAdmin = props.role;
     let navigate = useNavigate();
     const [newEmploye, setNewEmploye] = useState(initialState);
 
@@ -45,12 +46,12 @@ export default function Forms()
                 console.log(Response.data.message);
             }
         });
-        
     }
-
+   
     return (
       
         <Container>
+            {isAdmin && 
         <Form onSubmit= {submitHandle}>
 
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
@@ -63,7 +64,12 @@ export default function Forms()
                 Submit
             </Button>
         </Form>
+        }
+        {
+            !isAdmin && <div>Not admin</div>
+        }
         </Container>
 
     )
+    
 }

@@ -89,7 +89,6 @@ export const placeOrder = async(typeOfOrder,orderStatus,totalBill,listOrders) =>
     const obj={
         "orderStatus" : orderStatus,
         "typeOfOrder" : typeOfOrder,
-        "orderStatus" : orderStatus,
         "totalBill" : totalBill,
         "listOrders" : listOrders     
 

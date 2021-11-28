@@ -35,7 +35,7 @@ export default function FormLogin()
             {
                 console.log(response.data.message);                
                 localStorage.setItem('dumplingUserId',response.data.Id);
-                localStorage.setItem('',response.data.role);
+                localStorage.setItem('empRole',response.data.role);
                 alert(response.data.message);
                 console.log(localStorage.getItem('dumplingUserId'));
                 navigate("/dashboard");

@@ -40,6 +40,15 @@ export const createAccount = async (userName, accountType, currentPassword, emai
     return await axios.post(`${Url}/userController/createAccount`, object2)
 }
 
+export const updateAccount = async (accountType, position, emailAddress) => {
+    const object2 = {"userName" : userName,
+    "accountType":accountType,
+    "position" : position,
+    "emailAddress" : emailAddress,
+    }
+    return await axios.post(`${Url}/userController/updateAccount`, object2)
+}
+
 export const securityQuestions = async (Email) => {
     const object3 = {"email" : Email
     }

@@ -10,6 +10,7 @@ import ResetPw from "./components/resetpw/resetpw";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
+
 const App = () => {
   return (
     <Router>
@@ -23,6 +24,7 @@ const App = () => {
       <Route path='/resetpw' element={<ResetPw/>} />
       <Route path='/email' element={<Email/>} />
       <Route path='/questions' element={<Questions/>} />
+      
       </Routes>
     </div>
     </Router>

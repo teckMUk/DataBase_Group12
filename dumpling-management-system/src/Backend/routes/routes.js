@@ -17,6 +17,7 @@ route.post("/api/userController/accountExistence",accountExistence);
 route.post("/api/userController/validateSecurity",validateSecurity);
 route.post("/api/chefController/removeMenuItem",removeMenuItem);
 route.post("/api/chefController/addMenuItem",addMenuItem);
+route.post("/api/cashierController/placeOrder",placeOrder);
 route.post("/api/chefController/fetchDishIds",fetchDishIds);
 route.post("/api/chefController/viewPlacedOrders",viewPlacedOrders);
 route.post("/api/managerController/fetchAllEmployee",fetchAllEmployee);

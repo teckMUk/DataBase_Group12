@@ -27,14 +27,15 @@ export const addMenuItem = (req,res)=>
     let isSuccessful = false;
     let dishName = req.body.dishName;
     let dishType = req.body.dishType;
+    let dishPrice = req.body.dishPrice;
     let preparationTime = req.body.preparationTime;
     let calories = req.body.calories;
     let dishOfday = req.body.dishOfday;
     let allergens = req.body.allergens;
     let image = req.body.image;
     let addDishQuery =
-    `INSERT INTO dumpling.menu (dishName,dishType,preparationTime,calories,dishOfday,allergens,image,createdAt)
-    VALUES(${dishName},${dishType},${preparationTime},${calories},${dishOfday},${allergens},${image},NOW());`;
+    `INSERT INTO dumpling.menu (dishName,dishType,dishPrice,preparationTime,calories,dishOfday,allergens,image,createdAt)
+    VALUES("${dishName}","${dishType}",${dishPrice},${preparationTime},${calories},${dishOfday},"${allergens}","${image}",NOW());`;
     connectionString.connect((error)=>{
         if(error)
         {

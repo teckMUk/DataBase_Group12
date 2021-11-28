@@ -103,6 +103,7 @@ const createMenu = `CREATE TABLE IF NOT EXISTS dumpling.menu (
     dishId INT NOT NULL AUTO_INCREMENT,
     dishName VARCHAR(45) NOT NULL,
     dishType VARCHAR(45) NOT NULL,
+    dishPrice DECIMAL(5,2) NOT NULL,
     preparationTime INT NOT NULL,
     calories INT NOT NULL,
     dishOfday INT NOT NULL,

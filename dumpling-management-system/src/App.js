@@ -8,6 +8,7 @@ import CreateAccount from "./pages/create_account/create_account";
 import { BrowserRouter as Router , Routes, Route} from 'react-router-dom';
 import ResetPw from "./components/resetpw/resetpw";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import AddToMenu from "./pages/addMenuItem/addMenuItem";
 
 
 
@@ -24,6 +25,8 @@ const App = () => {
       <Route path='/resetpw' element={<ResetPw/>} />
       <Route path='/email' element={<Email/>} />
       <Route path='/questions' element={<Questions/>} />
+      <Route path='/addToMenu' element={<AddToMenu/>} />
+
       
       </Routes>
     </div>

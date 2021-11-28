@@ -107,7 +107,6 @@ export const addUser = (req,res)=>{
             user: process.env.user,
             password:process.env.password,
             database:process.env.database
-
         }
     );
     let message ="";
@@ -791,11 +790,14 @@ export const deleteAccount = (req,res) =>
         }
     );
     //check if person is admin
-    let position = req.body.id;
+  
     let emailCheck =  `SELECT * FROM account WHERE emailAddress="${req.body.emailAddress}"`;
     let updateQuery = `UPDATE account
-                    SET archived   = 1
-                    WHERE emailAddress = "${req.body.emailAddress}";`;
+                    SET archived=1
+                    WHERE emailAddress="${req.body.emailAddress}";`;
+    let updateEmp = `UPDATE employee
+                    SET archived=1
+                    WHERE accountId in (SELECT accountId FROM account WHERE emailAddress="${req.body.emailAddress}");`
 
     let message ="";
     let isSuccessful = false;
@@ -854,20 +856,37 @@ export const deleteAccount = (req,res) =>
                             }
                             else{
 
-                                    //email exists so update employee here
-                                    console.log("User account deleted");
-                                    isSuccessful=true;
-                                    message="User has been deleted";
-                                    res.send(
-                                    {
-                                            "isSuccessful":isSuccessful,
-                                            "message":message
-                                    }
-                                    );
-                                    connectionString.end();
+                                    connectionString.query(updateEmp, (errEmp, res2)=> {
+                                        if(errEmp)
+                                        {
+                                            console.log("Failed to delete account from employee");
+                                            console.log(errUser);
+                                            message ="Failed to delete employee account";
+                                            res.send(
+                                                {
+                                                    "isSuccessful":isSuccessful,
+                                                    "message":message
+                                                }
+                                            );
+                                            connectionString.end();
+                                        }
+
+                                        else{
+                                             //email exists so update employee here
+                                            console.log("User account deleted");
+                                            isSuccessful=true;
+                                            message="User has been deleted";
+                                            res.send(
+                                            {
+                                                    "isSuccessful":isSuccessful,
+                                                    "message":message
+                                            }
+                                            );
+                                            connectionString.end();
+                                        }
+                                    });                                   
                             }
                         });
-                        
                     }
                     else{
                         console.log(result)
@@ -883,8 +902,6 @@ export const deleteAccount = (req,res) =>
                     }
 
                 }
-
-
              });
             //if it is admin write update query 
            

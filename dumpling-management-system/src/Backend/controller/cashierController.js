@@ -2,8 +2,6 @@ import dotenv from "dotenv";
 import mysql from 'mysql';
 import express, { response } from 'express';
 import {v4 as uuidv4} from "uuid";
-
-
 dotenv.config({path:"./src/Backend/.env"});
 const app = express();
 app.use(express.json());
@@ -212,7 +210,7 @@ export const placeOrder = async (req,res)=>
 
     let dishIds = Object.values(JSON.parse(listOrders));
 
-    console.log(dishIds[0]);
+    // console.log(dishIds[0]);
 
     let finalDishIds = dishIds[0];
 
@@ -311,7 +309,6 @@ export const placeOrder = async (req,res)=>
                 'message':message
 
             });
-
         }
 
     });

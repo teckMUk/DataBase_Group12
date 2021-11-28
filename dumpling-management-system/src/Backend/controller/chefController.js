@@ -2,13 +2,10 @@ import dotenv from "dotenv";
 import mysql from 'mysql';
 import express from 'express';
 import bodyParser from "body-parser";
-import sha1 from 'sha1';
-import e from "express";
 dotenv.config({path:"./src/Backend/.env"});
 const app = express();
 app.use(bodyParser.json({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
-
 
 export const addMenuItem = (req,res)=>
 {
@@ -94,7 +91,7 @@ export const removeMenuItem = (req,res)=>
     let message = "";
     let isSuccessful = false;
     let dishId = req.body.dishId;
-    let deleteDish = `UPDATE dumpling.menu SET menu.archived =1 WHERE menu.dishId=${dishId}`;
+    let deleteDish = `UPDATE dumpling.menu SET menu.archived =1, menu.updatedAt=NOW() WHERE menu.dishId=${dishId}`;
     connectionString.query(deleteDish,(err,result)=>
     {
         if(err)
@@ -121,9 +118,7 @@ export const removeMenuItem = (req,res)=>
             connectionString.end();
         }
     });
-
 }
-
 export const fetchDishIds = (req,res)=>
 {
     var connectionString = mysql.createConnection(
@@ -204,7 +199,6 @@ export const fetchDishIds = (req,res)=>
         }
     });
 }
-
 export const viewPlacedOrders = (req,res)=>
 {
     var connectionString = mysql.createConnection(

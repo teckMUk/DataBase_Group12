@@ -33,7 +33,7 @@ function createTable(q)
 
 const createSalesRecord = `CREATE TABLE IF NOT EXISTS dumpling.salesrecord (
     salesId INT NOT NULL,
-    orderId INT NOT NULL,
+    orderId VARCHAR(50) NOT NULL,
     date DATE NOT NULL,
     createdAt DATETIME NOT NULL,
     updateAt DATETIME DEFAULT NULL,
@@ -46,11 +46,26 @@ const createSalesRecord = `CREATE TABLE IF NOT EXISTS dumpling.salesrecord (
         ON DELETE CASCADE
         ON UPDATE CASCADE);`;
 
+const createbonuses= `CREATE TABLE IF NOT EXISTS dumpling.bonus(
+    bonusId INT NOT NULL AUTO_INCREMENT,
+    employeeId INT NOT NULL,
+    reason VARCHAR(450) NULL DEFAULT '\"None\"',
+    date DATE NOT NULL,
+    createdAt DATETIME NOT NULL,
+    archived INT NOT NULL DEFAULT 0,
+    PRIMARY KEY (bonusId),
+    INDEX employeeId_idx (employeeId ASC) VISIBLE,
+    CONSTRAINT employeeId
+      FOREIGN KEY (employeeId)
+      REFERENCES dumpling.employee (employeeId)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE);`;
+
 const createOrder = `CREATE TABLE IF NOT EXISTS dumpling.order (
-    orderId INT NOT NULL,
+    orderId VARCHAR(50) NOT NULL,
     couponId INT DEFAULT NULL,
     typeOfOrder VARCHAR(45) NOT NULL,
-    OrderStatus VARCHAR(45) NOT NULL,
+    orderStatus VARCHAR(45) NOT NULL,
     totalBill DECIMAL NOT NULL,
     createdAt DATETIME NOT NULL,
     updatedAt DATETIME DEFAULT NULL,
@@ -63,7 +78,7 @@ const createOrder = `CREATE TABLE IF NOT EXISTS dumpling.order (
         ON DELETE SET NULL
         ON UPDATE SET NULL);`;
 const createDishAssignment = `CREATE TABLE IF NOT EXISTS dumpling.dishassignment (
-    orderNo int NOT NULL,
+    orderNo VARCHAR(50) NOT NULL,
     dishNo int NOT NULL,
     PRIMARY KEY (orderNo,dishNo))`;
 const alterdishAssignment1 = `ALTER TABLE dumpling.dishassignment 
@@ -171,14 +186,15 @@ connectionString.connect((error)=>
                 console.log("Database Created");
                 createTable(createAccount);
                 createTable(createEmpolyee);
-                createTable(createMenu);
                 createTable(createCoupoun);
                 createTable(createOrder);
+                createTable(createMenu);
                 createTable(createDishAssignment);
                 createTable(alterdishAssignment1);
                 createTable(alterdishAssignment2);
                 createTable(createChefAssignment);
                 createTable(createSalesRecord);
+                createTable(createbonuses);
                 connectionString.end();
             }
         });

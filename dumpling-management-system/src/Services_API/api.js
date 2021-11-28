@@ -79,23 +79,19 @@ export const validateSecurity = async(email, answerOne,answerTwo)=>{
     return await axios.post(`${Url}/userController/validateSecurity`,obj);
 }
 
-export const accountExistence = async (email) => {
-    const object6 = {
-    "email" : email
-    }
-    return await axios.post(`${Url}/userController/accountExistence`, object6)
-}
 
-export const addOrderItem = async(couponId,typeOfOrder,OrderStatus,totalBill,listOrders) =>{
+
+export const placeOrder = async(typeOfOrder,orderStatus,totalBill,listOrders) =>{
     const obj={
-        "couponId" : couponId,
+        "orderStatus" : orderStatus,
         "typeOfOrder" : typeOfOrder,
-        "OrderStatus" : OrderStatus,
+        "orderStatus" : orderStatus,
         "totalBill" : totalBill,
         "listOrders" : listOrders
+        
 
     }
-    return await axios.post(`${Url}/chefController/addOrderItem`, obj)
+    return await axios.post(`${Url}/cashierController/placeOrder`, obj)
 
 
 }

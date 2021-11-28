@@ -671,6 +671,10 @@ export const updateAccount = (req,res) =>
     let updateQuery = `UPDATE account
                         SET accountType  = "${req.body.empPosition}",  updatedAt= NOW()
                         WHERE emailAddress = "${req.body.emailAddress}";`;
+    let updateEmp= `UPDATE employee
+                    SET position="${req.body.empPosition}", updatedAt= NOW()
+                    WHERE accountId in (SELECT accountId FROM account WHERE emailAddress="${req.body.emailAddress}" and archived=0);`
+
     let message ="";
     let isSuccessful = false;
     console.log(emailCheck);
@@ -730,17 +734,35 @@ export const updateAccount = (req,res) =>
                             }
                             else{
 
-                                    //email exists so update employee here
-                                    console.log("User account updated");
-                                    isSuccessful=true;
-                                    message="User has been updated";
-                                    res.send(
+                                connectionString.query(updateEmp, (errEmp, res2)=> {
+                                    if(errEmp)
                                     {
-                                            "isSuccessful":isSuccessful,
-                                            "message":message
+                                        console.log("Failed to update account from employee");
+                                        console.log(errUser);
+                                        message ="Failed to update employee account";
+                                        res.send(
+                                            {
+                                                "isSuccessful":isSuccessful,
+                                                "message":message
+                                            }
+                                        );
+                                        connectionString.end();
                                     }
-                                    );
-                                    connectionString.end();
+
+                                    else{
+                                         //email exists so update employee here
+                                        console.log("User account updated");
+                                        isSuccessful=true;
+                                        message="User has been updated";
+                                        res.send(
+                                        {
+                                                "isSuccessful":isSuccessful,
+                                                "message":message
+                                        }
+                                        );
+                                        connectionString.end();
+                                    }
+                                });  
                             }
                         });
                     }
@@ -793,11 +815,11 @@ export const deleteAccount = (req,res) =>
   
     let emailCheck =  `SELECT * FROM account WHERE emailAddress="${req.body.emailAddress}"  and archived=0`;
     let updateQuery = `UPDATE account
-                    SET archived=1
+                    SET archived=1, updatedAt= NOW()
                     WHERE emailAddress="${req.body.emailAddress}";`;
     let updateEmp = `UPDATE employee
-                    SET archived=1
-                    WHERE accountId in (SELECT accountId FROM account WHERE emailAddress="${req.body.emailAddress}"  and archived=0);`
+                    SET archived=1, updatedAt= NOW()
+                    WHERE accountId in (SELECT accountId FROM account WHERE emailAddress="${req.body.emailAddress}" and archived=0);`
 
     let message ="";
     let isSuccessful = false;
@@ -820,8 +842,7 @@ export const deleteAccount = (req,res) =>
             }
             else{
 
-           
-            connectionString.query(emailCheck,(errEmail,result)=>{
+                connectionString.query(emailCheck,(errEmail,result)=>{
 
                 if(errEmail)
                 {

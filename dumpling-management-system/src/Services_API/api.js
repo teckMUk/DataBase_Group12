@@ -81,6 +81,61 @@ export const validateSecurity = async(email, answerOne,answerTwo)=>{
 
 
 
+export const placeOrder = async(typeOfOrder,orderStatus,totalBill,listOrders) =>{
+    const obj={
+        "orderStatus" : orderStatus,
+        "typeOfOrder" : typeOfOrder,
+        "orderStatus" : orderStatus,
+        "totalBill" : totalBill,
+        "listOrders" : listOrders
+        
+
+    }
+    return await axios.post(`${Url}/cashierController/placeOrder`, obj)
+
+
+}
+
+export const addMenuItem = async(dishName, dishType,preparationTime,calories,dishOfday, allergens, image) =>{
+    const obj={
+        "dishName" : dishName,
+        "dishType" : dishType,
+        "preparationTime" : preparationTime,
+        "calories" : calories,
+        "dishOfday" : dishOfday,
+        "allergens" : allergens,
+        "image": image
+
+
+
+    }
+    return await axios.post(`${Url}/chefController/addMenuItem`, obj)
+    
+
+
+
+}
+
+
+export const removeMenuItem = async(dishId) =>{
+
+    const obj={
+        "dishId" : dishId
+    }
+
+    return await axios.post(`${Url}/chefController/removeMenuItem`, obj)
+
+}
+
+
+
+
+
+
+
+
+
+
 
 
 

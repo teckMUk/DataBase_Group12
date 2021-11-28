@@ -2,16 +2,18 @@ import dotenv from "dotenv";
 import mysql from 'mysql';
 import express from 'express';
 import bodyParser from "body-parser";
+import sha1 from 'sha1';
+import { v4 as uuidv4 } from 'uuid';
 dotenv.config({path:"./src/Backend/.env"});
 const app = express();
 app.use(bodyParser.json({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
+
 export const addMenuItem = (req,res)=>
 
 {
-    console.log("adding menu item");
     var connectionString = mysql.createConnection(
         {
             host:process.env.host,
@@ -58,8 +60,6 @@ export const addMenuItem = (req,res)=>
                     );
 
                     connectionString.end();
-
-
 
                 }
 
@@ -162,6 +162,7 @@ export const fetchDishIds = (req,res)=>
                     'message':message 
                 }
             );
+            connectionString.end();
         }
         else
         {
@@ -184,6 +185,18 @@ export const fetchDishIds = (req,res)=>
                     'dishNames':dishNames
                 }
             );
+            connectionString.end();
         }
     });
 }
+
+
+
+  
+  
+
+
+
+
+
+

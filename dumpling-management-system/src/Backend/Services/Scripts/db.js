@@ -33,37 +33,83 @@ function createTable(q)
 
 const createSalesRecord = `CREATE TABLE IF NOT EXISTS dumpling.salesrecord (
     salesId INT NOT NULL,
-    orderId INT NOT NULL,
+    orderId VARCHAR(50) NOT NULL,
     date DATE NOT NULL,
     createdAt DATETIME NOT NULL,
     updateAt DATETIME DEFAULT NULL,
-    archived BIT(1) NOT NULL,
+    archived INT NOT NULL DEFAULT 0,
     PRIMARY KEY (salesId),
     INDEX orderId_idx (orderId ASC) VISIBLE,
     CONSTRAINT orderId
         FOREIGN KEY (orderId)
-        REFERENCES dumpling.order (orderId)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE);`;
+        REFERENCES dumpling.orders(orderId)
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION);`;
 
+const createbonuses= `CREATE TABLE IF NOT EXISTS dumpling.bonus(
+    bonusId INT NOT NULL AUTO_INCREMENT,
+    employeeId INT NOT NULL,
+    reason VARCHAR(450) NULL DEFAULT '\"None\"',
+    date DATE NOT NULL,
+    createdAt DATETIME NOT NULL,
+    archived INT NOT NULL DEFAULT 0,
+    PRIMARY KEY (bonusId),
+    INDEX employeeId_idx (employeeId ASC) VISIBLE,
+    CONSTRAINT employeeId
+      FOREIGN KEY (employeeId)
+      REFERENCES dumpling.employee (employeeId)
+      ON DELETE NO ACTION
+      ON UPDATE NO ACTION);`;
 
-const createOrder = `CREATE TABLE IF NOT EXISTS dumpling.order (
-    orderId INT NOT NULL ,
-    couponId INT NULL,
+const createOrder = `CREATE TABLE IF NOT EXISTS dumpling.orders(
+    orderId VARCHAR(50) NOT NULL,
+    couponId INT DEFAULT NULL,
     typeOfOrder VARCHAR(45) NOT NULL,
-    OrderStatus VARCHAR(45) NOT NULL,
+    orderStatus VARCHAR(45) NOT NULL,
     totalBill DECIMAL NOT NULL,
     createdAt DATETIME NOT NULL,
     updatedAt DATETIME DEFAULT NULL,
-    archived BIT(1) NOT NULL DEFAULT 0,
+    archived INT NOT NULL DEFAULT 0,
     PRIMARY KEY (orderId),
     INDEX couponId_idx (couponId ASC) VISIBLE,
     CONSTRAINT couponId
         FOREIGN KEY (couponId)
         REFERENCES dumpling.coupons (couponId)
-        ON DELETE SET NULL
-        ON UPDATE SET NULL);`;
-
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION);`;
+const createDishAssignment = `CREATE TABLE IF NOT EXISTS dumpling.dishassignment (
+    orderNo VARCHAR(50) NOT NULL,
+    dishNo int NOT NULL,
+    PRIMARY KEY (orderNo,dishNo))`;
+const alterdishAssignment1 = `ALTER TABLE dumpling.dishassignment 
+ADD INDEX dishNo_idx (dishNo ASC) VISIBLE;`;
+const alterdishAssignment2=
+`ALTER TABLE dumpling.dishassignment 
+ADD CONSTRAINT orderNo
+  FOREIGN KEY (orderNo)
+  REFERENCES dumpling.orders(orderId)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT dishNo
+  FOREIGN KEY (dishNo)
+  REFERENCES dumpling.menu(dishId)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;`;
+const createChefAssignment = `CREATE TABLE dumpling.chefassignment(
+    dishID INT NOT NULL,
+    chefId INT NOT NULL,
+    PRIMARY KEY (dishID, chefId),
+    INDEX chefId_idx (chefId ASC) VISIBLE,
+    CONSTRAINT chefId
+      FOREIGN KEY (chefId)
+      REFERENCES dumpling.employee(employeeId)
+      ON DELETE NO ACTION
+      ON UPDATE NO ACTION,
+    CONSTRAINT dishId
+      FOREIGN KEY (dishID)
+      REFERENCES dumpling.menu(dishId)
+      ON DELETE NO ACTION
+      ON UPDATE NO ACTION);`;
 
 const createAccount = `CREATE TABLE IF NOT EXISTS dumpling.account(
     accountId INT NOT NULL AUTO_INCREMENT,
@@ -71,11 +117,11 @@ const createAccount = `CREATE TABLE IF NOT EXISTS dumpling.account(
     accountType VARCHAR(45) NOT NULL,
     currentPassword VARCHAR(100) NOT NULL,
     previousPassword VARCHAR(100),
-    emailAddress VARCHAR(320) NOT NULL UNIQUE,
+    emailAddress VARCHAR(320) NOT NULL,
     securityQuestions VARCHAR(2000) NOT NULL,
     createdAt DATETIME NOT NULL,
     updatedAt DATETIME DEFAULT NULL,
-    archived BIT(1) NOT NULL DEFAULT 0,
+    archived INT NOT NULL DEFAULT 0,
     PRIMARY KEY (accountId));`;
 
     
@@ -90,18 +136,19 @@ const createEmpolyee = `CREATE TABLE IF NOT EXISTS dumpling.employee(
     bankAccountNumber BIGINT(20) NOT NULL,
     createdAt DATETIME NOT NULL,
     updatedAt DATETIME DEFAULT NULL,
-    archived BIT(1) NOT NULL DEFAULT 0,
+    archived INT NOT NULL DEFAULT 0,
     accountId INT NOT NULL,
     PRIMARY KEY (employeeId),
     CONSTRAINT accountId
         FOREIGN KEY (accountId)
         REFERENCES dumpling.account (accountId)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE);`;
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION);`;
 
 const createMenu = `CREATE TABLE IF NOT EXISTS dumpling.menu (
     dishId INT NOT NULL AUTO_INCREMENT,
     dishName VARCHAR(45) NOT NULL,
+    dishPrice DECIMAL(5,2) NOT NULL,
     dishType VARCHAR(45) NOT NULL,
     preparationTime INT NOT NULL,
     calories INT NOT NULL,
@@ -110,7 +157,7 @@ const createMenu = `CREATE TABLE IF NOT EXISTS dumpling.menu (
     image VARCHAR(450) NULL,
     createdAt DATETIME NOT NULL,
     updateAt DATETIME DEFAULT NULL,
-    archived BIT(1) NOT NULL DEFAULT 0,
+    archived INT NOT NULL DEFAULT 0,
     PRIMARY KEY (dishId));`;
 
 const createCoupoun = `CREATE TABLE IF NOT EXISTS dumpling.coupons (
@@ -121,7 +168,7 @@ const createCoupoun = `CREATE TABLE IF NOT EXISTS dumpling.coupons (
     expiryDate DATE NOT NULL,
     createdAt DATETIME NOT NULL,
     updatedAt DATETIME DEFAULT NULL,
-    archived BIT(1) NOT NULL DEFAULT 0,
+    archived INT NOT NULL DEFAULT 0,
     PRIMARY KEY (couponId));`;
 connectionString.connect((error)=>
 {
@@ -139,10 +186,15 @@ connectionString.connect((error)=>
                 console.log("Database Created");
                 createTable(createAccount);
                 createTable(createEmpolyee);
-                createTable(createMenu);
                 createTable(createCoupoun);
                 createTable(createOrder);
+                createTable(createMenu);
+                createTable(createDishAssignment);
+                createTable(alterdishAssignment1);
+                createTable(alterdishAssignment2);
+                createTable(createChefAssignment);
                 createTable(createSalesRecord);
+                createTable(createbonuses);
                 connectionString.end();
             }
         });

@@ -815,8 +815,8 @@ export const deleteAccount = (req,res) =>
   
     let emailCheck =  `SELECT * FROM account WHERE emailAddress="${req.body.emailAddress}"`;
     let updateQuery = `UPDATE account
-                    SET archived=1
-                    WHERE emailAddress="${req.body.emailAddress}",updatedAt= NOW();`;
+                    SET archived=1, updatedAt= NOW()
+                    WHERE emailAddress="${req.body.emailAddress}";`;
     let updateEmp = `UPDATE employee
                     SET archived=1, updatedAt= NOW()
                     WHERE accountId in (SELECT accountId FROM account WHERE emailAddress="${req.body.emailAddress}");`

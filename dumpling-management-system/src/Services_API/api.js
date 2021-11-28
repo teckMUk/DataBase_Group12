@@ -79,6 +79,65 @@ export const validateSecurity = async(email, answerOne,answerTwo)=>{
     return await axios.post(`${Url}/userController/validateSecurity`,obj);
 }
 
+export const accountExistence = async (email) => {
+    const object6 = {
+    "email" : email
+    }
+    return await axios.post(`${Url}/userController/accountExistence`, object6)
+}
+
+export const addOrderItem = async(couponId,typeOfOrder,OrderStatus,totalBill,listOrders) =>{
+    const obj={
+        "couponId" : couponId,
+        "typeOfOrder" : typeOfOrder,
+        "OrderStatus" : OrderStatus,
+        "totalBill" : totalBill,
+        "listOrders" : listOrders
+
+    }
+    return await axios.post(`${Url}/chefController/addOrderItem`, obj)
+
+
+}
+
+export const addMenuItem = async(dishName, dishType,preparationTime,calories,dishOfday, allergens, image) =>{
+    const obj={
+        "dishName" : dishName,
+        "dishType" : dishType,
+        "preparationTime" : preparationTime,
+        "calories" : calories,
+        "dishOfday" : dishOfday,
+        "allergens" : allergens,
+        "image": image
+
+
+
+    }
+    return await axios.post(`${Url}/chefController/addMenuItem`, obj)
+    
+
+
+
+}
+
+
+export const removeMenuItem = async(dishId) =>{
+
+    const obj={
+        "dishId" : dishId
+    }
+
+    return await axios.post(`${Url}/chefController/removeMenuItem`, obj)
+
+}
+
+
+
+
+
+
+
+
 
 
 

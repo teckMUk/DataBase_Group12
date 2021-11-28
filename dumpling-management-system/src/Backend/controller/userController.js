@@ -38,9 +38,8 @@ export const findUsers = (req,res)=>
             );
             connectionString.end();
         }
-
         else {
-            let loginQuery = `SELECT account.accountId,account.currentPassword, account.accountType FROM account WHERE account.emailAddress="${email}"`;
+            let loginQuery = `SELECT account.accountId,account.currentPassword, account.accountType FROM account WHERE account.emailAddress="${email}" and account.archived=0`;
             connectionString.query(loginQuery, (err, result) => {
                 if (err) {
                     console.log("No user found");
@@ -54,7 +53,6 @@ export const findUsers = (req,res)=>
                         });
                     connectionString.end();
                 }
-
                 else {
                     if (result.length === 0) {
                         isSuccessful = false;
@@ -67,7 +65,6 @@ export const findUsers = (req,res)=>
                         );
                         connectionString.end();
                     }
-
                     else {
                         console.log("User found");
                         console.log(result);
@@ -86,7 +83,6 @@ export const findUsers = (req,res)=>
                                 });
                             connectionString.end();
                         }
-
                         else {
                             isSuccessful = false;
                             message = "Invalid Credentials";
@@ -101,9 +97,7 @@ export const findUsers = (req,res)=>
                     }
                 }
             });
-
         }
-
     });
 }
 export const addUser = (req,res)=>{
@@ -119,9 +113,12 @@ export const addUser = (req,res)=>{
     let message ="";
     let isSuccessful = false;
     let currPass = sha1(req.body.currentPassword);
-    let validateQuery =  `SELECT * FROM account WHERE emailAddress="${req.body.emailAddress}"`;
+    let validateQuery =  `SELECT * FROM account WHERE emailAddress="${req.body.emailAddress}" and archived=0`;
     let secQuestions = req.body.securityQuestions;
+    console.log('bef',secQuestions);
     let stringifysecQuestions = JSON.stringify(secQuestions);
+    stringifysecQuestions = JSON.stringify(stringifysecQuestions);
+    console.log('aft', stringifysecQuestions);
     let addAccountquery =
     `INSERT INTO account (userName,accountType,currentPassword,emailAddress,securityQuestions,createdAt)
         VALUES("${req.body.userName}","${req.body.accountType}","${currPass}","${req.body.emailAddress}",${stringifysecQuestions},NOW());`;

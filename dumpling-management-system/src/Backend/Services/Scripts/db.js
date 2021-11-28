@@ -117,7 +117,7 @@ const createAccount = `CREATE TABLE IF NOT EXISTS dumpling.account(
     accountType VARCHAR(45) NOT NULL,
     currentPassword VARCHAR(100) NOT NULL,
     previousPassword VARCHAR(100),
-    emailAddress VARCHAR(320) NOT NULL UNIQUE,
+    emailAddress VARCHAR(320) NOT NULL,
     securityQuestions VARCHAR(2000) NOT NULL,
     createdAt DATETIME NOT NULL,
     updatedAt DATETIME DEFAULT NULL,

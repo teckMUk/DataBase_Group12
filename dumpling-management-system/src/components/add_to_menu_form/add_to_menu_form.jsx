@@ -8,6 +8,7 @@ import {useNavigate} from 'react-router-dom';
 const initialState = {
     dishName: "",
     dishType: "",
+    dishPrice:"",
     preparationTime: "",
     calories: "",
     dishOfday: "0",
@@ -43,7 +44,7 @@ const initialState = {
         e.preventDefault();
         
         
-        addMenuItem(newDish.dishName, newDish.dishType, newDish.preparationTime, newDish.calories, 
+        addMenuItem(newDish.dishName, newDish.dishType,newDish.dishPrice,newDish.preparationTime, newDish.calories, 
             newDish.dishOfday, newDish.allergens, 
             newDish.image).then((response)=>{
 
@@ -81,6 +82,12 @@ const initialState = {
                         </Form.Group>
 
                         <Form.Group className="mb-3" controlId="formBasicName">
+                            <Form.Label>Dish Price</Form.Label>
+                            <Form.Control type="text" placeholder="Enter Dish Price" name = 'dishPrice'
+                             value = {newDish.dishPrice} onChange = {handle}/>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3" controlId="formBasicName">
                             <Form.Label>Preparation Time</Form.Label>
                             <Form.Control type="text" placeholder="Enter Preparation Time" name = 'preparationTime'
                              value = {newDish.preparationTime} onChange = {handle}/>
@@ -108,10 +115,6 @@ const initialState = {
                         onClick= {onCreate}>
                             Add Dish
                         </Button>
-
-
-
-
                         
                    </Form>
                       

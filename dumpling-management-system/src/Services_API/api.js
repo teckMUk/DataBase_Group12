@@ -35,7 +35,7 @@ export const createAccount = async (userName, accountType, currentPassword, emai
 }
 
 export const updateAccount = async (accountType, position, emailAddress) => {
-    const object2 = {"userName" : userName,
+    const object2 = {
     "accountType":accountType,
     "position" : position,
     "emailAddress" : emailAddress,
@@ -96,10 +96,11 @@ export const placeOrder = async(typeOfOrder,orderStatus,totalBill,listOrders) =>
     return await axios.post(`${Url}/cashierController/placeOrder`, obj)
 }
 
-export const addMenuItem = async(dishName, dishType,preparationTime,calories,dishOfday, allergens, image) =>{
+export const addMenuItem = async(dishName, dishType,dishPrice,preparationTime,calories,dishOfday, allergens, image) =>{
     const obj={
         "dishName" : dishName,
         "dishType" : dishType,
+        "dishPrice":dishPrice,
         "preparationTime" : preparationTime,
         "calories" : calories,
         "dishOfday" : dishOfday,

@@ -32,7 +32,7 @@ export const addMenuItem = (req,res)=>
     let image = req.body.image;
     let addDishQuery =
     `INSERT INTO dumpling.menu (dishName,dishType,dishPrice,preparationTime,calories,dishOfday,allergens,image,createdAt)
-    VALUES(${dishName},${dishType},${dishPrice},${preparationTime},${calories},${dishOfday},${allergens},${image},NOW());`;
+    VALUES("${dishName}","${dishType}",${dishPrice},${preparationTime},${calories},${dishOfday},"${allergens}","${image}",NOW());`;
     connectionString.connect((error)=>{
         if(error)
         {

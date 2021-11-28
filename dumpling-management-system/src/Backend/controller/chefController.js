@@ -38,7 +38,8 @@ export const addMenuItem = (req,res)=>
     connectionString.connect((error)=>{
         if(error)
         {
-            console.log(err);
+
+            console.log(error);
 
         }
         else
@@ -189,49 +190,9 @@ export const fetchDishIds = (req,res)=>
     });
 }
 
-function fetchMaxId(connectionString) {
 
 
-    let findMax = 
-    `SELECT MAX(orderId) FROM dumpling.order`;
-    connectionString.query(findMax,(err2,result)=>
-        {
-            if(err2)
-            {
-                console.log("Failed to fetch order ID");
-                console.log(err2);
-                return -1;
-            }
-            else
-            {
-                console.log("Order ID fetched");
-                //console.log(result);
-                return result;
-            }
-         });
-
-
-  }
-
-  function insertDishAssignment(connectionString,q) {
-
-    connectionString.query(q,(err2,result)=>
-        {
-            if(err2)
-            {
-                
-                console.log(err2);
-                return -1;
-            }
-            else
-            {
-                
-                return 1;
-            }
-         });
-
-
-  }
+  
   
 
 
@@ -239,165 +200,3 @@ function fetchMaxId(connectionString) {
 
 
 
-export const addOrderItem = (req,res)=>{
-    var connectionString = mysql.createConnection(
-        {
-            host:process.env.host,
-            user: process.env.user,
-            password:process.env.password,
-            database:process.env.database
-
-        }
-    );
-
-    let message ="";
-    let isSuccessful = false;
-    let typeOfOrder = req.body.typeOfOrder;
-    let OrderStatus = req.body.orderStatus;
-    let totalBill = req.body.totalBill;
-    let listOrders = req.body.listOrders;//list orders is an array of order IDs that the user wishes to place an order of
-    let dishIds = Object.values(JSON.parse(listOrders));
-    //console.log(dishIds[0]);
-    let finalDishIds = dishIds[0];
-    let noOfOrders = finalDishIds.length;
-
-    //console.log("This is the number of orders",noOfOrders);
-    //list orders is an array of order IDs that the user wishes to place an order of 
-    
-    //insert into orders table first
-    
-    let checkUnique = 1;
-    let orderId = 0
-    let checkQuery =`SELECT * FROM dumpling.order WHERE order.orderId = ${orderId}`;
-    while(checkUnique)
-    {
-        orderId =uuidv4();
-        connectionString.connect((error)=>{
-            if(error)
-            {
-                console.log(err);
-        
-            }
-            else
-            {
-                connectionString.query(checkQuery,(err,result)=>{
-                    if(result.length===0)
-                    {
-                        checkUnique = 0;
-                    }
-
-
-                });
-
-            }
-
-        });
-        connectionString.end();
-
-
-
-    }
-
-
-    let addOrderQuery = 
-    `INSERT INTO dumpling.order (orderId,couponId,typeOfOrder,OrderStatus,totalBill,createdAt)
-    VALUES(${orderId},${couponId},${typeOfOrder},${OrderStatus},${totalBill},NOW());`;
-    let checkAdditionOrder = 0;
-    //now we should add into the orders table first
-    connectionString.connect((error)=>{
-        if(error)
-        {
-            console.log(err);
-    
-        }
-        else
-        {
-            connectionString.query(addOrderQuery,(err,result) => {
-                if(err)
-                {
-                    console.log("Failed to add order into the order tab");
-                    console.log(err);
-
-                }
-                else
-                {
-                    checkAdditionOrder = 1;
-                }
-               
-
-            });
-            
-
-
-        }
-        connectionString.end();
-
-});
-isSuccessful = true;
-let addDishAssignment = "";
-if(checkAdditionOrder ===1)
-{
-
-    connectionString.connect((error)=>{
-        if(error)
-        {
-            console.log(err);
-    
-        }
-        else
-        {
-            for (let i = 0; i < noOfOrders; i++) 
-            {
-                addDishAssignment = 
-                `INSERT INTO dumpling.dishAssignment (orderId,dishId) 
-                VALUES(${orderId},${finalDishIds[i]},NOW());`;
-                connectionString.query(addDishAssignment,(err,result) => {
-                    if(err)
-                    {
-                        console.log("Failed to add dish into the dish assignment table");
-                        console.log(err);
-                        isSuccessful = false;
-                        break;
-    
-                    }
-                    
-                   
-    
-                });
-                
-                
-
-
-
-
-                
-            }
-            
-            
-        }
-        connectionString.end();
-
-    });
-
-
-
-
-
-}
-
-if(isSuccessful===false || checkAdditionOrder===0)
-{
-    res.send(
-
-        {
-            "isSuccessful":false,
-
-            "message":"Order has been placed successfully"
-        }
-
-    );
-
-}
-
-
-}

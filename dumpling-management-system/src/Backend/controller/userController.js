@@ -38,9 +38,8 @@ export const findUsers = (req,res)=>
             );
             connectionString.end();
         }
-
         else {
-            let loginQuery = `SELECT account.accountId,account.currentPassword, account.accountType FROM account WHERE account.emailAddress="${email}"`;
+            let loginQuery = `SELECT account.accountId,account.currentPassword, account.accountType FROM account WHERE account.emailAddress="${email}" and account.archived=0`;
             connectionString.query(loginQuery, (err, result) => {
                 if (err) {
                     console.log("No user found");
@@ -54,7 +53,6 @@ export const findUsers = (req,res)=>
                         });
                     connectionString.end();
                 }
-
                 else {
                     if (result.length === 0) {
                         isSuccessful = false;
@@ -67,7 +65,6 @@ export const findUsers = (req,res)=>
                         );
                         connectionString.end();
                     }
-
                     else {
                         console.log("User found");
                         console.log(result);
@@ -86,7 +83,6 @@ export const findUsers = (req,res)=>
                                 });
                             connectionString.end();
                         }
-
                         else {
                             isSuccessful = false;
                             message = "Invalid Credentials";
@@ -101,9 +97,7 @@ export const findUsers = (req,res)=>
                     }
                 }
             });
-
         }
-
     });
 }
 export const addUser = (req,res)=>{
@@ -113,15 +107,17 @@ export const addUser = (req,res)=>{
             user: process.env.user,
             password:process.env.password,
             database:process.env.database
-
         }
     );
     let message ="";
     let isSuccessful = false;
     let currPass = sha1(req.body.currentPassword);
-    let validateQuery =  `SELECT * FROM account WHERE emailAddress="${req.body.emailAddress}"`;
+    let validateQuery =  `SELECT * FROM account WHERE emailAddress="${req.body.emailAddress}" and archived=0`;
     let secQuestions = req.body.securityQuestions;
+    console.log('bef',secQuestions);
     let stringifysecQuestions = JSON.stringify(secQuestions);
+    stringifysecQuestions = JSON.stringify(stringifysecQuestions);
+    console.log('aft', stringifysecQuestions);
     let addAccountquery =
     `INSERT INTO account (userName,accountType,currentPassword,emailAddress,securityQuestions,createdAt)
         VALUES("${req.body.userName}","${req.body.accountType}","${currPass}","${req.body.emailAddress}",${stringifysecQuestions},NOW());`;
@@ -656,3 +652,262 @@ export const forgetPassword = (req,res)=>{
 
 }
 
+export const updateAccount = (req,res) =>
+{
+    console.log('im called');
+    var connectionString = mysql.createConnection(
+        {
+            host:process.env.host,
+            user: process.env.user,
+            password:process.env.password,
+            database:process.env.database
+
+        }
+    );
+    //check if person is admin
+    
+    let position = req.body.id;
+    let emailCheck =  `SELECT * FROM account WHERE emailAddress="${req.body.emailAddress}"`;
+    let updateQuery = `UPDATE account
+                        SET accountType  = "${req.body.empPosition}",  updatedAt= NOW()
+                        WHERE emailAddress = "${req.body.emailAddress}";`;
+    let message ="";
+    let isSuccessful = false;
+    console.log(emailCheck);
+    if(position === 'Admin' || position === 'admin' )
+    {
+        connectionString.connect((err) => {
+
+            if(err)
+            {
+                console.log("Error found");
+                console.log(err);
+                message = "Connect to db failed";
+                res.send(
+                    {
+                        "isSuccessful":isSuccessful,
+                        "message":message
+                    }
+                );
+                connectionString.end();                
+            }
+            else{
+
+           
+            connectionString.query(emailCheck,(errEmail,result)=>{
+
+                if(errEmail)
+                {
+                    console.log("validateQuery failed");
+               
+                    message = "Unable to validate email address atm";
+                    res.send(
+                        {
+                            "isSuccessful":isSuccessful,
+                            "message":message
+                        }
+                    );
+                    connectionString.end();
+                }
+                else
+                {
+                    if(result.length !== 0)
+                    {
+                        
+                        connectionString.query(updateQuery ,(errUser,result1)=>{
+                            if(errUser)
+                            {
+                                console.log("Failed to update account");
+                                console.log(errUser);
+                                message ="Failed to update user account";
+                                res.send(
+                                    {
+                                        "isSuccessful":isSuccessful,
+                                        "message":message
+                                    }
+                                );
+                                connectionString.end();
+                            }
+                            else{
+
+                                    //email exists so update employee here
+                                    console.log("User account updated");
+                                    isSuccessful=true;
+                                    message="User has been updated";
+                                    res.send(
+                                    {
+                                            "isSuccessful":isSuccessful,
+                                            "message":message
+                                    }
+                                    );
+                                    connectionString.end();
+                            }
+                        });
+                    }
+                    else{
+                        console.log(result)
+                        console.log("no email");
+                        message = "this employee does not exist";
+                        res.send(
+                            {
+                                "isSuccessful":isSuccessful,
+                                "message":message
+                            }
+                        );
+                        connectionString.end(); 
+                    }
+
+                }
+
+
+             });
+            //if it is admin write update query 
+           
+            }
+
+
+        });
+    
+    }
+    else
+    {
+        return;
+    }
+
+}
+
+
+export const deleteAccount = (req,res) =>
+{
+   
+    var connectionString = mysql.createConnection(
+        {
+            host:process.env.host,
+            user: process.env.user,
+            password:process.env.password,
+            database:process.env.database
+
+        }
+    );
+    //check if person is admin
+  
+    let emailCheck =  `SELECT * FROM account WHERE emailAddress="${req.body.emailAddress}"`;
+    let updateQuery = `UPDATE account
+                    SET archived=1
+                    WHERE emailAddress="${req.body.emailAddress}";`;
+    let updateEmp = `UPDATE employee
+                    SET archived=1
+                    WHERE accountId in (SELECT accountId FROM account WHERE emailAddress="${req.body.emailAddress}");`
+
+    let message ="";
+    let isSuccessful = false;
+    console.log(emailCheck);
+   
+        connectionString.connect((err) => {
+
+            if(err)
+            {
+                console.log("Error found");
+                console.log(err);
+                message = "Connect to db failed";
+                res.send(
+                    {
+                        "isSuccessful":isSuccessful,
+                        "message":message
+                    }
+                );
+                connectionString.end();                
+            }
+            else{
+
+           
+            connectionString.query(emailCheck,(errEmail,result)=>{
+
+                if(errEmail)
+                {
+                    console.log("validateQuery failed");
+               
+                    message = "Unable to validate email address atm";
+                    res.send(
+                        {
+                            "isSuccessful":isSuccessful,
+                            "message":message
+                        }
+                    );
+                    connectionString.end();
+                }
+                else
+                {
+                    if(result.length !== 0)
+                    {
+                        connectionString.query(updateQuery ,(errUser,result1)=>{
+                            if(errUser)
+                            {
+                                console.log("Failed to delete account");
+                                console.log(errUser);
+                                message ="Failed to delete user account";
+                                res.send(
+                                    {
+                                        "isSuccessful":isSuccessful,
+                                        "message":message
+                                    }
+                                );
+                                connectionString.end();
+                            }
+                            else{
+
+                                    connectionString.query(updateEmp, (errEmp, res2)=> {
+                                        if(errEmp)
+                                        {
+                                            console.log("Failed to delete account from employee");
+                                            console.log(errUser);
+                                            message ="Failed to delete employee account";
+                                            res.send(
+                                                {
+                                                    "isSuccessful":isSuccessful,
+                                                    "message":message
+                                                }
+                                            );
+                                            connectionString.end();
+                                        }
+
+                                        else{
+                                             //email exists so update employee here
+                                            console.log("User account deleted");
+                                            isSuccessful=true;
+                                            message="User has been deleted";
+                                            res.send(
+                                            {
+                                                    "isSuccessful":isSuccessful,
+                                                    "message":message
+                                            }
+                                            );
+                                            connectionString.end();
+                                        }
+                                    });                                   
+                            }
+                        });
+                    }
+                    else{
+                        console.log(result)
+                        console.log("no email");
+                        message = "this employee does not exist";
+                        res.send(
+                            {
+                                "isSuccessful":isSuccessful,
+                                "message":message
+                            }
+                        );
+                        connectionString.end(); 
+                    }
+
+                }
+             });
+            //if it is admin write update query 
+           
+            }
+        });
+    
+}
+   
+           

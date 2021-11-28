@@ -11,6 +11,8 @@ app.use(cors());
 
 app.post("/api/userController/login",route);
 app.post("/api/userController/createAccount",route);
+app.post("/api/userController/updateAccount",route);
+app.post("/api/userController/deleteAccount",route);
 app.post("/api/userController/securityQuestions",route);
 app.post("/api/userController/changePassword",route);
 app.post("/api/userController/forgetPassword",route);
@@ -18,7 +20,6 @@ app.post("/api/userController/validateSecurity", route);
 app.post("/api/userController/accountExistence", route);
 app.post("/api/chefController/removeMenuItem",route);
 app.post("/api/chefController/addMenuItem", route);
-app.post("/api/chefController/addOrderItem", route);
 app.post("/api/chefController/fetchDishIds", route);
 app.post("/api/cashierController/placeOrder", route);
 const PORT =  process.env.PORT || 3000;

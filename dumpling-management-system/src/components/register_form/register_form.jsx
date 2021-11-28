@@ -3,10 +3,12 @@ import React from "react";
 import {Container, Form, Button} from 'react-bootstrap';
 import { useState, useEffect } from "react";
 //import  {Link} from 'react-router-dom';
+import {createAccount} from  '../../Services_API/api.js';
+import {useNavigate} from 'react-router-dom';
 
 const initialState = {
     name: "",
-    id: "",
+    accountType: "",
     email: "",
     status: "",
     address: "",
@@ -17,6 +19,10 @@ const initialState = {
     bankAccount: "",
     salary : "",
     employeeName: "",
+    security1: "",
+    security2: "",
+    ans1: "",
+    ans2: ""
   };
 
 const errorCheck = {
@@ -35,6 +41,7 @@ export default function RegisterForm()
 
     useEffect(() => {}, [newEmploye]);
 
+    let navigate = useNavigate();
     const handle = e => {
         const {name, value} = e.target;
         setNewEmploye({...newEmploye, [name]: value});
@@ -87,7 +94,31 @@ export default function RegisterForm()
       
     }
 
-    
+    const onCreate = (e) =>{
+        e.preventDefault();
+        let obj = {}
+        obj[newEmploye.security1] = newEmploye.ans1;
+        obj[newEmploye.security2] = newEmploye.ans2;
+       
+        console.log('obj is ',obj);
+        createAccount(newEmploye.name, newEmploye.accountType, newEmploye.cpw, newEmploye.email, obj, 
+            newEmploye.employeeName, newEmploye.bd, 
+            newEmploye.num, newEmploye.address, newEmploye.status, newEmploye.salary,newEmploye.bankAccount).then((response)=>{
+
+                if(response.data.isSuccessful)
+                {
+                    alert(response.data.message);
+                    navigate('/dashboard');
+                }
+                else{
+                    alert(response.data.message);
+                    navigate('/dashboard');
+                }
+
+        }); 
+
+    }
+
     return(
                <Container id="main-container" className="d-grid h-100">
                    <Form className= 'text-center' onSubmit= {submitHandle}>
@@ -100,20 +131,19 @@ export default function RegisterForm()
 
                         <Form.Group className="mb-3" controlId="formBasicID">
                             <Form.Label>accountType</Form.Label>
-                            <Form.Control type="text" placeholder="Employee Status" name = 'id'
-                            value = {newEmploye.id} onChange = {handle}/>
+                            <Form.Control type="text" placeholder="Employee Status" name = 'accountType'
+                            value = {newEmploye.accountType} onChange = {handle}/>
                         </Form.Group>
 
                         <Form.Group className="mb-3" controlId="formBasicPos">
                             <Form.Label>Employee Position</Form.Label>
-                            <Form.Control type="text" placeholder="Employee Status" name = 'status' 
+                            <Form.Control type="text" placeholder="Employee position" name = 'status' 
                             value = {newEmploye.status} onChange = {handle}/>
                         </Form.Group>
 
-
-                        <Form.Group className="mb-3" controlId="formBasicName">
+                        <Form.Group className="mb-3" controlId="formBasicEmpName">
                             <Form.Label>Employee Name</Form.Label>
-                            <Form.Control type="text" placeholder="Employee Status" name = 'status' 
+                            <Form.Control type="text" placeholder="Employee name" name = 'employeeName' 
                             value = {newEmploye.employeeName} onChange = {handle}/>
                         </Form.Group>
 
@@ -123,15 +153,15 @@ export default function RegisterForm()
                             value = {newEmploye.num} onChange = {handle}/>
                         </Form.Group>
 
-                        <Form.Group className="mb-3" controlId="formBasicNum">
+                        <Form.Group className="mb-3" controlId="formBasicNumSal">
                             <Form.Label>Salary</Form.Label>
-                            <Form.Control type="text" placeholder="number" name = 'num' 
+                            <Form.Control type="text" placeholder="number" name = 'salary' 
                             value = {newEmploye.salary} onChange = {handle}/>
                         </Form.Group>
 
-                        <Form.Group className="mb-3" controlId="formBasicNum">
+                        <Form.Group className="mb-3" controlId="formBasicNumAccount">
                             <Form.Label>Bank account Number</Form.Label>
-                            <Form.Control type="text" placeholder="number" name = 'num' 
+                            <Form.Control type="text" placeholder="number" name = 'bankAccount' 
                             value = {newEmploye.bankAccount} onChange = {handle}/>
                         </Form.Group>
 
@@ -152,7 +182,31 @@ export default function RegisterForm()
                             <Form.Control type="text" placeholder="Enter address" name = 'address'  
                             value = {newEmploye.address} onChange = {handle}/>
                         </Form.Group>
-                    
+
+                        <Form.Group className="mb-3" controlId="formBasicQuestion1">
+                            <Form.Label>Enter Question one: </Form.Label>
+                            <Form.Control type="text" placeholder="Enter question" name = 'security1'
+                             value = {newEmploye.security1} onChange = {handle}/>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3" controlId="formBasicAns1">
+                            <Form.Label>Enter Ansewr one: </Form.Label>
+                            <Form.Control type="text" placeholder="Enter ans" name = 'ans1'
+                             value = {newEmploye.ans1} onChange = {handle}/>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3" controlId="formBasicQuestion2">
+                            <Form.Label>Enter Question two: </Form.Label>
+                            <Form.Control type="text" placeholder="Enter question" name = 'security2'
+                             value = {newEmploye.security2} onChange = {handle}/>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3" controlId="formBasicAns2">
+                            <Form.Label>Enter Ansewr two: </Form.Label>
+                            <Form.Control type="text" placeholder="Enter ans" name = 'ans2'
+                             value = {newEmploye.ans2} onChange = {handle}/>
+                        </Form.Group>
+
                         <Form.Group className="mb-3" controlId="formBasicPassword">
                             <Form.Label>Set Default Password</Form.Label>
                             <Form.Control type="password" placeholder="Password" name = 'pw'  
@@ -177,7 +231,8 @@ export default function RegisterForm()
                            
                          </ul>
 
-                        <Button variant="primary" type="submit" disabled = {Object.values(newEmployeErr).includes(false)} href = "/dashboard">
+                        <Button variant="primary" type="submit" disabled = {Object.values(newEmployeErr).includes(false)} 
+                        onClick= {onCreate}>
                             Create Account
                         </Button>
 

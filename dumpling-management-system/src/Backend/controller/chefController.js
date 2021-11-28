@@ -34,7 +34,8 @@ export const addMenuItem = (req,res)=>
     connectionString.connect((error)=>{
         if(error)
         {
-            console.log(err);
+
+            console.log(error);
 
         }
         else

@@ -42,7 +42,7 @@ const createSalesRecord = `CREATE TABLE IF NOT EXISTS dumpling.salesrecord (
     INDEX orderId_idx (orderId ASC) VISIBLE,
     CONSTRAINT orderId
         FOREIGN KEY (orderId)
-        REFERENCES dumpling.order (orderId)
+        REFERENCES dumpling.orders(orderId)
         ON DELETE CASCADE
         ON UPDATE CASCADE);`;
 
@@ -61,9 +61,9 @@ const createbonuses= `CREATE TABLE IF NOT EXISTS dumpling.bonus(
       ON DELETE CASCADE
       ON UPDATE CASCADE);`;
 
-const createOrder = `CREATE TABLE IF NOT EXISTS dumpling.order (
+const createOrder = `CREATE TABLE IF NOT EXISTS dumpling.orders(
     orderId VARCHAR(50) NOT NULL,
-    couponId INT DEFAULT NULL,
+    couponId INT NOT NULL DEFAULT -1,
     typeOfOrder VARCHAR(45) NOT NULL,
     orderStatus VARCHAR(45) NOT NULL,
     totalBill DECIMAL NOT NULL,
@@ -75,8 +75,8 @@ const createOrder = `CREATE TABLE IF NOT EXISTS dumpling.order (
     CONSTRAINT couponId
         FOREIGN KEY (couponId)
         REFERENCES dumpling.coupons (couponId)
-        ON DELETE SET NULL
-        ON UPDATE SET NULL);`;
+        ON DELETE CASCADE
+        ON UPDATE CASCADE);`;
 const createDishAssignment = `CREATE TABLE IF NOT EXISTS dumpling.dishassignment (
     orderNo VARCHAR(50) NOT NULL,
     dishNo int NOT NULL,
@@ -87,7 +87,7 @@ const alterdishAssignment2=
 `ALTER TABLE dumpling.dishassignment 
 ADD CONSTRAINT orderNo
   FOREIGN KEY (orderNo)
-  REFERENCES dumpling.order(orderId)
+  REFERENCES dumpling.orders(orderId)
   ON DELETE CASCADE
   ON UPDATE CASCADE,
 ADD CONSTRAINT dishNo
@@ -161,7 +161,7 @@ const createMenu = `CREATE TABLE IF NOT EXISTS dumpling.menu (
     PRIMARY KEY (dishId));`;
 
 const createCoupoun = `CREATE TABLE IF NOT EXISTS dumpling.coupons (
-    couponId INT NOT NULL,
+    couponId INT NOT NULL DEFAULT -1,
     couponName VARCHAR(45) NOT NULL,
     discount INT NOT NULL,
     issueDate DATE NOT NULL,

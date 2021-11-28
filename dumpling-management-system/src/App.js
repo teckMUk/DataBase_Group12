@@ -22,7 +22,7 @@ const App = () => {
       <Route path='/create_account' element={<CreateAccount/>} />
       <Route path='/allForms' element={<Form2/>} />
       <Route path='/resetpw' element={<ResetPw/>} />
-      <Route path='/email' element={<Email/>} />
+      <Route path='/email' element={<Email role = {false}/>} />
       <Route path='/questions' element={<Questions/>} />
       
       </Routes>

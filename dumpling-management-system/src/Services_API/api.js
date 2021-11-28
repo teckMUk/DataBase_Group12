@@ -41,7 +41,7 @@ export const createAccount = async (userName, accountType, currentPassword, emai
 }
 
 export const updateAccount = async (accountType, position, emailAddress) => {
-    const object2 = {"userName" : userName,
+    const object2 = {
     "accountType":accountType,
     "position" : position,
     "emailAddress" : emailAddress,
@@ -92,7 +92,7 @@ export const validateSecurity = async(email, answerOne,answerTwo)=>{
 
 export const placeOrder = async(typeOfOrder,orderStatus,totalBill,listOrders) =>{
     const obj={
-        "orderStatus" : orderStatus,
+      
         "typeOfOrder" : typeOfOrder,
         "orderStatus" : orderStatus,
         "totalBill" : totalBill,

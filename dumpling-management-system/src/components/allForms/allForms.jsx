@@ -95,7 +95,6 @@ export default function Forms()
 
         });
         
-
     }
 
     const submitHandle = e => {

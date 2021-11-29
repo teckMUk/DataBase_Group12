@@ -2,12 +2,10 @@ import "./removeMenu.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Table , Button,} from "react-bootstrap";
 import {fetchDishIds,removeMenuItem} from '../../Services_API/api'
-import {useNavigate} from 'react-router-dom';
 import {useState, useEffect } from "react";
 
 export default function Table3()
 {
-    let navigate = useNavigate(); 
     const [employees,setEmployees] = useState();
     useEffect(() => {
         fetchDishIds().then((response)=>

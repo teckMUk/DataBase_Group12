@@ -10,8 +10,6 @@ import {addMenuItem} from  '../../Services_API/api.js';
 
 import {useNavigate} from 'react-router-dom';
 
- 
-
 const initialState = {
 
     dishName: "",
@@ -79,8 +77,6 @@ const initialState = {
     const onCreate = (e) =>{
 
         e.preventDefault();
-
-       
 
        
 
@@ -167,7 +163,6 @@ const initialState = {
  
 
                         <Form.Group className="mb-3" controlId="formBasicName">
-
                             <Form.Label>Preparation Time</Form.Label>
 
                             <Form.Control type="text" placeholder="Enter Preparation Time" name = 'preparationTime'
@@ -222,14 +217,9 @@ const initialState = {
 
                         </Button>
 
-                       
-
                    </Form>
 
                      
-
- 
-
                </Container>
 
        

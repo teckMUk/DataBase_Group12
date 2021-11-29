@@ -4,17 +4,11 @@ const Url = "http://localhost:3000/api"
 
 export const LogIn = async (Email, Password) => {
 
-    const object = {"email" : Email,
-    "password":Password
+    const object = {
+        "email" : Email,
+        "password":Password
     }
-    // axios(
-    //     {
-    //         method: 'POST',
-    //         url: `${Url}/userController/login`,
-    //         data: object
-    //     }).then((response)=>{
-    //         console.log(response);
-    //     });
+   
     return await axios.post(`${Url}/userController/login`,object,{
         'Accept': 'application/json',
         'content-type':'application/json'
@@ -65,7 +59,8 @@ export const securityQuestions = async (Email) => {
 }
 
 export const changePassword = async (ID, newPassword, currentPassword) => {
-    const object4 = {"ID" : ID,
+    const object4 = {
+    "ID" : ID,
     "newPassword" : newPassword,
     "currentPassword" : currentPassword
     }
@@ -100,37 +95,35 @@ export const validateSecurity = async(email, answerOne,answerTwo)=>{
 
 
 export const placeOrder = async(typeOfOrder,orderStatus,totalBill,listOrders) =>{
+    console.log("In placed orders api in server_api");
     const obj={
       
         "typeOfOrder" : typeOfOrder,
-        "orderStatus" : orderStatus,
+        "orderStatus":orderStatus,
         "totalBill" : totalBill,
-        "listOrders" : listOrders
-        
+        "listOrders" : listOrders     
 
     }
-    return await axios.post(`${Url}/cashierController/placeOrder`, obj)
-
-
+    // console.log(obj);
+    return await axios.post(`${Url}/cashierController/placeOrder`, obj,)
 }
 
-export const addMenuItem = async(dishName, dishType,preparationTime,calories,dishOfday, allergens, image) =>{
+export const addMenuItem = async(dishName, dishType,dishPrice,preparationTime,calories,dishOfday, allergens, image) =>{
     const obj={
         "dishName" : dishName,
         "dishType" : dishType,
+        "dishPrice":dishPrice,
         "preparationTime" : preparationTime,
         "calories" : calories,
         "dishOfday" : dishOfday,
         "allergens" : allergens,
         "image": image
 
-
-
     }
-    return await axios.post(`${Url}/chefController/addMenuItem`, obj)
-    
-
-
+    return await axios.post(`${Url}/chefController/addMenuItem`, obj,{
+    'Accept': 'application/json',
+    'content-type':'application/json'
+});
 
 }
 
@@ -146,13 +139,58 @@ export const removeMenuItem = async(dishId) =>{
 }
 export const getEmployeeDetails = async() =>
 {
-    return await axios.get(`${Url}/UserController/employeeDetails`);
+    return await axios.get(`${Url}/managerController/employeeDetails`);
 }
 
+export const updateEmployeeSalary = async(employeeId,updatedSalary,checkId) =>{
+    const updateSalaryForEmployee= {
+        "employeeId":employeeId,
+        "updatedSalary":updatedSalary,
+        "checkId":checkId
+    }
+    return await axios.post(`${Url}/managerController/updateEmployeeSalary`,updateSalaryForEmployee,{
+        'Accept': 'application/json',
+        'content-type':'application/json'
+    });
+}
 
+export const fetchAllEmployee = async() =>
+{
+    console.log("called fetch all employee");
+    const req = {};
+    return await axios.post(`${Url}/managerController/fetchAllEmployee`,req,{
+    'Accept': 'application/json',
+    'content-type':'application/json'
+    });
+}
 
+export const giveBonuses = async(checkId,employeeId,reason,date)=>{
+    const giveBonusToEmployee = {
+        "checkId":checkId,
+        "employeeId":employeeId,
+        "reason":reason,
+        "date":date
+    }
+    return await axios.post(`${Url}/managerController/giveBonuses`,giveBonusToEmployee,{
+        'Accept': 'application/json',
+        'content-type':'application/json'
+    });
+}
 
+export const fetchDishIds = async()=>{
 
+    return await axios.post(`${Url}/chefController/fetchDishIds`,{
+        'Accept': 'application/json',
+        'content-type':'application/json'
+    });
+}
+export const viewPlacedOrders = async()=>{
+
+    return await axios.post(`${Url}/chefController/viewPlacedOrders`,{
+        'Accept': 'application/json',
+        'content-type':'application/json'
+    });
+}
 
 
 

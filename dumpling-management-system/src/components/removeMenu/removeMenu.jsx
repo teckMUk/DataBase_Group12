@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Table , Button,} from "react-bootstrap";
 import {fetchDishIds,removeMenuItem} from '../../Services_API/api'
 import {useState, useEffect } from "react";
-
+import Nav2 from "../nav/nav";
 export default function Table3()
 {
     const [employees,setEmployees] = useState();
@@ -41,6 +41,10 @@ export default function Table3()
     }
     return (
         <>
+            <div>
+                <Nav2/>
+            </div>
+              
             <div>
             <Table responsive>
                 <thead>

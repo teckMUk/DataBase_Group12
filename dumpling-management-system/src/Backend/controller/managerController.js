@@ -121,37 +121,28 @@ export const fetchAllEmployee = (req,res)=>
         else
         {
             message = "Successfully fetched the details of the employees";
-            console.log(result);
-            console.log(result.length);
+            // console.log(result);
+            // console.log(result.length);
             isSuccessful = true;
-            let employeeIds = [];
-            let employeeNames = [];
-            let employeeSalaries = [];
-            let employeepositions = [];
+            let result1 = [];
             let isArchived = [];
             for(var i=0;i<result.length;i++)
             {
-                console.log(result)
+                // console.log(result)
                 isArchived.push(result[i].archived);
             }
             for(var i=0;i<result.length;i++)
             {
                 if(isArchived[i]===0)
                 {
-                    employeeIds.push(result[i].employeeId);
-                    employeeNames.push(result[i].employeeName);
-                    employeeSalaries.push(result[i].salary);
-                    employeepositions.push(result[i].position); 
+                    result1.push(JSON.parse(JSON.stringify(result[i])));
                 }
             }
             res.send(
                 {
                     'isSuccessful':isSuccessful,
                     'message':message,
-                    'employeeIds':employeeIds,
-                    'employeeNames':employeeNames,
-                    'employeeSalaries':employeeSalaries,
-                    'employeepositions':employeepositions
+                    'result':result1
                 }
             ); 
         }

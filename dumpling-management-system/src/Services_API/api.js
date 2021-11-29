@@ -34,11 +34,12 @@ export const createAccount = async (userName, accountType, currentPassword, emai
     return await axios.post(`${Url}/userController/createAccount`, object2)
 }
 
-export const updateAccount = async (accountType, position, emailAddress) => {
+export const updateAccount = async (accountType, position, emailAddress,role) => {
     const object2 = {
     "accountType":accountType,
-    "position" : position,
+    "empPosition" : position,
     "emailAddress" : emailAddress,
+    "role": role
     }
     return await axios.post(`${Url}/userController/updateAccount`, object2)
 }
@@ -138,7 +139,7 @@ export const removeMenuItem = async(dishId) =>{
 }
 export const getEmployeeDetails = async() =>
 {
-    return await axios.get(`${Url}/managerController/employeeDetails`);
+    return await axios.get(`${Url}/userController/employeeDetails`);
 }
 
 export const updateEmployeeSalary = async(employeeId,updatedSalary,checkId) =>{

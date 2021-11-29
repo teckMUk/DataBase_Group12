@@ -931,4 +931,47 @@ export const deleteAccount = (req,res) =>
     
 }
    
-           
+export const getEmployeeDetails = (req,res)=>
+{
+    let query = `SELECT employee.employeeid,employee.employeeName,account.emailAddress,employee.position,account.accountType
+                 From employee
+                 JOIN account ON employee.accountId=account.accountId
+                 where account.archived=0`;
+    var connectionString = mysql.createConnection(
+    {
+        host:process.env.host,
+        user: process.env.user,
+        password:process.env.password,
+        database:process.env.database
+
+    });
+    let message = "";
+    let isSuccessful = false;
+    connectionString.query(query,(err,result)=>
+    {
+        if(err)
+        {
+            console.log(err)
+            res.send(
+                {
+                    "isSuccesful":isSuccessful,
+                    "message":message
+                }
+            );
+            connectionString.end();
+        }
+        else{
+            isSuccessful=true;
+            message = "User details found";
+            console.log("records sent");
+            res.send(
+                {
+                    "isSuccesful":isSuccessful,
+                    "message":message,
+                    "employeeDetails":result
+                }
+            );
+            connectionString.end();
+        }
+    })
+}

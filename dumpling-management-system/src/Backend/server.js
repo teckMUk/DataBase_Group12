@@ -25,6 +25,7 @@ app.post("/api/chefController/viewPlacedOrders",route);
 app.post("/api/managerController/updateEmployeeSalary",route);
 app.post("/api/managerController/fetchAllEmployee",route);
 app.post("/api/managerController/giveBonuses",route);
+app.get("/api/managerController/employeeDetails",route);
 
 app.post("/api/cashierController/placeOrder", route);
 const PORT =  process.env.PORT || 3000;

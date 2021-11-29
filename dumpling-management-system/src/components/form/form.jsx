@@ -35,7 +35,7 @@ export default function FormLogin()
             {
                 console.log(response.data.message);                
                 localStorage.setItem('dumplingUserId',response.data.Id);
-                localStorage.setItem('',response.data.role);
+                localStorage.setItem('empRole',response.data.role);
                 alert(response.data.message);
                 console.log(localStorage.getItem('dumplingUserId'));
                 const prams = {"role":response.data.role};
@@ -67,6 +67,7 @@ export default function FormLogin()
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicPassword">
+                    
                     <Form.Label>Enter Password</Form.Label>
                     <Form.Control type="password" placeholder="Password" name = 'pw' 
                     value = {newEmploye.pw} onChange = {handle}/>

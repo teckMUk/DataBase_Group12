@@ -3,7 +3,7 @@ import {Container, Form, Button} from 'react-bootstrap';
 import { useState, useEffect } from "react";
 import {securityQuestions} from '../../Services_API/api';
 import {useNavigate} from 'react-router-dom';
-import {useLocation} from "react-router-dom";
+//import {useLocation} from "react-router-dom";
 
 const initialState = {
    
@@ -51,16 +51,16 @@ export default function Forms()
         });
     }
     ////checking  the page of email address
-    const location = useLocation();
-    const {page} = location.state;
+    // const location = useLocation();
+    // const {page} = location.state;
 
-    const checkPage = (page)=>
-    {
-        if(page === "forgetPw")
-        {
-            onValidateEmail();
-        }
-    }
+    // const checkPage = (page)=>
+    // {
+    //     if(page === "forgetPw")
+    //     {
+    //         onValidateEmail();
+    //     }
+    // }
    
     return (
       
@@ -74,7 +74,7 @@ export default function Forms()
                         value = {newEmploye.email} onChange = {handle}/>
             </Form.Group>
 
-            <Button variant="primary" type="submit" onClick={checkPage(page)}> 
+            <Button variant="primary" type="submit" onClick={onValidateEmail}> 
                 Submit
             </Button>
         </Form>

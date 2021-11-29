@@ -3,9 +3,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Table , Button,} from "react-bootstrap";
 import {fetchDishIds,placeOrder} from '../../Services_API/api'
 import {useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 export default function Tabel4()
 {
     let dishId = [];
+    let navigate = useNavigate();
     const [employees,setEmployees] = useState();
     useEffect(() => {
         fetchDishIds().then((response)=>
@@ -27,7 +29,20 @@ export default function Tabel4()
         let obj={
             "dishIds":dishId
         }
-        placeOrder("takenIn","placed",0,obj);
+        placeOrder("takenIn","placed",0,obj).then((response)=>
+        {
+            if(response.data.isSuccessful)
+            {
+                console.log(response.data.message);
+                alert(response.data.message);
+                navigate("/dashboard");
+            }
+            else
+            {
+                alert(response.data.message);
+                navigate("/dashboard");  
+            }
+        });
     }
     const onRemove = (id) =>
     {

@@ -11,7 +11,7 @@ export default function Nav2()
     const role = new URLSearchParams(search).get('role');
     let navigate = useNavigate();
     const isAdmin = (role) =>{
-            if(role == null)
+            if(role === null)
             {
                 let x = localStorage.getItem('empRole');
                 if(x == null)
@@ -35,6 +35,61 @@ export default function Nav2()
             }
         
     }
+
+    const isManagerAdmin = (role) =>{
+        if(role === null)
+        {
+            let x = localStorage.getItem('empRole');
+            if(x == null)
+            {
+                navigate('/');
+            }
+            else{
+                role = x;
+            }
+           
+        }
+
+        if(role.toLowerCase() === 'manager' || role.toLowerCase() === 'admin')
+        {
+            console.log('tru');
+            return true;
+        }
+        else{
+            console.log('false');
+            return false;
+        }
+    }
+
+    const isCashierChef = (role) =>{
+        if(role === null)
+        {
+            let x = localStorage.getItem('empRole');
+            if(x == null)
+            {
+                navigate('/');
+            }
+            else{
+                role = x;
+            }
+           
+        }
+
+        if(role.toLowerCase() === 'chef')
+        {
+            //tells if chef
+            console.log('tru');
+            return true;
+        }
+        else if (role.toLowerCase() === 'cashier'){
+            //is cashier
+            console.log('false');
+            return false;
+        }
+}
+
+
+
     
     const Logout2 = () =>
     {
@@ -83,10 +138,28 @@ export default function Nav2()
                             <NavDropdown.Item  onClick={getDetails}> View Employee Details </NavDropdown.Item>
                         </div>
                         }
+
+                        {//is chef
+                            (isCashierChef(role) || isAdmin(role)) && <div>
+                                <NavDropdown.Item href='/addToMenu'>Add to Menu</NavDropdown.Item> 
+                            </div>
+                        }
+
+                        {// is cashier
+                            (!isCashierChef(role) || isAdmin(role)) && <div> 
+                                <NavDropdown.Item href='/placeOrder'>Place Order</NavDropdown.Item> 
+                            </div>
+                        }
+
+                        {
+                            isManagerAdmin(role) && <div> 
+                                <NavDropdown.Item href='/updateSalaryOfEmployees'>Update Salary</NavDropdown.Item>
+                                <NavDropdown.Item href='/giveBonuses'>Give Bonus</NavDropdown.Item>
+                            </div>
+                        }
+
                         <NavDropdown.Item href="/resetpw">Reset Password</NavDropdown.Item>
-                        <NavDropdown.Item href="#action5">
-                            View Sales
-                        </NavDropdown.Item>
+                       
                         </NavDropdown>
                     </Nav>
 

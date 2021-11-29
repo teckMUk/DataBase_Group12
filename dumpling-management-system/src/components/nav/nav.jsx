@@ -3,6 +3,7 @@ import {Container, Navbar, Nav, NavDropdown} from "react-bootstrap";
 import "./nav.css";
 import {useLocation} from "react-router-dom";
 import {useNavigate} from 'react-router-dom';
+import { getEmployeeDetails } from '../../Services_API/api';
 
 export default function Nav2()
 {
@@ -46,6 +47,22 @@ export default function Nav2()
             localStorage.removeItem("dumplingUserId");
         }
     }
+    const getDetails = (e) =>
+    {
+        e.preventDefault();
+        getEmployeeDetails().then((response)=>
+        {
+            console.log(response);
+           if(response.data.isSuccesful) 
+           {
+                navigate('/updateDelEmp',{state:{employeeDetails:response.data.employeeDetails}});
+           }
+           else
+           {
+               alert("Failed to get employe details atm");
+           }
+        });
+    }
 
     return (
         <div className= 'box'>
@@ -67,7 +84,7 @@ export default function Nav2()
                         isAdmin(role) &&
                         <div> 
                             <NavDropdown.Item href="/create_account"> Create Account </NavDropdown.Item>
-                            <NavDropdown.Item href="/updateDelEmp"> View Employee Details </NavDropdown.Item>
+                            <NavDropdown.Item  onClick={getDetails}> View Employee Details </NavDropdown.Item>
                         </div>
                         }
                         <NavDropdown.Item href="/resetpw">Reset Password</NavDropdown.Item>

@@ -10,10 +10,11 @@ import { BrowserRouter as Router , Routes, Route} from 'react-router-dom';
 import ResetPw from "./components/resetpw/resetpw";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AddToMenu from "./pages/addMenuItem/addMenuItem";
-
+import UpdateDelEmp from "./pages/updateDelEmp/updateDelEmp";
 
 
 const App = () => {
+  
   return (
     <Router>
     <div className="App">
@@ -23,10 +24,12 @@ const App = () => {
       <Route path='/create_account' element={<CreateAccount/>} />
       <Route path='/allForms' element={<Form2/>} />
       <Route path='/resetpw' element={<ResetPw/>} />
-      <Route path='/email' element={<Email role = {false}/>} />
+      <Route path='/email' element={<Email/>} />
       <Route path='/questions' element={<Questions/>} />
       <Route path='/addToMenu' element={<AddToMenu/>} />
       <Route path='/getAllEmployees' element={<BasicTable/>} />
+      <Route path='/updateDelEmp' element={< UpdateDelEmp/>}/>
+      
       </Routes>
     </div>
     </Router>

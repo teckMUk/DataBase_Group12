@@ -43,6 +43,14 @@ export const updateAccount = async (accountType, position, emailAddress) => {
     return await axios.post(`${Url}/userController/updateAccount`, object2)
 }
 
+export const deleteAccount = async(emailAddress) =>
+{
+    const obj = {
+        "emailAddress": emailAddress
+    }
+    return await axios.post(`${Url}/userController/deleteAccount`,obj);
+}
+
 export const securityQuestions = async (Email) => {
     const object3 = {"email" : Email
     }
@@ -127,6 +135,10 @@ export const removeMenuItem = async(dishId) =>{
 
     return await axios.post(`${Url}/chefController/removeMenuItem`, obj)
 
+}
+export const getEmployeeDetails = async() =>
+{
+    return await axios.get(`${Url}/managerController/employeeDetails`);
 }
 
 export const updateEmployeeSalary = async(employeeId,updatedSalary,checkId) =>{

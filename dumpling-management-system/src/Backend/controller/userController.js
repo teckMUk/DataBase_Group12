@@ -666,10 +666,11 @@ export const updateAccount = (req,res) =>
     );
     //check if person is admin
     
-    let position = req.body.id;
+    let role = req.body.role; //admin
+
     let emailCheck =  `SELECT * FROM account WHERE emailAddress="${req.body.emailAddress}"  and archived=0`;
     let updateQuery = `UPDATE account
-                        SET accountType  = "${req.body.empPosition}",  updatedAt= NOW()
+                        SET accountType  = "${req.body.accountType}",  updatedAt= NOW()
                         WHERE emailAddress = "${req.body.emailAddress}";`;
     let updateEmp= `UPDATE employee
                     SET position="${req.body.empPosition}", updatedAt= NOW()
@@ -678,7 +679,7 @@ export const updateAccount = (req,res) =>
     let message ="";
     let isSuccessful = false;
     console.log(emailCheck);
-    if(position === 'Admin' || position === 'admin' )
+    if(role === 'Admin' || role === 'admin' )
     {
         connectionString.connect((err) => {
 
@@ -931,4 +932,47 @@ export const deleteAccount = (req,res) =>
     
 }
    
-           
+export const getEmployeeDetails = (req,res)=>
+{
+    let query = `SELECT employee.employeeid,employee.employeeName,account.emailAddress,employee.position,account.accountType
+                 From employee
+                 JOIN account ON employee.accountId=account.accountId
+                 where account.archived=0`;
+    var connectionString = mysql.createConnection(
+    {
+        host:process.env.host,
+        user: process.env.user,
+        password:process.env.password,
+        database:process.env.database
+
+    });
+    let message = "";
+    let isSuccessful = false;
+    connectionString.query(query,(err,result)=>
+    {
+        if(err)
+        {
+            console.log(err)
+            res.send(
+                {
+                    "isSuccesful":isSuccessful,
+                    "message":message
+                }
+            );
+            connectionString.end();
+        }
+        else{
+            isSuccessful=true;
+            message = "User details found";
+            console.log("records sent");
+            res.send(
+                {
+                    "isSuccesful":isSuccessful,
+                    "message":message,
+                    "employeeDetails":result
+                }
+            );
+            connectionString.end();
+        }
+    })
+}

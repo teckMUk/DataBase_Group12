@@ -3,17 +3,20 @@ import {Container, Form, Button} from 'react-bootstrap';
 import { useState, useEffect } from "react";
 import {securityQuestions} from '../../Services_API/api';
 import {useNavigate} from 'react-router-dom';
+//import {useLocation} from "react-router-dom";
+
 const initialState = {
    
     email: "",
   };
 
 
-export default function Forms(props)
+export default function Forms()
 {
-    let isAdmin = props.role;
+   
     let navigate = useNavigate();
     const [newEmploye, setNewEmploye] = useState(initialState);
+
 
     useEffect(() => {}, [newEmploye]);
     const handle = e => {
@@ -24,8 +27,8 @@ export default function Forms(props)
     const submitHandle = e => {
         e.preventDefault();
       
-      
     }
+
     const onValidateEmail = (e) =>
     {
         
@@ -47,11 +50,22 @@ export default function Forms(props)
             }
         });
     }
+    ////checking  the page of email address
+    // const location = useLocation();
+    // const {page} = location.state;
+
+    // const checkPage = (page)=>
+    // {
+    //     if(page === "forgetPw")
+    //     {
+    //         onValidateEmail();
+    //     }
+    // }
    
     return (
       
         <Container>
-            {isAdmin && 
+          
         <Form onSubmit= {submitHandle}>
 
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
@@ -64,10 +78,7 @@ export default function Forms(props)
                 Submit
             </Button>
         </Form>
-        }
-        {
-            !isAdmin && <div>Not admin</div>
-        }
+        
         </Container>
 
     )

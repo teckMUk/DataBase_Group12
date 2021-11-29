@@ -25,7 +25,7 @@ export const addMenuItem = (req,res)=>
     let dishName = req.body.dishName;
     let dishType = req.body.dishType;
     let preparationTime = req.body.preparationTime;
-    let dishPrice = req.body.dishPrice;
+    //let dishPrice = req.body.dishPrice;
     let calories = req.body.calories;
     let dishOfday = req.body.dishOfday;
     let allergens = req.body.allergens;

@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import express from 'express';
-import {findUsers,addUser,getSQ,changePassword,forgetPassword,validateSecurity, accountExistence, updateAccount, deleteAccount} from "../../Backend/controller/userController.js";
+import {findUsers,addUser,getSQ,changePassword,forgetPassword,validateSecurity, accountExistence, updateAccount, deleteAccount,getEmployeeDetails} from "../../Backend/controller/userController.js";
 import {addMenuItem,removeMenuItem,fetchDishIds,viewPlacedOrders} from "../../Backend/controller/chefController.js";
 import {updateEmployeeSalary,fetchAllEmployee, giveBonuses} from "../../Backend/controller/managerController.js";
 import {placeOrder} from "../../Backend/controller/cashierController.js";
@@ -23,4 +23,5 @@ route.post("/api/chefController/viewPlacedOrders",viewPlacedOrders);
 route.post("/api/managerController/fetchAllEmployee",fetchAllEmployee);
 route.post("/api/managerController/updateEmployeeSalary",updateEmployeeSalary);
 route.post("/api/managerController/giveBonuses",giveBonuses);
+route.get("/api/managerController/employeeDetails",getEmployeeDetails);
 export default route;

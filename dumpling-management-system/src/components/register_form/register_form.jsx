@@ -142,10 +142,10 @@ export default function RegisterForm()
                         </Form.Group>
 
                         <DropdownButton
-                        alignRight
-                        title="Account Type"
-                        id="dropdown-menu-align-right" name = 'accountType' value = {newEmploye.accountType} 
-                        onSelect={handle}>
+                            alignRight
+                            title="Account Type"
+                            id="dropdown-menu-align-right" name = 'accountType' value = {newEmploye.accountType} 
+                            onSelect={handle}>
                             <Dropdown.Item eventKey="Chef">Chef</Dropdown.Item>
                             <Dropdown.Item eventKey="Cashier">Cashier</Dropdown.Item>
                             <Dropdown.Item eventKey="Manager">Manager</Dropdown.Item>

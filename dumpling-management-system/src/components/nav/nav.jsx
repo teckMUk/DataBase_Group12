@@ -35,10 +35,6 @@ export default function Nav2()
             }
         
     }
-
-    // const prams = {"page":'updateUser'};
-    // navigate({pathname:'/email',
-    // search: `?${createSearchParams(prams)}`});
     
     const Logout2 = () =>
     {

@@ -33,9 +33,6 @@ export default class DynamicTable extends React.Component {
 
     }
 
- 
-
-   
 
     handleClick(e) {
 
@@ -117,43 +114,19 @@ export default class DynamicTable extends React.Component {
 
           placeOrder(this.state.typeOfOrder, this.state.orderStatus, this.state.totalBill,listOrders).then((response)=>{
 
- 
-
- 
-
- 
 
             if(response.data.isSuccessful)
 
- 
-
             {
 
- 
-
                 alert(response.data.message);
-
- 
-
                 //navigate('/dashboard');
-
- 
-
             }
-
- 
 
             else{
 
- 
-
                 alert(response.data.message);
-
- 
-
                 //navigate('/dashboard');
-
- 
 
             }
 

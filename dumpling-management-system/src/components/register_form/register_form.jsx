@@ -119,13 +119,6 @@ export default function RegisterForm()
     }
 
 
-
-//       <Form.Group className="mb-3" controlId="formBasicID">
-//       <Form.Label>accountType</Form.Label>
-//       <Form.Control type="text" placeholder="Employee Status" name = 'accountType'
-//       value = {newEmploye.accountType} onChange = {handle}/>
-//   </Form.Group>
-
     return(
                <Container id="main-container" className="d-grid h-100">
                    <Form className= 'text-center' onSubmit= {submitHandle}>

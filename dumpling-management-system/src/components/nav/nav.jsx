@@ -59,7 +59,7 @@ export default function Nav2()
            }
            else
            {
-               alert("Failed to get employe details atm");
+               alert(response.data.message);
            }
         });
     }

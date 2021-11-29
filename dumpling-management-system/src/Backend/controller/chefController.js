@@ -24,7 +24,6 @@ export const addMenuItem = (req,res)=>
     let isSuccessful = false;
     let dishName = req.body.dishName;
     let dishType = req.body.dishType;
-    let dishPrice = req.body.dishPrice;
     let preparationTime = req.body.preparationTime;
     let dishPrice = req.body.dishPrice;
     let calories = req.body.calories;
@@ -167,8 +166,8 @@ export const fetchDishIds = (req,res)=>
             {
                 message = "Found all the dishes";
                 isSuccessful = true;
-                console.log(result);
-                let result1=[];
+                // console.log(result);
+                let result1 = [];
                 let isArchived = [];
                 for(var i=0;i<result.length;i++)
                 {
@@ -178,20 +177,14 @@ export const fetchDishIds = (req,res)=>
                 {
                     if(isArchived[i]===0)
                     {
-                        dishIds.push(result[i].dishId);
-                        dishNames.push(result[i].dishName);
-                        dishAllergens.push(result[i].allergens);
-                        dishPriceForManydishes.push(result[i].dishPrice);
+                        result1.push(JSON.parse(JSON.stringify(result[i])));
                     }
                 }
                 res.send(
                     {
                         'isSuccessful':isSuccessful,
                         'message':message,
-                        'dishIDs':dishIds,
-                        'dishNames':dishNames,
-                        'allergens':dishAllergens,
-                        'dishPrice':dishPriceForManydishes
+                        'result':result1
                     }
                 );
                 connectionString.end();

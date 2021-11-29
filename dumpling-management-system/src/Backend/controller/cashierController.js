@@ -4,7 +4,7 @@ import express, { response } from 'express';
 import {v4 as uuidv4} from "uuid";
 dotenv.config({path:"./src/Backend/.env"});
 const app = express();
-app.use(express.json());
+app.use(express.json({extended:true}));
 app.use(express.urlencoded({ extended: true }));
 function findid()
 
@@ -45,6 +45,7 @@ function findid()
             {
 
                 console.log("error");
+                console.log(err);
 
                 reject("querry failed");
 
@@ -210,15 +211,14 @@ export const placeOrder = async (req,res)=>
 
     let dishIds = Object.values((JSON.parse(JSON.stringify(listOrders))));
 
-    // console.log(dishIds[0]);
+    // console.log(dishIds);
 
     let finalDishIds = dishIds[0];
-
     let noOfOrders = finalDishIds.length;
 
-    console.log("This is the number of orders",noOfOrders);
+    // console.log("This is the number of orders",noOfOrders);
 
-    console.log(typeOfOrder,orderStatus,totalBill,listOrders,noOfOrders,finalDishIds);
+    // console.log(typeOfOrder,orderStatus,totalBill,listOrders,noOfOrders,finalDishIds);
 
     let addOrderQuery =
 
@@ -272,7 +272,7 @@ export const placeOrder = async (req,res)=>
 
                    console.log("Successfully added into DA");
 
-                   console.log(response);
+                //    console.log(response);
 
  
 

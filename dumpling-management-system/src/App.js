@@ -5,6 +5,7 @@ import Form2 from "./components/allForms/allForms";
 import Email from "./components/email/email";
 import Questions from './components/questions/questions';
 import CreateAccount from "./pages/create_account/create_account";
+import  BasicTable from './components/basicTable/basicTable.jsx';
 import { BrowserRouter as Router , Routes, Route} from 'react-router-dom';
 import ResetPw from "./components/resetpw/resetpw";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -13,13 +14,11 @@ import DynamicTable from "./pages/placeOrder/placeOrder";
 
 
 
-
 const App = () => {
   return (
     <Router>
     <div className="App">
       <Routes> 
-
       <Route path='/' element={<Login/>} />
       <Route path='/dashboard' element={<Dashboard/>} />
       <Route path='/create_account' element={<CreateAccount/>} />
@@ -28,12 +27,8 @@ const App = () => {
       <Route path='/email' element={<Email role = {false}/>} />
       <Route path='/questions' element={<Questions/>} />
       <Route path='/addToMenu' element={<AddToMenu/>} />
+      <Route path='/getAllEmployees' element={<BasicTable/>} />
       <Route path='/placeOrder' element={<DynamicTable/>} />
-
-
-
-
-      
       </Routes>
     </div>
     </Router>

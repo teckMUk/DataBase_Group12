@@ -2,13 +2,13 @@ import React from 'react';
 import {Container, Navbar, Nav, NavDropdown} from "react-bootstrap";
 import "./nav.css";
 import {useLocation} from "react-router-dom";
-
+//import {createSearchParams, useNavigate} from 'react-router-dom';
 
 export default function Nav2()
 {
     const search = useLocation().search;
     const role = new URLSearchParams(search).get('role');
-
+    //let navigate = useNavigate();
     const isAdmin = (role) =>{
             console.log('rol is ', role);
             if(role.toLowerCase() === 'admin')
@@ -22,6 +22,11 @@ export default function Nav2()
             }
             
     }
+
+    // const prams = {"page":'updateUser'};
+    // navigate({pathname:'/email',
+    // search: `?${createSearchParams(prams)}`});
+
     const Logout2 = () =>
     {
         if(localStorage.getItem("dumplingUserId"))
@@ -29,6 +34,7 @@ export default function Nav2()
             localStorage.removeItem("dumplingUserId");
         }
     }
+
     return (
         <div className= 'box'>
            <Navbar bg="light" expand="lg">
@@ -44,7 +50,9 @@ export default function Nav2()
                         <Nav.Link href="#action1">Home</Nav.Link>
                         <Nav.Link href="#action2">Profile</Nav.Link>
                         <NavDropdown title="Settings" id="navbarScrollingDropdown">
-                        {isAdmin(role) &&
+                       
+                        { 
+                        isAdmin(role) &&
                         <div> 
                             <NavDropdown.Item href="/create_account"> Create Account </NavDropdown.Item>
                             <NavDropdown.Item href="/email"> Update Account </NavDropdown.Item>

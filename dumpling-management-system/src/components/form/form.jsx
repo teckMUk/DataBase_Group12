@@ -21,8 +21,6 @@ export default function FormLogin()
         const {name, value} = e.target;
         setNewEmploye({...newEmploye, [name]: value});
       
-     
-       
     }
     
     const onLogin = (e) =>{
@@ -38,6 +36,7 @@ export default function FormLogin()
                 localStorage.setItem('empRole',response.data.role);
                 alert(response.data.message);
                 console.log(localStorage.getItem('dumplingUserId'));
+
                 const prams = {"role":response.data.role};
                 navigate({pathname:'/dashboard',
                 search: `?${createSearchParams(prams)}`});

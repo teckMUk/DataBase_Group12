@@ -1,6 +1,6 @@
 import "./table.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Table } from "react-bootstrap";
+import { Table , Button} from "react-bootstrap";
 
 
 export default function Table2()
@@ -29,7 +29,9 @@ export default function Table2()
                             {Array.from({ length: 4}).map((_, index) => (
                                 <td key={index}>Table cell {index}</td>
                             ))}
+                             <td> <Button>Delete</Button></td>
                         </tr>
+                       
                         </tbody>
                 ))}
                 

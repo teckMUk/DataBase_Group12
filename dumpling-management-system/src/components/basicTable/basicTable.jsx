@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from "react";
 import Table from 'react-bootstrap/Table';
 import {fetchAllEmployee,updateEmployeeSalary} from '../../Services_API/api';
-import {Container, Form, Button} from 'react-bootstrap';
+import {Form} from 'react-bootstrap';
 
 export default function BasicTable () {
     let id;

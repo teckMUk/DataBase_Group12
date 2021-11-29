@@ -11,7 +11,7 @@ export default function Nav2()
     const role = new URLSearchParams(search).get('role');
     let navigate = useNavigate();
     const isAdmin = (role) =>{
-            if(role == null)
+            if(role === null)
             {
                 let x = localStorage.getItem('empRole');
                 if(x == null)
@@ -36,10 +36,85 @@ export default function Nav2()
         
     }
 
-    // const prams = {"page":'updateUser'};
-    // navigate({pathname:'/email',
-    // search: `?${createSearchParams(prams)}`});
-    
+    const isManager= (role) =>{
+        if(role === null)
+        {
+            let x = localStorage.getItem('empRole');
+            if(x == null)
+            {
+                navigate('/');
+            }
+            else{
+                role = x;
+            }
+           
+        }
+
+        if(role.toLowerCase() === 'manager')
+        {
+            console.log('tru');
+            return true;
+        }
+        else{
+            console.log('false');
+            return false;
+        }
+    }
+
+    const isCashier= (role) =>{
+        if(role === null)
+        {
+            let x = localStorage.getItem('empRole');
+            if(x == null)
+            {
+                navigate('/');
+            }
+            else{
+                role = x;
+            }
+           
+        }
+
+        if(role.toLowerCase() === 'cashier')
+        {
+            //tells if chef
+            console.log('tru');
+            return true;
+        }
+        else{
+            //is cashier
+            console.log('false');
+            return false;
+        }
+}
+
+const isChef= (role) =>{
+    if(role === null)
+    {
+        let x = localStorage.getItem('empRole');
+        if(x == null)
+        {
+            navigate('/');
+        }
+        else{
+            role = x;
+        }
+       
+    }
+
+    if(role.toLowerCase() === 'chef')
+    {
+        //tells if chef
+        console.log('tru');
+        return true;
+    }
+    else{
+      
+        console.log('false');
+        return false;
+    }
+}
+
     const Logout2 = () =>
     {
         if(localStorage.getItem("dumplingUserId"))
@@ -85,12 +160,34 @@ export default function Nav2()
                         <div> 
                             <NavDropdown.Item href="/create_account"> Create Account </NavDropdown.Item>
                             <NavDropdown.Item  onClick={getDetails}> View Employee Details </NavDropdown.Item>
+                            <NavDropdown.Item href='/addToMenu'>Add to Menu</NavDropdown.Item> 
+                            <NavDropdown.Item href='/placeOrder'>Place Order</NavDropdown.Item> 
+                            <NavDropdown.Item href='/updateSalaryOfEmployees'>Update Salary</NavDropdown.Item>
+                            <NavDropdown.Item href='/giveBonuses'>Give Bonus</NavDropdown.Item>
                         </div>
                         }
+
+                        {//is chef
+                            isChef(role)&& <div>
+                                <NavDropdown.Item href='/addToMenu'>Add to Menu</NavDropdown.Item> 
+                            </div>
+                        }
+
+                        {// is cashier
+                            isCashier(role)&& <div> 
+                                <NavDropdown.Item href='/placeOrder'>Place Order</NavDropdown.Item> 
+                            </div>
+                        }
+
+                        {
+                            isManager(role) && <div> 
+                                <NavDropdown.Item href='/updateSalaryOfEmployees'>Update Salary</NavDropdown.Item>
+                                <NavDropdown.Item href='/giveBonuses'>Give Bonus</NavDropdown.Item>
+                            </div>
+                        }
+
                         <NavDropdown.Item href="/resetpw">Reset Password</NavDropdown.Item>
-                        <NavDropdown.Item href="#action5">
-                            View Sales
-                        </NavDropdown.Item>
+                       
                         </NavDropdown>
                     </Nav>
 

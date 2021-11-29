@@ -25,7 +25,7 @@ export const addMenuItem = (req,res)=>
     let dishName = req.body.dishName;
     let dishType = req.body.dishType;
     let preparationTime = req.body.preparationTime;
-    let dishPrice = req.body.dishPrice;
+    //let dishPrice = req.body.dishPrice;
     let calories = req.body.calories;
     let dishOfday = req.body.dishOfday;
     let allergens = req.body.allergens;
@@ -166,7 +166,7 @@ export const fetchDishIds = (req,res)=>
             {
                 message = "Found all the dishes";
                 isSuccessful = true;
-                // console.log(result);
+                
                 let result1 = [];
                 let isArchived = [];
                 for(var i=0;i<result.length;i++)

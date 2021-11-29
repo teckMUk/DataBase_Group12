@@ -1,36 +1,30 @@
 import React from 'react';
 import { useState, useEffect } from "react";
 import Table from 'react-bootstrap/Table';
-import {fetchAllEmployee} from '../../Services_API/api';
+import {fetchAllEmployee,updateEmployeeSalary} from '../../Services_API/api';
 import {Container, Form, Button} from 'react-bootstrap';
-const initialstate =
-{
-    employeeId:"",
-    employeeName:"",
-    salary:"",
-    position:""
-}
+
 export default function BasicTable () {
-
+    let id;
+    const [salary,setSalary] = useState();
     const [employees,setEmployees] = useState();
-    const [updatedSalary,setSalary] = useState(initialstate);
     
-    useEffect(()=>{},[updatedSalary]);
-    const handle = (e) =>
-    {
-
-        const {name, value} = e.target;
-        setSalary({...updatedSalary, [name]: value});
-
-    }
-
-    fetchAllEmployee().then((response)=>{
-        console.log(response);
-        if(response.data.isSuccessful)
-        {
+    useEffect(() =>{
+        fetchAllEmployee().then((response)=>{
+            console.log(response);
             setEmployees(response.data.result);
-        }
-    })
+        });
+    }, []);
+
+    const submitHandle = e => {
+        // e.preventDefault();
+        let checkid = 2;
+        updateEmployeeSalary(id,salary,checkid).then((response)=>{
+            
+            console.log(response);
+        })
+      
+    }
     return(
         <div id="tableDiv">
         <Table striped bordered hover variant="dark">
@@ -54,14 +48,16 @@ export default function BasicTable () {
                     <td>{employee.salary}</td>
                     <td>{employee.position}</td>
                     <td>
+                    {id=employee.employeeId}
                     <Form>
-                        <Form.Group className="mb-3" controlId="formBasicName">
-                        <Form.Control type="text" placeholder="Updated Salary" name = "salary" value = {updatedSalary.salary} onChange = {handle}/>
+                        <Form.Group  key = {i} className="mb-3" controlId="formBasicName">
+                        <Form.Control type="text" placeholder="Updated Salary" name = {employee.emoloyeeName} value = {salary} onChange={(e)=>setSalary(e.target.value)}/>
                         </Form.Group>
                     </Form>
                     </td>
                     <td>
-                    <button>Update</button></td>
+                    
+                    <button onClick={() => {submitHandle()}}>Update</button></td>
                     </tr>
                 </tbody>
             )

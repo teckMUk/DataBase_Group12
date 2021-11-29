@@ -126,20 +126,6 @@ export const addMenuItem = async(dishName, dishType,dishPrice,preparationTime,ca
 
 }
 
-export const fetchDishIds = async()=>{
-
- 
-
-    return await axios.post(`${Url}/chefController/fetchDishIds`,{
-
-        'Accept': 'application/json',
-
-        'content-type':'application/json'
-
-    });
-
-}
-
 
 export const removeMenuItem = async(dishId) =>{
 
@@ -149,6 +135,10 @@ export const removeMenuItem = async(dishId) =>{
 
     return await axios.post(`${Url}/chefController/removeMenuItem`, obj)
 
+}
+export const getEmployeeDetails = async() =>
+{
+    return await axios.get(`${Url}/managerController/employeeDetails`);
 }
 
 export const updateEmployeeSalary = async(employeeId,updatedSalary,checkId) =>{
@@ -200,9 +190,6 @@ export const viewPlacedOrders = async()=>{
         'content-type':'application/json'
     });
 }
-
-
-
 
 
 

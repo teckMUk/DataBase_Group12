@@ -2,7 +2,7 @@ import './form.css';
 import {Container, Form, Button} from 'react-bootstrap';
 import { useState, useEffect } from "react";
 import { LogIn } from '../../Services_API/api';
-import {useNavigate} from 'react-router-dom';
+import {createSearchParams, useNavigate} from 'react-router-dom';
 const initialState = {
    
     email: "",
@@ -21,8 +21,6 @@ export default function FormLogin()
         const {name, value} = e.target;
         setNewEmploye({...newEmploye, [name]: value});
       
-     
-       
     }
     
     const onLogin = (e) =>{
@@ -35,10 +33,13 @@ export default function FormLogin()
             {
                 console.log(response.data.message);                
                 localStorage.setItem('dumplingUserId',response.data.Id);
-                localStorage.setItem('',response.data.role);
+                localStorage.setItem('empRole',response.data.role);
                 alert(response.data.message);
                 console.log(localStorage.getItem('dumplingUserId'));
-                navigate("/dashboard");
+
+                const prams = {"role":response.data.role};
+                navigate({pathname:'/dashboard',
+                search: `?${createSearchParams(prams)}`});
             }
             else
             {
@@ -65,6 +66,7 @@ export default function FormLogin()
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicPassword">
+                    
                     <Form.Label>Enter Password</Form.Label>
                     <Form.Control type="password" placeholder="Password" name = 'pw' 
                     value = {newEmploye.pw} onChange = {handle}/>

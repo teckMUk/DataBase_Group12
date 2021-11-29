@@ -19,12 +19,8 @@ export default function Table2(prop)
                     <th>Email address</th>
                     <th>position</th>
                     <th>account Type</th>
-                    {/* {Array.from({ length: 4}).map((_, index) => (
-                        <th key={index}>Table heading</th>
-                    ))} */}
                     </tr>
                 </thead>
-
                 
                 {emp.map((e , i)=> (
                     <tbody key = {i}>
@@ -34,9 +30,7 @@ export default function Table2(prop)
                             <td>{e.emailAddress} </td>
                             <td>{e.position} </td>
                             <td>{e.accountType} </td>
-                            {/* {Array.from({ length: 4}).map((_, index) => (
-                                <td key={index}>Table cell {index}</td>
-                            ))} */}
+                          
                              <td> <Button>Delete</Button></td>
                              <td> <Button>Update</Button></td>
                         </tr>

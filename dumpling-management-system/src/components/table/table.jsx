@@ -30,6 +30,7 @@ export default function Table2(prop)
         {
             if(response.data.isSuccessful)
             {
+                alert(response.data.message);
                 navigate('/dashboard');
             }
             else

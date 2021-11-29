@@ -666,10 +666,11 @@ export const updateAccount = (req,res) =>
     );
     //check if person is admin
     
-    let position = req.body.id;
+    let role = req.body.role; //admin
+
     let emailCheck =  `SELECT * FROM account WHERE emailAddress="${req.body.emailAddress}"  and archived=0`;
     let updateQuery = `UPDATE account
-                        SET accountType  = "${req.body.empPosition}",  updatedAt= NOW()
+                        SET accountType  = "${req.body.accountType}",  updatedAt= NOW()
                         WHERE emailAddress = "${req.body.emailAddress}";`;
     let updateEmp= `UPDATE employee
                     SET position="${req.body.empPosition}", updatedAt= NOW()
@@ -678,7 +679,7 @@ export const updateAccount = (req,res) =>
     let message ="";
     let isSuccessful = false;
     console.log(emailCheck);
-    if(position === 'Admin' || position === 'admin' )
+    if(role === 'Admin' || role === 'admin' )
     {
         connectionString.connect((err) => {
 

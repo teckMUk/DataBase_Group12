@@ -4,20 +4,20 @@ import Nav2 from '../../components/nav/nav';
 import { useLocation } from 'react-router-dom';
 
 
-export default function Update(prop)
+export default function Update()
 {
     const {state} = useLocation();
-    const {employeeDetails} = state
-    console.log(employeeDetails);
+    const {employeeDetails} = state;
+    console.log('obj is ', employeeDetails);
     return (
         <>
             <div>
                 <div>
                     <Nav2/>
                 </div>
-                
+
                 <div>
-                    <Table/>
+                    <Table employeeDetails = {employeeDetails}/>
                 </div>
             </div>
         </>

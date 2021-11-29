@@ -5,6 +5,9 @@ import { useState, useEffect } from "react";
 //import  {Link} from 'react-router-dom';
 import {createAccount} from  '../../Services_API/api.js';
 import {useNavigate} from 'react-router-dom';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import Dropdown from 'react-bootstrap/Dropdown'
+
 
 const initialState = {
     name: "",
@@ -46,7 +49,6 @@ export default function RegisterForm()
         const {name, value} = e.target;
         setNewEmploye({...newEmploye, [name]: value});
         
-           
         if(name === "pw")
         {
             let moreThanMin = false;
@@ -119,21 +121,35 @@ export default function RegisterForm()
 
     }
 
+    const handleSelect=(e)=>{
+        console.log(e);
+      }
+
+//       <Form.Group className="mb-3" controlId="formBasicID">
+//       <Form.Label>accountType</Form.Label>
+//       <Form.Control type="text" placeholder="Employee Status" name = 'accountType'
+//       value = {newEmploye.accountType} onChange = {handle}/>
+//   </Form.Group>
+
     return(
                <Container id="main-container" className="d-grid h-100">
                    <Form className= 'text-center' onSubmit= {submitHandle}>
 
                         <Form.Group className="mb-3" controlId="formBasicName">
-                            <Form.Label>Full Name</Form.Label>
+                            <Form.Label>User Name</Form.Label>
                             <Form.Control type="text" placeholder="Enter Name" name = 'name'
                              value = {newEmploye.name} onChange = {handle}/>
                         </Form.Group>
 
-                        <Form.Group className="mb-3" controlId="formBasicID">
-                            <Form.Label>accountType</Form.Label>
-                            <Form.Control type="text" placeholder="Employee Status" name = 'accountType'
-                            value = {newEmploye.accountType} onChange = {handle}/>
-                        </Form.Group>
+                        <DropdownButton
+                        alignRight
+                        title="Account Type"
+                        id="dropdown-menu-align-right" name = 'accountType' value = {newEmploye.accountType} 
+                        onSelect={handle}>
+                            <Dropdown.Item eventKey="Chef">Chef</Dropdown.Item>
+                            <Dropdown.Item eventKey="Cashier">Cashier</Dropdown.Item>
+                            <Dropdown.Item eventKey="Manager">Manager</Dropdown.Item>
+                        </DropdownButton>
 
                         <Form.Group className="mb-3" controlId="formBasicPos">
                             <Form.Label>Employee Position</Form.Label>

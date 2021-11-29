@@ -1,3 +1,4 @@
+
 import './App.css';
 import Dashboard from "./pages/dashboard/dashboard";
 import Login from "./pages/login/login";
@@ -11,6 +12,7 @@ import ResetPw from "./components/resetpw/resetpw";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AddToMenu from "./pages/addMenuItem/addMenuItem";
 import UpdateDelEmp from "./pages/updateDelEmp/updateDelEmp";
+import DynamicTable from "./pages/placeOrder/placeOrder";
 
 
 const App = () => {
@@ -29,7 +31,7 @@ const App = () => {
       <Route path='/addToMenu' element={<AddToMenu/>} />
       <Route path='/getAllEmployees' element={<BasicTable/>} />
       <Route path='/updateDelEmp' element={< UpdateDelEmp/>}/>
-      
+      <Route path='/placeOrder' element={<DynamicTable/>} />
       </Routes>
     </div>
     </Router>

@@ -21,11 +21,12 @@ export default function Table2(prop)
                     <th>account Type</th>
                     </tr>
                 </thead>
-                
+
                 {emp.map((e , i)=> (
                     <tbody key = {i}>
                         
                         <tr>
+                            <td>{i}</td>
                             <td>{e.employeeName}</td>
                             <td>{e.emailAddress} </td>
                             <td>{e.position} </td>

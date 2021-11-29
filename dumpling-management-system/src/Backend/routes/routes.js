@@ -23,5 +23,5 @@ route.post("/api/chefController/viewPlacedOrders",viewPlacedOrders);
 route.post("/api/managerController/fetchAllEmployee",fetchAllEmployee);
 route.post("/api/managerController/updateEmployeeSalary",updateEmployeeSalary);
 route.post("/api/managerController/giveBonuses",giveBonuses);
-route.get("/api/managerController/employeeDetails",getEmployeeDetails);
+route.get("/api/UserController/employeeDetails",getEmployeeDetails);
 export default route;

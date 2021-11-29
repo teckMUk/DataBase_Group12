@@ -1,10 +1,19 @@
 import "./placeOrder.css";
-
 import React from "react";
+
+import Nav from '../../components/nav/nav';
 
 import {Container, Button,Form} from 'react-bootstrap';
 
 import {placeOrder} from  '../../Services_API/api.js';
+
+import {useNavigate} from 'react-router-dom';
+
+import Dropdown from '../../components/dropdown/dropdown';
+
+
+
+
 
 
 export default class DynamicTable extends React.Component {
@@ -33,6 +42,9 @@ export default class DynamicTable extends React.Component {
 
     }
 
+ 
+
+   
 
     handleClick(e) {
 
@@ -114,19 +126,43 @@ export default class DynamicTable extends React.Component {
 
           placeOrder(this.state.typeOfOrder, this.state.orderStatus, this.state.totalBill,listOrders).then((response)=>{
 
+ 
+
+ 
+
+ 
 
             if(response.data.isSuccessful)
 
+ 
+
             {
 
+ 
+
                 alert(response.data.message);
+
+ 
+
                 //navigate('/dashboard');
+
+ 
+
             }
+
+ 
 
             else{
 
+ 
+
                 alert(response.data.message);
+
+ 
+
                 //navigate('/dashboard');
+
+ 
 
             }
 
@@ -184,7 +220,6 @@ export default class DynamicTable extends React.Component {
 
 
 
-
     updateMessage(event) {
 
         this.setState({
@@ -217,10 +252,15 @@ export default class DynamicTable extends React.Component {
 
       }
 
+
+
+
+ 
+
     render() {
 
       return (
-
+        
         <Form>
 
         <Container id="main-container" className="d-grid h-100">

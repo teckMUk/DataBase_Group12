@@ -18,16 +18,21 @@ export default function Table2()
                     ))}
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                    <td>1</td>
-                    {Array.from({ length: 4}).map((_, index) => (
-                        <td key={index}>Table cell {index}</td>
-                    ))}
-                    </tr>
 
-                </tbody>
-
+                
+                {emp.map(e => (
+                    <tbody>
+                        
+                        <tr>
+                            <td>{e}</td>
+                            
+                            {Array.from({ length: 4}).map((_, index) => (
+                                <td key={index}>Table cell {index}</td>
+                            ))}
+                        </tr>
+                        </tbody>
+                ))}
+                
                 </Table>
             </div>
         </>

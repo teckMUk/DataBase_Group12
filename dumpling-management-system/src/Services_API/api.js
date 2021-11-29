@@ -102,7 +102,7 @@ export const placeOrder = async(typeOfOrder,orderStatus,totalBill,listOrders) =>
         "orderStatus":orderStatus,
         "totalBill" : totalBill,
         "listOrders" : listOrders     
-
+        
     }
     // console.log(obj);
     return await axios.post(`${Url}/cashierController/placeOrder`, obj,)

@@ -143,6 +143,10 @@ export const removeMenuItem = async(dishId) =>{
     return await axios.post(`${Url}/chefController/removeMenuItem`, obj)
 
 }
+export const getEmployeeDetails = async() =>
+{
+    return await axios.get(`${Url}/managerController/employeeDetails`);
+}
 
 
 

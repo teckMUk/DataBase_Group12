@@ -5,6 +5,7 @@ import {fetchAllEmployee,giveBonuses} from '../../Services_API/api';
 import {Container, Form, Button} from 'react-bootstrap';
 import { useModal } from 'react-hooks-use-modal';
 import {useNavigate,Link} from 'react-router-dom';
+
 function formatDate(date) {
     var d = new Date(date),
         month = '' + (d.getMonth() + 1),
@@ -36,26 +37,36 @@ export default function BonusTable () {
 
     const submitHandle = e => {
         // e.preventDefault();
-        let checkid = localStorage.getItem("dumplingUserId");
-        let date = new Date();
-        date = formatDate(date);
-        console.log(date);
-        giveBonuses(checkid,id,reason,date).then((response)=>{
+        let checkid = localStorage.getItem('dumplingUserId');
+        if(!checkid)
+        {
+            navigate('/login');
+            window.location.reload();
             
-            console.log(response);
-            if(response.data.isSuccessful)
-            {
-                alert(response.data.message);
-                navigate("/giveBonuses");
-                
+        }
+        else
+        {
+            let date = new Date();
+                date = formatDate(date);
+                console.log(date);
+                giveBonuses(checkid,id,reason,date).then((response)=>{
+                    
+                    console.log(response);
+                    if(response.data.isSuccessful)
+                    {
+                        alert(response.data.message);
+                        navigate("/giveBonuses");
+                        
+                    }
+                    else{
+                        alert(response.data.message);
+                        navigate("/giveBonuses");
+                    }
+                })
+            
             }
-            else{
-                alert(response.data.message);
-                navigate("/giveBonuses");
-            }
-        })
-      
-    }
+        }
+        
     const [Modal, open, close, isOpen] = useModal('root', {
         preventScroll: true,
         closeOnOverlayClick: false

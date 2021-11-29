@@ -22,29 +22,39 @@ export default function BasicTable () {
             else
             {
                 navigate('/login');
+                window.location.reload();
             }
         });
     }, []);
 
     const submitHandle = e => {
         // e.preventDefault();
-        let checkid = 2;
-        updateEmployeeSalary(id,salary,checkid).then((response)=>{
+        let checkid = localStorage.getItem('dumplingUserId');
+        if(!checkid)
+        {
+            navigate('/login');
+            window.location.reload();
+        }
+        else
+        {
+            updateEmployeeSalary(id,salary,checkid).then((response)=>{
             
-            console.log(response);
-            if(response.data.isSuccessful)
-            {
-                alert(response.data.message);
-                window.location.reload();
-                navigate("/updateSalaryOfEmployees");
-                
-            }
-            else{
-                alert(response.data.message);
-                window.location.reload();
-                navigate("/updateSalaryOfEmployees");
-            }
-        })
+                console.log(response);
+                if(response.data.isSuccessful)
+                {
+                    alert(response.data.message);
+                    window.location.reload();
+                    navigate("/updateSalaryOfEmployees");
+                    
+                }
+                else{
+                    alert(response.data.message);
+                    window.location.reload();
+                    navigate("/updateSalaryOfEmployees");
+                }
+            })
+        }
+       
       
     }
     const [Modal, open, close, isOpen] = useModal('root', {

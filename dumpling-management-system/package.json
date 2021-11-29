@@ -15,6 +15,7 @@
     "concurrently": "^6.4.0",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
+    "fs": "0.0.1-security",
     "http": "^0.0.1-security",
     "https": "^1.0.0",
     "mysql": "^2.18.1",
@@ -25,6 +26,7 @@
     "react-redux": "^7.2.6",
     "react-router-dom": "^6.0.2",
     "react-scripts": "4.0.3",
+    "react-table": "^7.7.0",
     "redux": "^4.1.2",
     "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^2.4.0",
@@ -34,7 +36,7 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "start": "export PORT=3001 && react-scripts start",
+    "start": "SET PORT=3001 && react-scripts start",
     "dev": "concurrently \"npm run server\" \"npm run start\"",
     "build": "react-scripts build",
     "test": "react-scripts test",

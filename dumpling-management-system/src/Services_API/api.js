@@ -86,14 +86,17 @@ export const validateSecurity = async(email, answerOne,answerTwo)=>{
 
 
 export const placeOrder = async(typeOfOrder,orderStatus,totalBill,listOrders) =>{
+    console.log("In placed orders api in server_api");
     const obj={
       
         "typeOfOrder" : typeOfOrder,
+        "orderStatus":orderStatus,
         "totalBill" : totalBill,
         "listOrders" : listOrders     
 
     }
-    return await axios.post(`${Url}/cashierController/placeOrder`, obj)
+    // console.log(obj);
+    return await axios.post(`${Url}/cashierController/placeOrder`, obj,)
 }
 
 export const addMenuItem = async(dishName, dishType,dishPrice,preparationTime,calories,dishOfday, allergens, image) =>{
@@ -108,7 +111,10 @@ export const addMenuItem = async(dishName, dishType,dishPrice,preparationTime,ca
         "image": image
 
     }
-    return await axios.post(`${Url}/chefController/addMenuItem`, obj)
+    return await axios.post(`${Url}/chefController/addMenuItem`, obj,{
+    'Accept': 'application/json',
+    'content-type':'application/json'
+});
 
 }
 
@@ -129,17 +135,19 @@ export const updateEmployeeSalary = async(employeeId,updatedSalary,checkId) =>{
         "updatedSalary":updatedSalary,
         "checkId":checkId
     }
-    return await axios.post(`${URL}/managerController/updateEmployeeSalary`,updateSalaryForEmployee,{
+    return await axios.post(`${Url}/managerController/updateEmployeeSalary`,updateSalaryForEmployee,{
         'Accept': 'application/json',
         'content-type':'application/json'
     });
 }
 
-export const fetchAllEmployee = async() =>{
-    
-return await axios.post(`${URL}/managerController/fetchAllEmployee`,{
-        'Accept': 'application/json',
-        'content-type':'application/json'
+export const fetchAllEmployee = async() =>
+{
+    console.log("called fetch all employee");
+    const req = {};
+    return await axios.post(`${Url}/managerController/fetchAllEmployee`,req,{
+    'Accept': 'application/json',
+    'content-type':'application/json'
     });
 }
 
@@ -150,7 +158,7 @@ export const giveBonuses = async(checkId,employeeId,reason,date)=>{
         "reason":reason,
         "date":date
     }
-    return await axios.post(`${URL}/managerController/giveBonuses`,giveBonusToEmployee,{
+    return await axios.post(`${Url}/managerController/giveBonuses`,giveBonusToEmployee,{
         'Accept': 'application/json',
         'content-type':'application/json'
     });
@@ -158,14 +166,14 @@ export const giveBonuses = async(checkId,employeeId,reason,date)=>{
 
 export const fetchDishIds = async()=>{
 
-    return await axios.post(`${URL}/chefController/fetchDishIds`,{
+    return await axios.post(`${Url}/chefController/fetchDishIds`,{
         'Accept': 'application/json',
         'content-type':'application/json'
     });
 }
 export const viewPlacedOrders = async()=>{
 
-    return await axios.post(`${URL}/chefController/viewPlacedOrders`,{
+    return await axios.post(`${Url}/chefController/viewPlacedOrders`,{
         'Accept': 'application/json',
         'content-type':'application/json'
     });

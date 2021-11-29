@@ -21,8 +21,9 @@ export default function BasicTable () {
             }
             else
             {
-                navigate('/login');
-                window.location.reload();
+                //navigate('/login');
+                //window.location.reload();
+                alert(response.data.result);
             }
         });
     }, []);
@@ -55,7 +56,7 @@ export default function BasicTable () {
        
       
     }
-    const [Modal, open, close, isOpen] = useModal('root', {
+    const [Modal, open] = useModal('root', {
         preventScroll: true,
         closeOnOverlayClick: false
       });

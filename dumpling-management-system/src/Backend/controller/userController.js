@@ -794,7 +794,14 @@ export const updateAccount = (req,res) =>
     }
     else
     {
-        return;
+        message = "account dosent have admin role type";
+        isSuccessful = false;
+        res.send(
+            {
+                "isSuccessful":isSuccessful,
+                "message":message
+            }
+        );
     }
 
 }
@@ -937,7 +944,7 @@ export const getEmployeeDetails = (req,res)=>
     let query = `SELECT employee.employeeid,employee.employeeName,account.emailAddress,employee.position,account.accountType
                  From employee
                  JOIN account ON employee.accountId=account.accountId
-                 where account.archived=0`;
+                 where account.archived=0 and account.accountType!="admin"`;
     var connectionString = mysql.createConnection(
     {
         host:process.env.host,
@@ -962,17 +969,32 @@ export const getEmployeeDetails = (req,res)=>
             connectionString.end();
         }
         else{
-            isSuccessful=true;
-            message = "User details found";
-            console.log("records sent");
-            res.send(
-                {
-                    "isSuccesful":isSuccessful,
-                    "message":message,
-                    "employeeDetails":result
-                }
-            );
-            connectionString.end();
+            if(result.length===0)
+            {
+                isSuccessful=false;
+                console.log("no record found");
+                message = "No User account in database to display please create some";
+                res.send(
+                    {
+                        "isSuccesful":isSuccessful,
+                        "message":message,
+                    });
+                connectionString.end();
+            }
+            else
+            {   isSuccessful=true;
+                message = "User details found";
+                console.log("records sent");
+                res.send(
+                    {
+                        "isSuccesful":isSuccessful,
+                        "message":message,
+                        "employeeDetails":result
+                    }
+                );
+                connectionString.end();
+            }
+            
         }
-    })
+    });
 }

@@ -55,12 +55,12 @@ export default function BonusTable () {
                     if(response.data.isSuccessful)
                     {
                         alert(response.data.message);
-                        navigate("/giveBonuses");
+                        navigate("/dashboard");
                         
                     }
                     else{
                         alert(response.data.message);
-                        navigate("/giveBonuses");
+                        navigate("/dashboard");
                     }
                 })
             
@@ -106,9 +106,6 @@ export default function BonusTable () {
                         </Form.Group>
                     </Form>
                     <button onClick={submitHandle}>Update</button>
-                    <Link to="/giveBonuses">
-                    <button onClick={close} >close</button>
-                    </Link>
                     </Modal>
                     </td>
                     </tr>

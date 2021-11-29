@@ -5,9 +5,6 @@ import { useState, useEffect } from "react";
 //import  {Link} from 'react-router-dom';
 import {createAccount} from  '../../Services_API/api.js';
 import {useNavigate} from 'react-router-dom';
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import Dropdown from 'react-bootstrap/Dropdown'
-
 
 const initialState = {
     name: "",
@@ -121,15 +118,6 @@ export default function RegisterForm()
 
     }
 
-    const handleSelect=(e)=>{
-        console.log(e);
-      }
-
-//       <Form.Group className="mb-3" controlId="formBasicID">
-//       <Form.Label>accountType</Form.Label>
-//       <Form.Control type="text" placeholder="Employee Status" name = 'accountType'
-//       value = {newEmploye.accountType} onChange = {handle}/>
-//   </Form.Group>
 
     return(
                <Container id="main-container" className="d-grid h-100">
@@ -141,15 +129,13 @@ export default function RegisterForm()
                              value = {newEmploye.name} onChange = {handle}/>
                         </Form.Group>
 
-                        <DropdownButton
-                        alignRight
-                        title="Account Type"
-                        id="dropdown-menu-align-right" name = 'accountType' value = {newEmploye.accountType} 
-                        onSelect={handle}>
-                            <Dropdown.Item eventKey="Chef">Chef</Dropdown.Item>
-                            <Dropdown.Item eventKey="Cashier">Cashier</Dropdown.Item>
-                            <Dropdown.Item eventKey="Manager">Manager</Dropdown.Item>
-                        </DropdownButton>
+                        <div onChange={handle}>  
+                               <p>Select Account Type</p>
+                            <p><input type="radio" value="chef" name="accountType" /> Chef</p>
+                            <p><input type="radio" value="manager" name="accountType" /> Manager</p>
+                            <p><input type="radio" value="cashier" name="accountType" /> Cashier</p>
+
+                        </div>
 
                         <Form.Group className="mb-3" controlId="formBasicPos">
                             <Form.Label>Employee Position</Form.Label>

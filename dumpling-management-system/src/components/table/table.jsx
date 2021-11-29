@@ -94,14 +94,17 @@ export default function Table2(prop)
                             <td>{e.accountType} </td>
                             <td> <Button onClick={open}>Update</Button></td>
                             <Modal>
-                                <h1>Are you sure you want to delte user with email {e.emailAddress}</h1>
+                                <p>Are you sure you want to delte user with email {e.emailAddress}</p>
                                 <Container id="main-container" className="d-grid h-100">
                                 <Form className= 'text-center'>
-                                   <Form.Group className="mb-3" controlId="formBasicName">
-                                        <Form.Label>New account type</Form.Label>
-                                        <Form.Control type="text" placeholder="Enter account type" name = 'accountType'
-                                        value = {newEmploye.accountType} onChange = {handle}/>
-                                   </Form.Group>
+                                  
+                                   <div onChange={handle}>  
+                                        <p>Select Account Type</p>
+                                        <p><input type="radio" value="chef" name="accountType" /> Chef</p>
+                                        <p><input type="radio" value="manager" name="accountType" /> Manager</p>
+                                        <p><input type="radio" value="cashier" name="accountType" /> Cashier</p>
+                                    </div>
+
                                    <Form.Group className="mb-3" controlId="formBasicPostion">
                                         <Form.Label>New postion</Form.Label>
                                         <Form.Control type="text" placeholder="Enter account type" name = 'position'
@@ -111,10 +114,11 @@ export default function Table2(prop)
                                 </Container>
                                 <div>
                                 <Button onClick={close}> close </Button>
-                                <Button onClick={()=>{onUpdate(e.emailAddress,newEmploye.position,newEmploye.accountType)}}>Update</Button>
+                                <Button onClick={()=>{onUpdate(e.emailAddress,newEmploye.position,newEmploye.accountType)}}
+                                disabled = {Object.values(newEmploye).includes("")}>Update</Button>
                                 </div>
                             </Modal>
-                             <td> <Button onClick={() =>onDelete(e.emailAddress)}>Delete</Button></td>
+                             <td> <Button onClick={() =>onDelete(e.emailAddress)} > Delete</Button></td>
                         </tr>
                        
                         </tbody>

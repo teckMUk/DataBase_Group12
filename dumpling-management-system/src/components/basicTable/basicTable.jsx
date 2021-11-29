@@ -43,14 +43,12 @@ export default function BasicTable () {
                 if(response.data.isSuccessful)
                 {
                     alert(response.data.message);
-                    window.location.reload();
-                    navigate("/updateSalaryOfEmployees");
+                    navigate("/dashboard");
                     
                 }
                 else{
                     alert(response.data.message);
-                    window.location.reload();
-                    navigate("/updateSalaryOfEmployees");
+                    navigate("/dashboard");
                 }
             })
         }

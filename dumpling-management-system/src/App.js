@@ -13,6 +13,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import AddToMenu from "./pages/addMenuItem/addMenuItem";
 import UpdateDelEmp from "./pages/updateDelEmp/updateDelEmp";
 import DynamicTable from "./pages/placeOrder/placeOrder";
+import Table3 from "./components/removeMenu/removeMenu";
 
 
 const App = () => {
@@ -32,6 +33,7 @@ const App = () => {
       <Route path='/getAllEmployees' element={<BasicTable/>} />
       <Route path='/updateDelEmp' element={< UpdateDelEmp/>}/>
       <Route path='/placeOrder' element={<DynamicTable/>} />
+      <Route path='/removeitem' element={<Table3/>}/>
       </Routes>
     </div>
     </Router>

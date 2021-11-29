@@ -2,9 +2,9 @@ import React from 'react';
 import { useState, useEffect } from "react";
 import Table from 'react-bootstrap/Table';
 import {fetchAllEmployee,giveBonuses} from '../../Services_API/api';
-import {Container, Form, Button} from 'react-bootstrap';
+import {Form} from 'react-bootstrap';
 import { useModal } from 'react-hooks-use-modal';
-import {useNavigate,Link} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 function formatDate(date) {
     var d = new Date(date),
@@ -67,7 +67,7 @@ export default function BonusTable () {
             }
         }
         
-    const [Modal, open, close, isOpen] = useModal('root', {
+    const [Modal, open] = useModal('root', {
         preventScroll: true,
         closeOnOverlayClick: false
       });

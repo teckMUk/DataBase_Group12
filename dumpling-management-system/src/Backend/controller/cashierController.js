@@ -209,8 +209,8 @@ export const placeOrder = async (req,res)=>
 
     let listOrders = req.body.listOrders;
 
-    // let dishIds = Object.values((JSON.parse(JSON.stringify(listOrders))));
-    let dishIds = Object.values(JSON.parse(listOrders));
+    let dishIds = Object.values((JSON.parse(JSON.stringify(listOrders))));
+    // let dishIds = Object.values(JSON.parse(listOrders));
 
     // console.log(dishIds);
 

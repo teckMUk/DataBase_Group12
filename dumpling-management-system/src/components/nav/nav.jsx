@@ -36,7 +36,7 @@ export default function Nav2()
         
     }
 
-    const isManagerAdmin = (role) =>{
+    const isManager= (role) =>{
         if(role === null)
         {
             let x = localStorage.getItem('empRole');
@@ -50,7 +50,7 @@ export default function Nav2()
            
         }
 
-        if(role.toLowerCase() === 'manager' || role.toLowerCase() === 'admin')
+        if(role.toLowerCase() === 'manager')
         {
             console.log('tru');
             return true;
@@ -140,19 +140,19 @@ export default function Nav2()
                         }
 
                         {//is chef
-                            (isCashierChef(role) || isAdmin(role)) && <div>
+                            (isCashierChef(role) || isAdmin(role) || !isManager(role)) && <div>
                                 <NavDropdown.Item href='/addToMenu'>Add to Menu</NavDropdown.Item> 
                             </div>
                         }
 
                         {// is cashier
-                            (!isCashierChef(role) || isAdmin(role)) && <div> 
+                            (!isCashierChef(role) || isAdmin(role) || !isManager(role)) && <div> 
                                 <NavDropdown.Item href='/placeOrder'>Place Order</NavDropdown.Item> 
                             </div>
                         }
 
                         {
-                            isManagerAdmin(role) && <div> 
+                            (isManager(role) || isAdmin(role)) && <div> 
                                 <NavDropdown.Item href='/updateSalaryOfEmployees'>Update Salary</NavDropdown.Item>
                                 <NavDropdown.Item href='/giveBonuses'>Give Bonus</NavDropdown.Item>
                             </div>

@@ -133,6 +133,20 @@ export const addMenuItem = async(dishName, dishType,preparationTime,calories,dis
 
 }
 
+export const fetchDishIds = async()=>{
+
+ 
+
+    return await axios.post(`${Url}/chefController/fetchDishIds`,{
+
+        'Accept': 'application/json',
+
+        'content-type':'application/json'
+
+    });
+
+}
+
 
 export const removeMenuItem = async(dishId) =>{
 
@@ -143,6 +157,9 @@ export const removeMenuItem = async(dishId) =>{
     return await axios.post(`${Url}/chefController/removeMenuItem`, obj)
 
 }
+
+
+
 
 
 

@@ -9,6 +9,8 @@ import { BrowserRouter as Router , Routes, Route} from 'react-router-dom';
 import ResetPw from "./components/resetpw/resetpw";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AddToMenu from "./pages/addMenuItem/addMenuItem";
+import DynamicTable from "./pages/placeOrder/placeOrder";
+
 
 
 
@@ -26,6 +28,10 @@ const App = () => {
       <Route path='/email' element={<Email role = {false}/>} />
       <Route path='/questions' element={<Questions/>} />
       <Route path='/addToMenu' element={<AddToMenu/>} />
+      <Route path='/placeOrder' element={<DynamicTable/>} />
+
+
+
 
       
       </Routes>

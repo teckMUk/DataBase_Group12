@@ -168,11 +168,8 @@ export const fetchDishIds = (req,res)=>
                 message = "Found all the dishes";
                 isSuccessful = true;
                 console.log(result);
-                let dishIds = [];
-                let dishNames = [];
-                let dishAllergens = [];
-                let dishPriceForManydishes = [];
-                let isArchived =[];
+                let result1=[];
+                let isArchived = [];
                 for(var i=0;i<result.length;i++)
                 {
                     isArchived.push(result[i].archived);

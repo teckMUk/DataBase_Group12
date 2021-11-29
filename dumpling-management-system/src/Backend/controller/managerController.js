@@ -58,6 +58,7 @@ export const updateEmployeeSalary = (req,res)=>
                     if(err)
                     {
                         message = "Failed to update the salary";
+                        console.log(err);
                         res.send(
                             {
                                 "isSuccessful":isSuccessful,

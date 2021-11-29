@@ -5,9 +5,6 @@ import { useState, useEffect } from "react";
 //import  {Link} from 'react-router-dom';
 import {createAccount} from  '../../Services_API/api.js';
 import {useNavigate} from 'react-router-dom';
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import Dropdown from 'react-bootstrap/Dropdown'
-
 
 const initialState = {
     name: "",
@@ -121,9 +118,7 @@ export default function RegisterForm()
 
     }
 
-    const handleSelect=(e)=>{
-        console.log(e);
-      }
+
 
 //       <Form.Group className="mb-3" controlId="formBasicID">
 //       <Form.Label>accountType</Form.Label>

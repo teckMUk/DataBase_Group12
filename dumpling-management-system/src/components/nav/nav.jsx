@@ -61,7 +61,7 @@ export default function Nav2()
         }
     }
 
-    const isCashierChef = (role) =>{
+    const isCashier= (role) =>{
         if(role === null)
         {
             let x = localStorage.getItem('empRole');
@@ -75,22 +75,46 @@ export default function Nav2()
            
         }
 
-        if(role.toLowerCase() === 'chef')
+        if(role.toLowerCase() === 'cashier')
         {
             //tells if chef
             console.log('tru');
             return true;
         }
-        else if (role.toLowerCase() === 'cashier'){
+        else{
             //is cashier
             console.log('false');
             return false;
         }
 }
 
+const isChef= (role) =>{
+    if(role === null)
+    {
+        let x = localStorage.getItem('empRole');
+        if(x == null)
+        {
+            navigate('/');
+        }
+        else{
+            role = x;
+        }
+       
+    }
 
+    if(role.toLowerCase() === 'chef')
+    {
+        //tells if chef
+        console.log('tru');
+        return true;
+    }
+    else{
+      
+        console.log('false');
+        return false;
+    }
+}
 
-    
     const Logout2 = () =>
     {
         if(localStorage.getItem("dumplingUserId"))
@@ -136,23 +160,27 @@ export default function Nav2()
                         <div> 
                             <NavDropdown.Item href="/create_account"> Create Account </NavDropdown.Item>
                             <NavDropdown.Item  onClick={getDetails}> View Employee Details </NavDropdown.Item>
+                            <NavDropdown.Item href='/addToMenu'>Add to Menu</NavDropdown.Item> 
+                            <NavDropdown.Item href='/placeOrder'>Place Order</NavDropdown.Item> 
+                            <NavDropdown.Item href='/updateSalaryOfEmployees'>Update Salary</NavDropdown.Item>
+                            <NavDropdown.Item href='/giveBonuses'>Give Bonus</NavDropdown.Item>
                         </div>
                         }
 
                         {//is chef
-                            (isCashierChef(role) || isAdmin(role) || !isManager(role)) && <div>
+                            isChef(role)&& <div>
                                 <NavDropdown.Item href='/addToMenu'>Add to Menu</NavDropdown.Item> 
                             </div>
                         }
 
                         {// is cashier
-                            (!isCashierChef(role) || isAdmin(role) || !isManager(role)) && <div> 
+                            isCashier(role)&& <div> 
                                 <NavDropdown.Item href='/placeOrder'>Place Order</NavDropdown.Item> 
                             </div>
                         }
 
                         {
-                            (isManager(role) || isAdmin(role)) && <div> 
+                            isManager(role) && <div> 
                                 <NavDropdown.Item href='/updateSalaryOfEmployees'>Update Salary</NavDropdown.Item>
                                 <NavDropdown.Item href='/giveBonuses'>Give Bonus</NavDropdown.Item>
                             </div>

@@ -166,7 +166,7 @@ export const fetchDishIds = (req,res)=>
             {
                 message = "Found all the dishes";
                 isSuccessful = true;
-                // console.log(result);
+                
                 let result1 = [];
                 let isArchived = [];
                 for(var i=0;i<result.length;i++)

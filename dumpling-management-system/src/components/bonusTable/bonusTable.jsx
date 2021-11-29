@@ -1,16 +1,31 @@
 import React from 'react';
 import { useState, useEffect } from "react";
 import Table from 'react-bootstrap/Table';
-import {fetchAllEmployee,giveBonuses,updateEmployeeSalary} from '../../Services_API/api';
+import {fetchAllEmployee,giveBonuses} from '../../Services_API/api';
 import {Container, Form, Button} from 'react-bootstrap';
 import { useModal } from 'react-hooks-use-modal';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate,Link} from 'react-router-dom';
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+ 
 
 export default function BonusTable () {
     let id;
     let navigate = useNavigate();
     const [salary,setSalary] = useState();
     const [employees,setEmployees] = useState();
+    const [reason,setReason]=useState();
     
     useEffect(() =>{
         fetchAllEmployee().then((response)=>{
@@ -21,19 +36,22 @@ export default function BonusTable () {
 
     const submitHandle = e => {
         // e.preventDefault();
-        let checkid = 2;
-        giveBonuses(id,salary,checkid).then((response)=>{
+        let checkid = localStorage.getItem("dumplingUserId");
+        let date = new Date();
+        date = formatDate(date);
+        console.log(date);
+        giveBonuses(checkid,id,reason,date).then((response)=>{
             
             console.log(response);
             if(response.data.isSuccessful)
             {
                 alert(response.data.message);
-                navigate("/getAllEmployees");
+                navigate("/giveBonuses");
                 
             }
             else{
                 alert(response.data.message);
-                navigate("/getAllEmployees");
+                navigate("/giveBonuses");
             }
         })
       
@@ -51,7 +69,7 @@ export default function BonusTable () {
             <th>Employee Name</th>
             <th>Salary</th>
             <th>Postion</th>
-            <th>Update Salary</th>
+            <th>Give Bonus</th>
             </tr>
         </thead>
         {employees ? employees.map((employee,i)=>
@@ -67,17 +85,19 @@ export default function BonusTable () {
                     <td><button onClick={open}>Click to Give Bonus</button></td>
                     <td>
                     <Modal>
-                    <p> Are you sure you want to update the salary of {employee.employeeName}</p>
+                    <p> Are you sure you want to give bonus to {employee.employeeName}</p>
                     <Form>
                         <Form.Group  key = {i} className="mb-3" controlId="formBasicName">
-                        <Form.Control type="text" placeholder="Updated Salary" name = {employee.emoloyeeName} value = {salary} onChange={(e)=>setSalary(e.target.value)}/>
+                        <Form.Control type="text" placeholder="Give bonus" name = {employee.emoloyeeName} value = {salary} onChange={(e)=>setSalary(e.target.value)}/>
                         </Form.Group>
                         <Form.Group  key = {i} className="mb-3" controlId="formBasicName">
-                        <Form.Control type="text" placeholder="reason" name = {employee.emoloyeeName} value = {salary} onChange={(e)=>setSalary(e.target.value)}/>
+                        <Form.Control type="text" placeholder="reason" name = {employee.emoloyeeName} value = {reason} onChange={(e)=>setReason(e.target.value)}/>
                         </Form.Group>
                     </Form>
                     <button onClick={submitHandle}>Update</button>
-                    <button onClick={close}>close</button>
+                    <Link to="/giveBonuses">
+                    <button onClick={close} >close</button>
+                    </Link>
                     </Modal>
                     </td>
                     </tr>

@@ -166,7 +166,7 @@ export const giveBonuses = (req,res)=>
     let reason = req.body.reason;
     let date = req.body.date;
     let checkForIdQuery = `SELECT account.accountType FROM dumpling.account WHERE account.accountId=${checkForId}`;
-    let giveBonus = `INSERT INTO dumpling.bonus(employeeId,reason,date,createdAt) VALUES (${giveBonusToEmployeeId},${reason},"${date}",NOW())`;
+    let giveBonus = `INSERT INTO dumpling.bonus(employeeId,reason,date,createdAt) VALUES (${giveBonusToEmployeeId},"${reason}","${date}",NOW())`;
     connectionString.query(checkForIdQuery,(err,result)=>
     {
         if(err)

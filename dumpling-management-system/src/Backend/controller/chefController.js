@@ -204,8 +204,7 @@ export const viewPlacedOrders = (req,res)=>
 
         }
     );
-    let orderPlaced = "placed";
-    let placedOrderQuery = `SELECT * from dumpling.orders WHERE orders.orderStatus = "${orderPlaced}"`;
+    let placedOrderQuery = ` SELECT dishassignment.orderNo,menu.dishName from dishassignment INNER JOIN dumpling.menu ON dishassignment.dishNo=menu.dishId`;
     let message = "";
     let isSuccessful = false;
     connectionString.query(placedOrderQuery,(err,result)=>
@@ -238,7 +237,7 @@ export const viewPlacedOrders = (req,res)=>
             }
             else
             {
-                message = "The menu items are fetched";
+                message = "The Placed order are";
                 isSuccessful = true;
                 console.log(result);
                 res.send(

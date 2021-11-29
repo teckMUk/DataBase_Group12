@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from "react";
 import Table from 'react-bootstrap/Table';
 import {fetchAllEmployee,updateEmployeeSalary} from '../../Services_API/api';
-import {Container, Form, Button} from 'react-bootstrap';
+import {Form} from 'react-bootstrap';
 import { useModal } from 'react-hooks-use-modal';
 import {useNavigate} from 'react-router-dom';
 
@@ -15,7 +15,14 @@ export default function BasicTable () {
     useEffect(() =>{
         fetchAllEmployee().then((response)=>{
             console.log(response);
-            setEmployees(response.data.result);
+            if(response.data.isSuccessful)
+            {   
+                setEmployees(response.data.result);
+            }
+            else
+            {
+                navigate('/login');
+            }
         });
     }, []);
 
@@ -28,12 +35,14 @@ export default function BasicTable () {
             if(response.data.isSuccessful)
             {
                 alert(response.data.message);
-                navigate("/getAllEmployees");
+                window.location.reload();
+                navigate("/updateSalaryOfEmployees");
                 
             }
             else{
                 alert(response.data.message);
-                navigate("/getAllEmployees");
+                window.location.reload();
+                navigate("/updateSalaryOfEmployees");
             }
         })
       
@@ -74,7 +83,6 @@ export default function BasicTable () {
                         </Form.Group>
                     </Form>
                     <button onClick={submitHandle}>Update</button>
-                    <button onClick={close}>close</button>
                     </Modal>
                     </td>
                     </tr>

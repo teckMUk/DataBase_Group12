@@ -399,7 +399,7 @@ export const applyCoupon = (req,res)=>
                         else
                         {
                         
-                            connectionString.end();
+                            // connectionString.end();
                             console.log(" not expired");
                             var connectionString2 = mysql.createConnection(
                                 {
@@ -440,17 +440,20 @@ export const applyCoupon = (req,res)=>
 
                                             );
                                             connectionString2.end();
+                                            connectionString.end();
 
 
                                         }
                                         else
                                         {
-                                            connectionString2.end();
+                                            
+                                            console.log(result)
                                             lucky_bill = result[0].totalBill;
                                             console.log("here");
-                                            
+                                            console.log(lucky_bill);
                                             new_bill = lucky_bill - ((coupon_percentage*1.0/100)*lucky_bill)
                                             console.log(new_bill);
+                                            connectionString2.end();
                                             //now we have the new bill...just update the total bill in the orders table.
                                             //now create another connection string
                                             var connectionString3 = mysql.createConnection(

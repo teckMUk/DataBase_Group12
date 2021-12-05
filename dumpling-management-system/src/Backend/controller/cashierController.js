@@ -111,9 +111,7 @@ function addIntoDA(orderId,toAddintoDA)
 
         );
 
-        let addIntoDishAss = `INSERT INTO dumpling.dishassignment(orderNo,dishNo)
-
-        VALUES("${orderId}",${toAddintoDA});`;
+        let addIntoDishAss = `INSERT INTO dumpling.dishassignment(orderNo,dishNo) VALUES("${orderId}","${toAddintoDA}");`;
 
         connectionString2.query(addIntoDishAss,(err,result)=>
 
@@ -124,6 +122,7 @@ function addIntoDA(orderId,toAddintoDA)
             {
 
                 console.log("Error");
+                console.log(err);
 
                 reject("Query failed");
 
@@ -314,4 +313,40 @@ export const placeOrder = async (req,res)=>
 
     });
 
+}
+export const viewOrderSummary = (req,res)=>{
+    var connectionString = mysql.createConnection(
+        {
+            host:process.env.host,
+            user: process.env.user,
+            password:process.env.password,
+            database:process.env.database
+        }
+
+    )
+    let message = "";
+    let isSuccessful = false;
+    let orderId = req.body.orderId;
+    let orderSummary = `SELECT * FROM orders INNER JOIN dishassignment on orders.orderId = dishassignment.orderNo INNER JOIN menu on menu.dishId = dishassignment.dishNo WHERE orders.orderId = "${orderId}";`;
+    connectionString.query(orderSummary,(err,result)=>{
+        if(err)
+        {
+            message = "Cannot display order summary";
+            res.send({
+                'isSuccessful':isSuccessful,
+                'message':message
+            });
+
+        }
+        else
+        {
+            message = "Sucessfully displaying the order summary";
+            isSuccessful = true;
+            res.send({
+                'isSuccessful':isSuccessful,
+                'message':message,
+                'result':result
+            });
+        }
+    })
 }

@@ -3,7 +3,7 @@ import express from 'express';
 import {findUsers,addUser,getSQ,changePassword,forgetPassword,validateSecurity, accountExistence, updateAccount, deleteAccount,getEmployeeDetails} from "../../Backend/controller/userController.js";
 import {addMenuItem,removeMenuItem,fetchDishIds,viewPlacedOrders} from "../../Backend/controller/chefController.js";
 import {updateEmployeeSalary,fetchAllEmployee, giveBonuses, addCoupon, applyCoupon} from "../../Backend/controller/managerController.js";
-import {placeOrder} from "../../Backend/controller/cashierController.js";
+import {placeOrder,viewOrderSummary} from "../../Backend/controller/cashierController.js";
 dotenv.config({path:"./src/Backend/.env"});
 const route = express.Router();
 route.post("/api/userController/login",findUsers);
@@ -26,5 +26,5 @@ route.post("/api/managerController/giveBonuses",giveBonuses);
 route.get("/api/userController/employeeDetails",getEmployeeDetails);
 route.post("/api/managerController/addCoupon",addCoupon);
 route.post("/api/managerController/applyCoupon",applyCoupon);
-
+route.post("/api/cashierController/viewOrderSummary",viewOrderSummary);
 export default route;

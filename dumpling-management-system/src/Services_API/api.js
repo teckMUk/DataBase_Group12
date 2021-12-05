@@ -194,6 +194,39 @@ export const viewPlacedOrders = async()=>{
 
 
 
+export const addCoupon = async(couponId, couponName, discount, issueDate, expiryDate) =>{
+    const obj={
+        "couponId" : couponId,
+        "couponName" : couponName,
+        "discount":discount,
+        "issueDate" : issueDate,
+        "expiryDate" : expiryDate
+
+    }
+    return await axios.post(`${Url}/managerController/addCoupon`, obj,{
+    'Accept': 'application/json',
+    'content-type':'application/json'
+});
+
+}
+
+export const applyCoupon = async(couponId, orderId) =>{
+    const obj={
+        "couponId" : couponId,
+        "orderId" : orderId
+
+    }
+    return await axios.post(`${Url}/managerController/applyCoupon`, obj,{
+    'Accept': 'application/json',
+    'content-type':'application/json'
+});
+
+}
+
+
+
+
+
 
 
 

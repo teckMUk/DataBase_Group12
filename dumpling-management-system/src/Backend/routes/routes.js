@@ -1,9 +1,10 @@
 import dotenv from "dotenv";
 import express from 'express';
 import {findUsers,addUser,getSQ,changePassword,forgetPassword,validateSecurity, accountExistence, updateAccount, deleteAccount,getEmployeeDetails} from "../../Backend/controller/userController.js";
-import {addMenuItem,removeMenuItem,fetchDishIds,viewPlacedOrders} from "../../Backend/controller/chefController.js";
+import {addMenuItem,removeMenuItem,fetchDishIds,viewPlacedOrders,changeOrderStatus} from "../../Backend/controller/chefController.js";
 import {updateEmployeeSalary,fetchAllEmployee, giveBonuses} from "../../Backend/controller/managerController.js";
 import {placeOrder} from "../../Backend/controller/cashierController.js";
+// import { RoundedCornerTwoTone } from "@material-ui/icons";
 dotenv.config({path:"./src/Backend/.env"});
 const route = express.Router();
 route.post("/api/userController/login",findUsers);
@@ -24,4 +25,5 @@ route.post("/api/managerController/fetchAllEmployee",fetchAllEmployee);
 route.post("/api/managerController/updateEmployeeSalary",updateEmployeeSalary);
 route.post("/api/managerController/giveBonuses",giveBonuses);
 route.get("/api/userController/employeeDetails",getEmployeeDetails);
+route.post("/api/managerController/updateOrderStatus",changeOrderStatus)
 export default route;

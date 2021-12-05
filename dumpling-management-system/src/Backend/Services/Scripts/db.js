@@ -32,7 +32,7 @@ function createTable(q)
 }
 
 const createSalesRecord = `CREATE TABLE IF NOT EXISTS dumpling.salesrecord (
-    salesId INT NOT NULL,
+    salesId INT NOT NULL AUTO_INCREMENT,
     orderId VARCHAR(50) NOT NULL,
     date DATE NOT NULL,
     createdAt DATETIME NOT NULL,

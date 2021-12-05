@@ -7,6 +7,8 @@ import { useNavigate } from "react-router";
 export default function Tabel4()
 {
     let dishId = [];
+    let orderStatus = ""
+    let bill = 0;
     let navigate = useNavigate();
     const [employees,setEmployees] = useState();
     useEffect(() => {
@@ -24,12 +26,19 @@ export default function Tabel4()
             }
         });
     }, []);
+    const  handleChange = (e)=>
+    {
+        const {name,value} = e.target;
+        console.log(name,value);
+        orderStatus = value;
+    }
     const onPlaceOrder = () =>
     {
+
         let obj={
             "dishIds":dishId
         }
-        placeOrder("takenIn","placed",0,obj).then((response)=>
+        placeOrder(orderStatus,"placed",bill,obj).then((response)=>
         {
             if(response.data.isSuccessful)
             {
@@ -44,22 +53,28 @@ export default function Tabel4()
             }
         });
     }
-    const onRemove = (id) =>
+    const onRemove = (id,price) =>
     {
         if(dishId.length!==0)
         {
+            
             let index = dishId.indexOf(id)
             if(dishId.indexOf(id)!==-1)
             {
+                bill = bill-price;
                 dishId.splice(index,1);
 
             }
+            console.log("THis is the bill after removing the dish",bill);
         }
         console.log(dishId);
     }
-    const onAdddish = (id) =>
+    const onAdddish = (id,price) =>
     {
+
+        bill = bill+price;
         dishId.push(id);
+        console.log("THis is the bil",bill);
         console.log(dishId);
     }
     return (
@@ -83,13 +98,18 @@ export default function Tabel4()
                             <td>{e.dishName}</td>
                             <td>{e.allergens} </td>
                             <td>{e.dishPrice} </td>
-                            <td> <Button onClick={() =>onAdddish(e.dishId)}>Add item</Button></td>
-                            <td> <Button onClick={() =>onRemove(e.dishId)}>remove item</Button></td>
+                            <td> <Button onClick={() =>onAdddish(e.dishId,e.dishPrice)}>Add item</Button></td>
+                            <td> <Button onClick={() =>onRemove(e.dishId,e.dishPrice)}>remove item</Button></td>
                         </tr>
                        
                         </tbody>
                 )):null}
                 </Table>
+                <div onChange={handleChange}>
+                    <input type="radio" value="DineIn" name="typeOfOrder" /> Dine In    
+                    <input type="radio" value="TakeAway" name="typeOfOrder" /> Takeway
+                </div>
+                
                 <Button onClick={onPlaceOrder}> Place Order</Button>
             </div>
         </>

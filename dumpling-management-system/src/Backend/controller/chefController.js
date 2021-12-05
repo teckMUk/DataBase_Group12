@@ -421,7 +421,7 @@ function findCurrentStatus(orderId)
 {
     return new Promise((resolve,reject)=>
     {
-        let curretStatusQuerry = `select orderStatus from orders where orderId="${orderId}"`;
+        let curretStatusQuerry = `select orderStatus from orders where orderId="${orderId} and orderStatus!=completed"`;
         console.log(curretStatusQuerry);
         var connectionString = mysql.createConnection(
         {
@@ -491,9 +491,9 @@ function addRecordToSaleRecord(orderId)
     return new Promise((resolve,reject)=>
     {
         var today = new Date();
-        var date = today.getFullYear() + '-' + today.getMonth() + "-" + today.getDate();
-        let updateQuerry = `Insert into salesrecord (orderId,date,createAt)
-        values("${orderId}",${date},NOW());`;
+        var date = today.getFullYear() + '-' + (today.getMonth()+1) + "-" + today.getDate();
+        let updateQuerry = `Insert into salesrecord (orderId,date,createdAt)
+        values("${orderId}","${date}",NOW());`;
         console.log(updateQuerry);
         var connectionString = mysql.createConnection(
         {
@@ -505,6 +505,7 @@ function addRecordToSaleRecord(orderId)
         connectionString.query(updateQuerry,(err,result)=>
         {
             if(err){
+                console.log(err);
                 reject("querry failed");
                 connectionString.end();
             }

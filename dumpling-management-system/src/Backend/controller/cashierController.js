@@ -350,3 +350,67 @@ export const viewOrderSummary = (req,res)=>{
         }
     })
 }
+export const dailySaleReport = (req,res) =>
+{
+    
+    var today = new Date();
+    let month = today.getMonth()+1;
+    let day = today.getDate();
+    let year = today.getFullYear();
+    let querry =`Select dishassignment.orderNo,menu.dishName,orders.totalBill from orders inner join dishassignment on dishassignment.orderNo=orders.orderId inner join menu on dishassignment.dishNo=menu.dishId where menu.archived=0 and orders.orderId=(select salesrecord.orderId from salesrecord where DAY(salesrecord.date)=${day} and MONTH(salesrecord.date)=${month} and YEAR(salesrecord.date)=${year} and salesrecord.archived=0);`
+    console.log(querry)
+    var connectionString = mysql.createConnection(
+        {
+            host:process.env.host,
+            user: process.env.user,
+            password:process.env.password,
+            database:process.env.database
+
+        }
+    );
+    let message = "";
+    let isSuccessful = false;
+    connectionString.query(querry,(err,result)=>
+    {
+        if(err){
+            message = "querry failed";
+            console.log(err);
+            res.send(
+                {
+                    "isSuccessful":isSuccessful,
+                    "message":message
+                }
+            );
+            connectionString.end();
+        }
+        else
+        {
+            if(result.length === 0)
+            {
+                message = "No sale today";
+                res.send(
+                    {
+                        "isSuccessful":isSuccessful,
+                        "message":message
+                    }
+                );
+                connectionString.end();
+
+            }
+            else
+            {
+                message = "sale record for day found";
+                isSuccessful = true;
+                console.log(result);
+                res.send(
+                    {
+                        "isSuccessful":isSuccessful,
+                        "message":message,
+                        'result':result
+                    }
+                );
+                connectionString.end();
+            }
+        }
+    })
+}

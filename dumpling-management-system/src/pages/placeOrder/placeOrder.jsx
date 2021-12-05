@@ -265,7 +265,7 @@ export default class DynamicTable extends React.Component {
     render() {
 
       return (
-
+        
         <Form>
 
         <Container id="main-container" className="d-grid h-100">

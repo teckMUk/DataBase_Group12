@@ -12,8 +12,10 @@ import ResetPw from "./components/resetpw/resetpw";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AddToMenu from "./pages/addMenuItem/addMenuItem";
 import UpdateDelEmp from "./pages/updateDelEmp/updateDelEmp";
-import DynamicTable from "./pages/placeOrder/placeOrder";
-
+import  BonusTable from './components/bonusTable/bonusTable.jsx';
+import ViewOrders from './components/viewOrders/viewOrders.jsx';
+import Table3 from "./components/removeMenu/removeMenu";
+import Table4 from "./components/PlaceOrder/PlaceOrder";
 
 const App = () => {
   
@@ -29,9 +31,13 @@ const App = () => {
       <Route path='/email' element={<Email/>} />
       <Route path='/questions' element={<Questions/>} />
       <Route path='/addToMenu' element={<AddToMenu/>} />
-      <Route path='/getAllEmployees' element={<BasicTable/>} />
-      <Route path='/updateDelEmp' element={< UpdateDelEmp/>}/>
-      <Route path='/placeOrder' element={<DynamicTable/>} />
+      <Route path='/updateSalaryOfEmployees' element={<BasicTable/>} />
+      <Route path='/updateDelEmp' element={<UpdateDelEmp/>}/>
+     {/* <Route path='/placeOrder' element={<DynamicTable/>} /> */}
+      <Route path='/giveBonuses' element={<BonusTable/>} />
+      <Route path='/viewPlacedOrders' element={<ViewOrders/>} />
+      <Route path='/removeitem' element={<Table3/>}/>
+      <Route path='/placeOrder' element={<Table4/>}/>
       </Routes>
     </div>
     </Router>

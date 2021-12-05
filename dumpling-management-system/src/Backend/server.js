@@ -24,10 +24,10 @@ app.post("/api/chefController/fetchDishIds", route);
 app.post("/api/chefController/viewPlacedOrders",route);
 app.post("/api/managerController/updateEmployeeSalary",route);
 app.post("/api/managerController/fetchAllEmployee",route);
-
-app.get("/api/managerController/employeeDetails",route);
-
+app.post("/api/managerController/giveBonuses",route);
+app.get("/api/userController/employeeDetails",route);
 app.post("/api/cashierController/placeOrder", route);
+
 const PORT =  process.env.PORT || 3000;
 app.listen(PORT,()=>{
     console.log(`Server is listening on port ${PORT}`);

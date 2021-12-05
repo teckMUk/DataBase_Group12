@@ -2,8 +2,6 @@ import dotenv from "dotenv";
 import mysql from 'mysql';
 import express from 'express';
 import bodyParser from "body-parser";
-import sha1 from 'sha1';
-import { v4 as uuidv4 } from 'uuid';
 dotenv.config({path:"./src/Backend/.env"});
 const app = express();
 app.use(bodyParser.json({ extended: true }));
@@ -25,7 +23,7 @@ export const addMenuItem = (req,res)=>
     let dishName = req.body.dishName;
     let dishType = req.body.dishType;
     let preparationTime = req.body.preparationTime;
-    //let dishPrice = req.body.dishPrice;
+    let dishPrice = req.body.dishPrice;
     let calories = req.body.calories;
     let dishOfday = req.body.dishOfday;
     let allergens = req.body.allergens;
@@ -94,12 +92,13 @@ export const removeMenuItem = (req,res)=>
     let message = "";
     let isSuccessful = false;
     let dishId = req.body.dishId;
-    let deleteDish = `UPDATE dumpling.menu SET menu.archived =1, menu.updatedAt=NOW() WHERE menu.dishId=${dishId}`;
+    let deleteDish = `UPDATE dumpling.menu SET menu.archived =1, menu.updateAt=NOW() WHERE menu.dishId=${dishId}`;
     connectionString.query(deleteDish,(err,result)=>
     {
         if(err)
         {
             message = "Dish not deleted";
+            console.log(err);
             res.send(
                 {
                     'isSuccessful':isSuccessful,
@@ -204,8 +203,7 @@ export const viewPlacedOrders = (req,res)=>
 
         }
     );
-    let orderPlaced = "placed";
-    let placedOrderQuery = `SELECT * from dumpling.orders WHERE orders.orderStatus = "${orderPlaced}"`;
+    let placedOrderQuery = ` SELECT dishassignment.orderNo,menu.dishName from dishassignment INNER JOIN dumpling.menu ON dishassignment.dishNo=menu.dishId`;
     let message = "";
     let isSuccessful = false;
     connectionString.query(placedOrderQuery,(err,result)=>
@@ -238,7 +236,7 @@ export const viewPlacedOrders = (req,res)=>
             }
             else
             {
-                message = "The menu items are fetched";
+                message = "The Placed order are";
                 isSuccessful = true;
                 console.log(result);
                 res.send(

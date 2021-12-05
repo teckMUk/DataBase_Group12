@@ -80,6 +80,7 @@ const createOrder = `CREATE TABLE IF NOT EXISTS dumpling.orders(
 const createDishAssignment = `CREATE TABLE IF NOT EXISTS dumpling.dishassignment (
     orderNo VARCHAR(50) NOT NULL,
     dishNo VARCHAR(50) NOT NULL,
+    quantity INT DEFAULT 0,
     PRIMARY KEY (orderNo,dishNo))`;
 const alterdishAssignment1 = `ALTER TABLE dumpling.dishassignment 
 ADD INDEX dishNo_idx (dishNo ASC) VISIBLE;`;

@@ -24,6 +24,8 @@ route.post("/api/managerController/fetchAllEmployee",fetchAllEmployee);
 route.post("/api/managerController/updateEmployeeSalary",updateEmployeeSalary);
 route.post("/api/managerController/giveBonuses",giveBonuses);
 route.get("/api/userController/employeeDetails",getEmployeeDetails);
+route.post("/api/managerController/addCoupon",addCoupon);
+route.post("/api/managerController/applyCoupon",applyCoupon);
 route.post("/api/managerController/updateOrderStatus",changeOrderStatus)
 route.post("/api/cashierController/viewOrderSummary",viewOrderSummary);
 route.get("/api/cashierController/dailySaleReport",dailySaleReport);

@@ -228,3 +228,346 @@ export const giveBonuses = (req,res)=>
         }
     });
 }
+
+export const addCoupon = (req,res)=>
+{
+    var connectionString = mysql.createConnection(
+        {
+            host:process.env.host,
+            user: process.env.user,
+            password:process.env.password,
+            database:process.env.database
+        }
+
+    );
+
+    let message ="";
+    let isSuccessful = false;
+
+    let couponId = req.body.couponId;
+    let couponName = req.body.couponName;
+    let discount = req.body.discount;
+    let issueDate = req.body.issueDate;
+    let expiryDate = req.body.expiryDate;
+    let addCouponQuery = 
+    `INSERT INTO dumpling.coupons(couponId,couponName,discount,issueDate,expiryDate,createdAt)
+    VALUES(${couponId},"${couponName}",${discount},"${issueDate}","${expiryDate}",NOW());`; 
+
+    connectionString.connect((error)=>{
+        if(error)
+        {
+
+            console.log(error);
+
+        }
+        else
+        {
+            connectionString.query(addCouponQuery,(err,result)=>
+            {
+                if(err)
+                {
+                    console.log("Error found");
+                    console.log(err);
+                    message = "Failed to insert coupon into the menu";
+                    res.send(
+                        {
+                            "isSuccessful":isSuccessful,
+                            "message":message
+                        }
+
+                    );
+
+                    connectionString.end();
+
+                }
+                else
+                {
+                    console.log("Coupon has been added successfully");
+                    isSuccessful = true;
+                    message="Coupon has been added";
+                    res.send(
+                        {
+                            "isSuccessful":isSuccessful,
+                            "message":message
+                        }
+                    );
+
+                    connectionString.end();
+                }
+            });
+
+        }
+
+    });
+
+
+}
+
+
+export const applyCoupon = (req,res)=>
+{
+
+    var connectionString = mysql.createConnection(
+        {
+            host:process.env.host,
+            user: process.env.user,
+            password:process.env.password,
+            database:process.env.database
+        }
+
+    );
+
+    let message ="";
+    let isSuccessful = false;
+    let couponId = req.body.couponId;
+    let orderId = req.body.orderId;
+    let coupon_percentage;
+    let lucky_bill;
+    let new_bill;
+    let check_coupon_existence = false;
+    let check_coupon_existence_query = 
+    `SELECT * FROM dumpling.coupons WHERE dumpling.coupons.couponId = ${couponId};`;
+
+    connectionString.connect((error)=>{
+        if(error)
+        {
+
+            console.log(error);
+
+
+        }
+        else
+        {
+            connectionString.query(check_coupon_existence_query,(err,result)=>
+            {
+                if(err)
+                {
+                    console.log("Error found in querying the coupons table for coupon existnce");
+                    console.log(err);
+                    message = "Error found in querying the coupons table for coupon existnce";
+                    res.send(
+                        {
+                            "isSuccessful":isSuccessful,
+                            "message":message
+                        }
+
+                    );
+                    connectionString.end();
+
+
+                }
+                else
+                {
+                    if(result.length == 0)
+                    {
+                        //this means that no coupons of this kind were found
+                        console.log("No matching coupon found");
+                        message = "No coupon with this ID found";
+                        res.send(
+                            {
+                                "isSuccessful":isSuccessful,
+                                "message":message
+                            }
+
+                        );
+                        connectionString.end();
+                        
+                    }
+                    else
+                    {
+                        let list_split = result[0].expiryDate.toISOString().split( "T" );
+                        let exp_date = list_split[0];
+                        let today = ((new Date()).toISOString().split( "T" ))[0];
+                        let exp_date_date = new Date(exp_date);
+                        let today_date = new Date(today);
+                        coupon_percentage = result[0].discount;
+                        console.log(coupon_percentage);
+                        
+                        if(today>list_split)
+                        {
+                            console.log("expired");
+                            message = "Coupon expired";
+                            res.send(
+                                {
+                                    "isSuccessful":false,
+                                    "message":message
+                                }
+
+                        );
+                        connectionString.end();
+                        }
+                        else
+                        {
+                        
+                            // connectionString.end();
+                            console.log(" not expired");
+                            var connectionString2 = mysql.createConnection(
+                                {
+                                    host:process.env.host,
+                                    user: process.env.user,
+                                    password:process.env.password,
+                                    database:process.env.database
+                                }
+                        
+                            );
+                            //now extract the total bill
+                            let extract_bill = 
+                            `SELECT * FROM dumpling.orders WHERE dumpling.orders.orderId = "${orderId}";`;
+                            connectionString2.connect((error)=>{
+                                if(error)
+                                {
+                        
+                                    console.log(error);
+                        
+                        
+                                }
+                                else
+                                {
+
+                                    connectionString2.query(extract_bill,(err,result)=>
+                                    {
+
+                                        if(err)
+                                        {
+                                            console.log("Error found in querying the orders table for bill");
+                                            console.log(err);
+                                            message = "Error found in querying the orders table for bill";
+                                            res.send(
+                                                {
+                                                    "isSuccessful":isSuccessful,
+                                                    "message":message
+                                                }
+
+                                            );
+                                            connectionString2.end();
+                                            connectionString.end();
+
+
+                                        }
+                                        else
+                                        {
+                                            
+                                            console.log(result)
+                                            lucky_bill = result[0].totalBill;
+                                            console.log("here");
+                                            console.log(lucky_bill);
+                                            new_bill = lucky_bill - ((coupon_percentage*1.0/100)*lucky_bill)
+                                            console.log(new_bill);
+                                            connectionString2.end();
+                                            //now we have the new bill...just update the total bill in the orders table.
+                                            //now create another connection string
+                                            var connectionString3 = mysql.createConnection(
+                                                {
+                                                    host:process.env.host,
+                                                    user: process.env.user,
+                                                    password:process.env.password,
+                                                    database:process.env.database
+                                                }
+                                        
+                                            );
+                                            let update_bill = 
+                                            `UPDATE dumpling.orders SET orders.totalBill=${new_bill},orders.updatedAt=NOW() WHERE orders.orderId ="${orderId}"`;
+                                            connectionString3.connect((error)=>{
+                                                if(error)
+                                                {
+                                        
+                                                    console.log(error);
+                                        
+                                        
+                                                }
+                                                else
+                                                {
+                                                    connectionString3.query(update_bill,(err,result)=>
+                                                    {
+                                                        if(err)
+                                                        {
+                                                                
+                                                                console.log(err);
+                                                                message = "Error in applying coupon";
+                                                                res.send(
+                                                                    {
+                                                                        "isSuccessful":false,
+                                                                        "message":message
+                                                                    }
+
+                                                                );
+                                                                connectionString3.end();
+
+                                                        }
+                                                        else
+                                                        {
+                                                                message = "Coupon applied";
+                                                                res.send(
+                                                                    {
+                                                                        "isSuccessful":true,
+                                                                        "message":message
+                                                                    }
+
+                                                                );
+                                                                connectionString3.end();
+
+
+                                                        }
+
+                                                    });
+
+
+
+                                                }
+                                            });
+
+
+
+
+
+
+
+                                        }
+                                        
+
+                                    });
+
+                                }
+
+
+
+                            });
+
+
+
+    
+
+
+
+                        }
+                        
+                        
+                        // now create another connection string...
+                        // check the validity of the coupon
+                        
+                        
+
+                    }
+
+                }
+
+
+
+
+            });
+
+
+        }
+
+    });
+
+
+    
+     
+
+    
+
+
+
+
+}

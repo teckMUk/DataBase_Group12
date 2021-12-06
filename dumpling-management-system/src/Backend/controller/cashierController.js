@@ -459,3 +459,81 @@ export const dailySaleReport = (req,res) =>
         }
     })
 }
+
+
+
+export const viewEditableOrders = (req,res) =>
+{
+    var connectionString = mysql.createConnection(
+        {
+            host:process.env.host,
+            user: process.env.user,
+            password:process.env.password,
+            database:process.env.database
+        }
+
+    )
+    let a = "placed";
+    let b = "created";
+
+    let query = 
+    `SELECT * FROM dumpling.orders WHERE orderStatus = "${a}" OR orderStatus = "${b}";`;
+    let message = "";
+    let isSuccessful = false;
+
+    connectionString.query(query,(err,result)=>
+    {
+        if(err)
+        {
+            message = "query failed";
+            console.log(err);
+            res.send(
+                {
+                    "isSuccessful":isSuccessful,
+                    "message":message
+                }
+            );
+            connectionString.end();
+        }
+        else
+        {
+            if(result.length === 0)
+            {
+                message = "No orders placed or created";
+                res.send(
+                    {
+                        "isSuccessful":isSuccessful,
+                        "message":message
+                    }
+                );
+                connectionString.end();
+
+            }
+            else
+            {
+                message = "Orders found that were created or placed";
+                res.send(
+                    {
+                        "isSuccessful":true,
+                        "message":message,
+                        'result':result
+                    }
+                );
+                connectionString.end();
+
+
+            }
+
+
+        }
+
+
+    });
+
+
+
+
+
+
+
+}

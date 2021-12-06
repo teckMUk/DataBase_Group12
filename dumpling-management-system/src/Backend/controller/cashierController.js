@@ -85,7 +85,7 @@ function findid()
 
 }
 
-function addIntoDA(orderId,toAddintoDA)
+function addIntoDA(orderId,toAddintoDA,quantity)
 
 {
 
@@ -111,7 +111,7 @@ function addIntoDA(orderId,toAddintoDA)
 
         );
 
-        let addIntoDishAss = `INSERT INTO dumpling.dishassignment(orderNo,dishNo) VALUES("${orderId}","${toAddintoDA}");`;
+        let addIntoDishAss = `INSERT INTO dumpling.dishassignment(orderNo,dishNo,quantity) VALUES("${orderId}","${toAddintoDA}",${quantity});`;
 
         connectionString2.query(addIntoDishAss,(err,result)=>
 
@@ -144,6 +144,20 @@ function addIntoDA(orderId,toAddintoDA)
 
     });
 
+}
+function iffound(element,noOfOrders,finalDishIds)
+{
+    for(var j=0;j<noOfOrders;j++)
+    {
+        if(element===finalDishIds[j])
+        {
+            return true;
+        }
+        else
+        {
+            return finalDishIds[j];
+        }
+    }
 }
 
 export const placeOrder = async (req,res)=>
@@ -210,12 +224,42 @@ export const placeOrder = async (req,res)=>
 
     let dishIds = Object.values((JSON.parse(JSON.stringify(listOrders))));
     // let dishIds = Object.values(JSON.parse(listOrders));
-
+    console.log(dishIds);
     // console.log(dishIds);
 
     let finalDishIds = dishIds[0];
     let noOfOrders = finalDishIds.length;
-
+    const toFindDuplicates = finalDishIds => finalDishIds.filter((item,index,ar)=> ar.indexOf(item) ===index);
+    var duplicateElements = toFindDuplicates(finalDishIds);
+    const counts = {};
+    console.log(duplicateElements);
+    for (var i=0;i<duplicateElements.length;i++)
+    {
+        if (iffound(duplicateElements[i],noOfOrders,finalDishIds)===true)
+        {
+            continue;
+        }
+        else if (iffound(duplicateElements[i],noOfOrders,finalDishIds)!==true )
+        {
+            let ans = iffound(duplicateElements[i],noOfOrders,finalDishIds);
+            // duplicateElements.push(ans);
+            if(duplicateElements.find(element => element===ans))
+            {
+                continue;
+            }
+            else
+            {
+                duplicateElements.push(ans);
+            }
+        }
+       
+    }
+    console.log("This is the final array",duplicateElements);
+    let finalLengthToinsert = duplicateElements.length;
+    finalDishIds.forEach(element => {
+        counts[element] = (counts[element]||0)+1; 
+    });
+    console.log(counts);
     // console.log("This is the number of orders",noOfOrders);
 
     // console.log(typeOfOrder,orderStatus,totalBill,listOrders,noOfOrders,finalDishIds);
@@ -260,13 +304,14 @@ export const placeOrder = async (req,res)=>
 
            
 
-            for(var i=0;i<noOfOrders;i++)
+            for(var i=0;i<finalLengthToinsert;i++)
 
             {
 
                 // console.log("Here is the first dish id",finalDishIds[i]);
+                console.log("This is the count",counts[duplicateElements[i]]);
 
-                addIntoDA(orderId,finalDishIds[i]).then((response)=>
+                addIntoDA(orderId,duplicateElements[i],counts[duplicateElements[i]]).then((response)=>
 
                 {
 
@@ -347,6 +392,70 @@ export const viewOrderSummary = (req,res)=>{
                 'message':message,
                 'result':result
             });
+        }
+    })
+}
+export const dailySaleReport = (req,res) =>
+{
+    
+    var today = new Date();
+    let month = today.getMonth()+1;
+    let day = today.getDate();
+    let year = today.getFullYear();
+    let querry =`Select dishassignment.orderNo,menu.dishName,orders.totalBill from orders inner join dishassignment on dishassignment.orderNo=orders.orderId inner join menu on dishassignment.dishNo=menu.dishId where menu.archived=0 and orders.orderId=(select salesrecord.orderId from salesrecord where DAY(salesrecord.date)=${day} and MONTH(salesrecord.date)=${month} and YEAR(salesrecord.date)=${year} and salesrecord.archived=0);`
+    console.log(querry)
+    var connectionString = mysql.createConnection(
+        {
+            host:process.env.host,
+            user: process.env.user,
+            password:process.env.password,
+            database:process.env.database
+
+        }
+    );
+    let message = "";
+    let isSuccessful = false;
+    connectionString.query(querry,(err,result)=>
+    {
+        if(err){
+            message = "querry failed";
+            console.log(err);
+            res.send(
+                {
+                    "isSuccessful":isSuccessful,
+                    "message":message
+                }
+            );
+            connectionString.end();
+        }
+        else
+        {
+            if(result.length === 0)
+            {
+                message = "No sale today";
+                res.send(
+                    {
+                        "isSuccessful":isSuccessful,
+                        "message":message
+                    }
+                );
+                connectionString.end();
+
+            }
+            else
+            {
+                message = "sale record for day found";
+                isSuccessful = true;
+                console.log(result);
+                res.send(
+                    {
+                        "isSuccessful":isSuccessful,
+                        "message":message,
+                        'result':result
+                    }
+                );
+                connectionString.end();
+            }
         }
     })
 }

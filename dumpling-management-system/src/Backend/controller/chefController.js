@@ -417,3 +417,175 @@ export const viewPlacedOrders = (req,res)=>
         }
     });
 }
+function findCurrentStatus(orderId)
+{
+    return new Promise((resolve,reject)=>
+    {
+        let curretStatusQuerry = `select orderStatus from orders where orderId="${orderId} and orderStatus!=completed"`;
+        console.log(curretStatusQuerry);
+        var connectionString = mysql.createConnection(
+        {
+                host:process.env.host,
+                user: process.env.user,
+                password:process.env.password,
+                database:process.env.database
+        });
+        connectionString.query(curretStatusQuerry,(err,result)=>
+        {
+            if(err){
+                reject("querry failed");
+                connectionString.end();
+            }
+            else
+            {
+                if(result.length===0)
+                {
+                    reject("no order found related to order id");
+                    connectionString.end();
+                }
+                else
+                {
+                    console.log(result);
+                    resolve(result[0].orderStatus);
+                    connectionString.end();
+                }
+            }
+        });
+        
+    });
+}
+function updateStatus(orderId,newStatus)
+{
+    return new Promise((resolve,reject)=>
+    {
+        let updateQuerry = `update orders
+        set orderStatus="${newStatus}"
+        where orderId="${orderId}"`;
+        console.log(updateQuerry);
+        var connectionString = mysql.createConnection(
+        {
+                host:process.env.host,
+                user: process.env.user,
+                password:process.env.password,
+                database:process.env.database
+        });
+        connectionString.query(updateQuerry,(err,result)=>
+        {
+            if(err){
+                reject("querry failed");
+                connectionString.end();
+            }
+            else
+            {
+                console.log(result);
+                resolve("orderStatus changed");
+                connectionString.end();
+                
+            }
+        });
+        
+    });
+}
+function addRecordToSaleRecord(orderId)
+{
+    return new Promise((resolve,reject)=>
+    {
+        var today = new Date();
+        var date = today.getFullYear() + '-' + (today.getMonth()+1) + "-" + today.getDate();
+        let updateQuerry = `Insert into salesrecord (orderId,date,createdAt)
+        values("${orderId}","${date}",NOW());`;
+        console.log(updateQuerry);
+        var connectionString = mysql.createConnection(
+        {
+                host:process.env.host,
+                user: process.env.user,
+                password:process.env.password,
+                database:process.env.database
+        });
+        connectionString.query(updateQuerry,(err,result)=>
+        {
+            if(err){
+                console.log(err);
+                reject("querry failed");
+                connectionString.end();
+            }
+            else
+            {
+                console.log(result);
+                resolve("orderStatus changed");
+                connectionString.end();
+                
+            }
+        });
+        
+    });
+}
+export const changeOrderStatus = async (req,res) =>
+{
+    let orderId = req.body.orderId;
+    console.log(orderId);
+    let message = "";
+    let isSuccessful = false;
+    await findCurrentStatus(orderId).then(async (response)=>
+    {
+        if(response==='placed')
+        {
+            await updateStatus(orderId,"preparing").then((response)=>
+            {
+                isSuccessful= true;
+                message = "OrderStatus updated succuefully"
+                res.send({
+                    "message":message,
+                    "isSuccessful":isSuccessful
+                });
+            }).catch((err)=>
+            {
+                message ="Couldn't update OrderStatus";
+                res.send({
+                    "message":message,
+                   "isSuccessful":isSuccessful,
+                });
+                console.log(err);
+            });
+        }
+        else if(response==='preparing')
+        {
+            await updateStatus(orderId,"completed").then(async (response)=>
+            {
+                await addRecordToSaleRecord(orderId).then((response1)=>
+                {
+                    isSuccessful= true;
+                    message = "OrderStatus updated sucessfully"
+                    res.send({
+                        "message":message,
+                        "isSuccessful":isSuccessful
+                    });
+                }).catch((err)=>
+                {
+                    message = "failed to add record to sales record";
+                    res.send({
+                        "message":message,
+                        "isSuccessful":isSuccessful
+                    }); 
+                });
+
+            }).catch((err)=>
+            {
+                message ="Couldn't update OrderStatus";
+                res.send({
+                    "message":message,
+                    "isSuccessful":isSuccessful
+                });
+                console.log(err);
+            });
+        }
+    }).catch((err)=>
+    {
+        message ="Couldn't update OrderStatus";
+        res.send({
+            "message":message,
+            "isSuccessful":isSuccessful
+        });
+        console.log(err);
+    });
+}

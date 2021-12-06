@@ -463,8 +463,8 @@ export const dailySaleReport = (req,res) =>
 export const monthYearSale = (req, res) =>
 {
     //req will have month and year
-    let month = req.month;
-    let year = req.year;
+    let month = req.body.month;
+    let year = req.body.year;
     console.log(month);
     console.log(year);
     let big_query;
@@ -494,7 +494,7 @@ export const monthYearSale = (req, res) =>
     connectionString.query(big_query,(err,result)=>
     {
         if(err){
-            message = "querry failed";
+            message = "query failed";
             console.log(err);
             res.send(
                 {
@@ -508,7 +508,7 @@ export const monthYearSale = (req, res) =>
         {
             if(result.length === 0)
             {
-                message = "No sale today";
+                message = "No sale";
                 res.send(
                     {
                         "isSuccessful":isSuccessful,
@@ -520,7 +520,7 @@ export const monthYearSale = (req, res) =>
             }
             else
             {
-                message = "sale record for day found";
+                message = "sale record found";
                 isSuccessful = true;
                 console.log(result);
                 res.send(

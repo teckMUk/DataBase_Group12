@@ -29,8 +29,6 @@ app.get("/api/userController/employeeDetails",route);
 app.post("/api/cashierController/placeOrder", route);
 app.post("/api/managerController/addCoupon", route);
 app.post("/api/managerController/applyCoupon", route);
-
-
 app.post("/api/cashierController/viewOrderSummary",route);
 
 const PORT =  process.env.PORT || 3000;

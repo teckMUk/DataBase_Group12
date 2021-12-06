@@ -2,8 +2,8 @@ import dotenv from "dotenv";
 import express from 'express';
 import {findUsers,addUser,getSQ,changePassword,forgetPassword,validateSecurity, accountExistence, updateAccount, deleteAccount,getEmployeeDetails} from "../../Backend/controller/userController.js";
 import {addMenuItem,removeMenuItem,fetchDishIds,viewPlacedOrders,changeOrderStatus} from "../../Backend/controller/chefController.js";
-import {updateEmployeeSalary,fetchAllEmployee, giveBonuses} from "../../Backend/controller/managerController.js";
-import {placeOrder,viewOrderSummary,dailySaleReport} from "../../Backend/controller/cashierController.js";
+import {updateEmployeeSalary,fetchAllEmployee, giveBonuses, addCoupon, applyCoupon} from "../../Backend/controller/managerController.js";
+import {placeOrder,viewOrderSummary,dailySaleReport, monthYearSale} from "../../Backend/controller/cashierController.js";
 dotenv.config({path:"./src/Backend/.env"});
 const route = express.Router();
 route.post("/api/userController/login",findUsers);
@@ -29,4 +29,5 @@ route.post("/api/managerController/applyCoupon",applyCoupon);
 route.post("/api/managerController/updateOrderStatus",changeOrderStatus)
 route.post("/api/cashierController/viewOrderSummary",viewOrderSummary);
 route.get("/api/cashierController/dailySaleReport",dailySaleReport);
+route.get("/api/cashierController/monthYearSale",monthYearSale);
 export default route;

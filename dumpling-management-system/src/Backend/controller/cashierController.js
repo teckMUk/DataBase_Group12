@@ -487,6 +487,52 @@ export const monthYearSale = (req, res) =>
         }
     );
 
+    let message = "";
+    let isSuccessful = false;
+    connectionString.query(big_query,(err,result)=>
+    {
+        if(err){
+            message = "querry failed";
+            console.log(err);
+            res.send(
+                {
+                    "isSuccessful":isSuccessful,
+                    "message":message
+                }
+            );
+            connectionString.end();
+        }
+        else
+        {
+            if(result.length === 0)
+            {
+                message = "No sale";
+                res.send(
+                    {
+                        "isSuccessful":isSuccessful,
+                        "message":message
+                    }
+                );
+                connectionString.end();
+
+            }
+            else
+            {
+                message = "sale record found";
+                isSuccessful = true;
+                console.log(result);
+                res.send(
+                    {
+                        "isSuccessful":isSuccessful,
+                        "message":message,
+                        'result':result
+                    }
+                );
+                connectionString.end();
+            }
+        }
+    })
+
 }
 
 

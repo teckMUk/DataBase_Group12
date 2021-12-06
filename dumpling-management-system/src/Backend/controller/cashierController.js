@@ -463,6 +463,20 @@ export const dailySaleReport = (req,res) =>
 export const monthYearSale = (req, res) =>
 {
     //req will have month and year
+    let month = req.month;
+    let year = req.year;
+    let big_query;
+    if(month != null)
+    {
+        let query_mon = `Select dishassignment.orderNo, menu.dishName, orders.totalBill from orders inner join dishassignment on dishassignment.orderNo=orders.orderId inner join menu on dishassignment.dishNo=menu.dishId where menu.archived=0 and orders.orderId=(select salesrecord.orderId from salesrecord where DAY(salesrecord.date)=${day} and MONTH(salesrecord.date)=${month} and YEAR(salesrecord.date)=${year} and salesrecord.archived=0);`
+        big_query = query_mon;
+    }
+    else
+    {
+        let query_year = `Select dishassignment.orderNo, menu.dishName, orders.totalBill from orders inner join dishassignment on dishassignment.orderNo=orders.orderId inner join menu on dishassignment.dishNo=menu.dishId where menu.archived=0 and orders.orderId=(select salesrecord.orderId from salesrecord where DAY(salesrecord.date)=${day} and MONTH(salesrecord.date)=${month} and YEAR(salesrecord.date)=${year} and salesrecord.archived=0);`
+        big_query = query_year;
+    }
+
     var connectionString = mysql.createConnection(
         {
             host:process.env.host,
@@ -474,3 +488,8 @@ export const monthYearSale = (req, res) =>
     );
 
 }
+
+
+
+
+

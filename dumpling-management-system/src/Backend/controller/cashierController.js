@@ -465,15 +465,17 @@ export const monthYearSale = (req, res) =>
     //req will have month and year
     let month = req.month;
     let year = req.year;
+    console.log(month);
+    console.log(year);
     let big_query;
     if(month != null)
     {
-        let query_mon = `Select dishassignment.orderNo, menu.dishName, orders.totalBill from orders inner join dishassignment on dishassignment.orderNo=orders.orderId inner join menu on dishassignment.dishNo=menu.dishId where menu.archived=0 and orders.orderId=(select salesrecord.orderId from salesrecord where DAY(salesrecord.date)=${day} and MONTH(salesrecord.date)=${month} and YEAR(salesrecord.date)=${year} and salesrecord.archived=0);`
+        let query_mon = `Select dishassignment.orderNo, menu.dishName, orders.totalBill from orders inner join dishassignment on dishassignment.orderNo=orders.orderId inner join menu on dishassignment.dishNo=menu.dishId where menu.archived=0 and orders.orderId=(select salesrecord.orderId from salesrecord where MONTH(salesrecord.date)=${month} and YEAR(salesrecord.date)=${year} and salesrecord.archived=0);`
         big_query = query_mon;
     }
     else
     {
-        let query_year = `Select dishassignment.orderNo, menu.dishName, orders.totalBill from orders inner join dishassignment on dishassignment.orderNo=orders.orderId inner join menu on dishassignment.dishNo=menu.dishId where menu.archived=0 and orders.orderId=(select salesrecord.orderId from salesrecord where DAY(salesrecord.date)=${day} and MONTH(salesrecord.date)=${month} and YEAR(salesrecord.date)=${year} and salesrecord.archived=0);`
+        let query_year = `Select dishassignment.orderNo, menu.dishName, orders.totalBill from orders inner join dishassignment on dishassignment.orderNo=orders.orderId inner join menu on dishassignment.dishNo=menu.dishId where menu.archived=0 and orders.orderId=(select salesrecord.orderId from salesrecord where YEAR(salesrecord.date)=${year} and salesrecord.archived=0);`
         big_query = query_year;
     }
 
@@ -506,7 +508,7 @@ export const monthYearSale = (req, res) =>
         {
             if(result.length === 0)
             {
-                message = "No sale";
+                message = "No sale today";
                 res.send(
                     {
                         "isSuccessful":isSuccessful,
@@ -518,7 +520,7 @@ export const monthYearSale = (req, res) =>
             }
             else
             {
-                message = "sale record found";
+                message = "sale record for day found";
                 isSuccessful = true;
                 console.log(result);
                 res.send(

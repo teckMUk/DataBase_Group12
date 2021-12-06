@@ -223,6 +223,20 @@ export const applyCoupon = async(couponId, orderId) =>{
 
 }
 
+export const deleteOrder = async(orderId) =>{
+    const obj={
+        "orderId" : orderId
+    }
+    return await axios.post(`${Url}/cashierController/deleteOrder`, obj,{
+    'Accept': 'application/json',
+    'content-type':'application/json'
+});
+
+}
+
+
+
+
 
 
 

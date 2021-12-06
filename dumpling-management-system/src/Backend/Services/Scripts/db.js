@@ -32,7 +32,7 @@ function createTable(q)
 }
 
 const createSalesRecord = `CREATE TABLE IF NOT EXISTS dumpling.salesrecord (
-    salesId INT NOT NULL,
+    salesId INT NOT NULL AUTO_INCREMENT,
     orderId VARCHAR(50) NOT NULL,
     date DATE NOT NULL,
     createdAt DATETIME NOT NULL,
@@ -79,7 +79,8 @@ const createOrder = `CREATE TABLE IF NOT EXISTS dumpling.orders(
         ON UPDATE NO ACTION);`;
 const createDishAssignment = `CREATE TABLE IF NOT EXISTS dumpling.dishassignment (
     orderNo VARCHAR(50) NOT NULL,
-    dishNo int NOT NULL,
+    dishNo VARCHAR(50) NOT NULL,
+    quantity INT DEFAULT 0,
     PRIMARY KEY (orderNo,dishNo))`;
 const alterdishAssignment1 = `ALTER TABLE dumpling.dishassignment 
 ADD INDEX dishNo_idx (dishNo ASC) VISIBLE;`;
@@ -95,8 +96,8 @@ ADD CONSTRAINT dishNo
   REFERENCES dumpling.menu(dishId)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;`;
-const createChefAssignment = `CREATE TABLE dumpling.chefassignment(
-    dishID INT NOT NULL,
+const createChefAssignment = `CREATE TABLE IF NOT EXISTS dumpling.chefassignment(
+    dishID VARCHAR(50) NOT NULL,
     chefId INT NOT NULL,
     PRIMARY KEY (dishID, chefId),
     INDEX chefId_idx (chefId ASC) VISIBLE,
@@ -146,7 +147,7 @@ const createEmpolyee = `CREATE TABLE IF NOT EXISTS dumpling.employee(
         ON UPDATE NO ACTION);`;
 
 const createMenu = `CREATE TABLE IF NOT EXISTS dumpling.menu (
-    dishId INT NOT NULL AUTO_INCREMENT,
+    dishId VARCHAR(50) NOT NULL,
     dishName VARCHAR(45) NOT NULL,
     dishPrice DECIMAL(5,2) NOT NULL,
     dishType VARCHAR(45) NOT NULL,

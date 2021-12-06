@@ -160,6 +160,11 @@ function iffound(element,noOfOrders,finalDishIds)
     }
 }
 
+
+
+
+
+
 export const placeOrder = async (req,res)=>
 
 {
@@ -259,6 +264,7 @@ export const placeOrder = async (req,res)=>
     finalDishIds.forEach(element => {
         counts[element] = (counts[element]||0)+1; 
     });
+    console.log("counts");
     console.log(counts);
     // console.log("This is the number of orders",noOfOrders);
 

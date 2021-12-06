@@ -421,7 +421,7 @@ function findCurrentStatus(orderId)
 {
     return new Promise((resolve,reject)=>
     {
-        let curretStatusQuerry = `select orderStatus from orders where orderId="${orderId} and orderStatus!=completed"`;
+        let curretStatusQuerry = `select orderStatus from orders where orderId="${orderId}" and orderStatus!="completed"`;
         console.log(curretStatusQuerry);
         var connectionString = mysql.createConnection(
         {

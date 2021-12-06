@@ -32,7 +32,8 @@ app.post("/api/managerController/applyCoupon", route);
 app.post("/api/managerController/updateOrderStatus",route);
 app.post("/api/cashierController/viewOrderSummary",route);
 app.get("/api/cashierController/dailySaleReport",route);
-app.get("/api/cashierController/viewEditableOrders",route);
+app.get("/api/managerController/monthYearSale",route);
+app.get("/api/managerController/viewEditableOrders",route);
 app.post("/api/cashierController/deleteOrder",route);
 
 

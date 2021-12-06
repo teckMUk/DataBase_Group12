@@ -160,6 +160,11 @@ function iffound(element,noOfOrders,finalDishIds)
     }
 }
 
+
+
+
+
+
 export const placeOrder = async (req,res)=>
 
 {
@@ -259,6 +264,7 @@ export const placeOrder = async (req,res)=>
     finalDishIds.forEach(element => {
         counts[element] = (counts[element]||0)+1; 
     });
+    console.log("counts");
     console.log(counts);
     // console.log("This is the number of orders",noOfOrders);
 
@@ -459,3 +465,167 @@ export const dailySaleReport = (req,res) =>
         }
     })
 }
+
+
+
+export const viewEditableOrders = (req,res) =>
+{
+    var connectionString = mysql.createConnection(
+        {
+            host:process.env.host,
+            user: process.env.user,
+            password:process.env.password,
+            database:process.env.database
+        }
+
+    )
+    let a = "placed";
+    let b = "created";
+
+    let query = 
+    `SELECT * FROM dumpling.orders WHERE orderStatus = "${a}" OR orderStatus = "${b}";`;
+    let message = "";
+    let isSuccessful = false;
+
+    connectionString.query(query,(err,result)=>
+    {
+        if(err)
+        {
+            message = "query failed";
+            console.log(err);
+            res.send(
+                {
+                    "isSuccessful":isSuccessful,
+                    "message":message
+                }
+            );
+            connectionString.end();
+        }
+        else
+        {
+            if(result.length === 0)
+            {
+                message = "No orders placed or created";
+                res.send(
+                    {
+                        "isSuccessful":isSuccessful,
+                        "message":message
+                    }
+                );
+                connectionString.end();
+
+            }
+            else
+            {
+                message = "Orders found that were created or placed";
+                res.send(
+                    {
+                        "isSuccessful":true,
+                        "message":message,
+                        'result':result
+                    }
+                );
+                connectionString.end();
+
+
+            }
+
+
+        }
+
+
+    });
+
+
+
+}
+
+export const deleteOrder = (req,res) =>
+{
+    var connectionString = mysql.createConnection(
+        {
+            host:process.env.host,
+            user: process.env.user,
+            password:process.env.password,
+            database:process.env.database
+        }
+
+    )
+    let message = "";
+    let isSuccessful = false;
+    let orderId = req.body.orderId;
+    
+
+
+
+
+    let foreignDelete = 
+    `DELETE FROM dumpling.dishassignment WHERE orderNo = "${orderId}";`;
+    connectionString.query(foreignDelete,(err,result)=>{
+        if(err)
+        {
+            message = "Query failed";
+            console.log(err);
+            res.send({
+                'isSuccessful':isSuccessful,
+                'message':message
+            });
+            connectionString.end();
+
+        }
+        else
+        {
+            console.log("Deletion from the dish assignment table succeeded");
+            //now set the archive bit of that particular orderId to be 1
+            connectionString.end();
+            var connectionString2 = mysql.createConnection(
+                {
+                    host:process.env.host,
+                    user: process.env.user,
+                    password:process.env.password,
+                    database:process.env.database
+                }
+        
+            )
+            let n = 1;
+            let orderArchive = 
+            `UPDATE dumpling.orders SET archived =${n} WHERE orderId = "${orderId}";`;
+            connectionString2.query(orderArchive,(err,result)=>
+            {
+                if(err)
+                {
+                    message = "Failed to set archive";
+                    console.log(err);
+                    res.send({
+                    'isSuccessful':false,
+                    'message':message
+                    });
+                    connectionString2.end();
+
+                }
+                else
+                {
+                    message = "Archive set successfully";
+                    res.send({
+                        'isSuccessful':true,
+                        'message':message
+                        });
+                    connectionString2.end();
+
+
+                }
+
+            });
+
+           
+
+        }
+
+
+
+    });
+
+    //u will get in the body the order id that u wanna wipe off fully
+
+}
+

@@ -160,6 +160,11 @@ function iffound(element,noOfOrders,finalDishIds)
     }
 }
 
+
+
+
+
+
 export const placeOrder = async (req,res)=>
 
 {
@@ -259,6 +264,7 @@ export const placeOrder = async (req,res)=>
     finalDishIds.forEach(element => {
         counts[element] = (counts[element]||0)+1; 
     });
+    console.log("counts");
     console.log(counts);
     // console.log("This is the number of orders",noOfOrders);
 
@@ -460,40 +466,31 @@ export const dailySaleReport = (req,res) =>
     })
 }
 
-export const monthYearSale = (req, res) =>
-{
-    //req will have month and year
-    let month = req.body.month;
-    let year = req.body.year;
-    console.log(month);
-    console.log(year);
-    let big_query;
-    if(month != null)
-    {
-        let query_mon = `Select dishassignment.orderNo, menu.dishName, orders.totalBill from orders inner join dishassignment on dishassignment.orderNo=orders.orderId inner join menu on dishassignment.dishNo=menu.dishId where menu.archived=0 and orders.orderId=(select salesrecord.orderId from salesrecord where MONTH(salesrecord.date)=${month} and YEAR(salesrecord.date)=${year} and salesrecord.archived=0);`
-        big_query = query_mon;
-    }
-    else
-    {
-        let query_year = `Select dishassignment.orderNo, menu.dishName, orders.totalBill from orders inner join dishassignment on dishassignment.orderNo=orders.orderId inner join menu on dishassignment.dishNo=menu.dishId where menu.archived=0 and orders.orderId=(select salesrecord.orderId from salesrecord where YEAR(salesrecord.date)=${year} and salesrecord.archived=0);`
-        big_query = query_year;
-    }
 
+
+export const viewEditableOrders = (req,res) =>
+{
     var connectionString = mysql.createConnection(
         {
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
             database:process.env.database
-
         }
-    );
 
+    )
+    let a = "placed";
+    let b = "created";
+
+    let query = 
+    `SELECT * FROM dumpling.orders WHERE orderStatus = "${a}" OR orderStatus = "${b}";`;
     let message = "";
     let isSuccessful = false;
-    connectionString.query(big_query,(err,result)=>
+
+    connectionString.query(query,(err,result)=>
     {
-        if(err){
+        if(err)
+        {
             message = "query failed";
             console.log(err);
             res.send(
@@ -508,7 +505,7 @@ export const monthYearSale = (req, res) =>
         {
             if(result.length === 0)
             {
-                message = "No sale";
+                message = "No orders placed or created";
                 res.send(
                     {
                         "isSuccessful":isSuccessful,
@@ -520,24 +517,115 @@ export const monthYearSale = (req, res) =>
             }
             else
             {
-                message = "sale record found";
-                isSuccessful = true;
-                console.log(result);
+                message = "Orders found that were created or placed";
                 res.send(
                     {
-                        "isSuccessful":isSuccessful,
+                        "isSuccessful":true,
                         "message":message,
                         'result':result
                     }
                 );
                 connectionString.end();
+
+
             }
+
+
         }
-    })
+
+
+    });
+
+
 
 }
 
+export const deleteOrder = (req,res) =>
+{
+    var connectionString = mysql.createConnection(
+        {
+            host:process.env.host,
+            user: process.env.user,
+            password:process.env.password,
+            database:process.env.database
+        }
+
+    )
+    let message = "";
+    let isSuccessful = false;
+    let orderId = req.body.orderId;
+    
 
 
 
+
+    let foreignDelete = 
+    `DELETE FROM dumpling.dishassignment WHERE orderNo = "${orderId}";`;
+    connectionString.query(foreignDelete,(err,result)=>{
+        if(err)
+        {
+            message = "Query failed";
+            console.log(err);
+            res.send({
+                'isSuccessful':isSuccessful,
+                'message':message
+            });
+            connectionString.end();
+
+        }
+        else
+        {
+            console.log("Deletion from the dish assignment table succeeded");
+            //now set the archive bit of that particular orderId to be 1
+            connectionString.end();
+            var connectionString2 = mysql.createConnection(
+                {
+                    host:process.env.host,
+                    user: process.env.user,
+                    password:process.env.password,
+                    database:process.env.database
+                }
+        
+            )
+            let n = 1;
+            let orderArchive = 
+            `UPDATE dumpling.orders SET archived =${n} WHERE orderId = "${orderId}";`;
+            connectionString2.query(orderArchive,(err,result)=>
+            {
+                if(err)
+                {
+                    message = "Failed to set archive";
+                    console.log(err);
+                    res.send({
+                    'isSuccessful':false,
+                    'message':message
+                    });
+                    connectionString2.end();
+
+                }
+                else
+                {
+                    message = "Archive set successfully";
+                    res.send({
+                        'isSuccessful':true,
+                        'message':message
+                        });
+                    connectionString2.end();
+
+
+                }
+
+            });
+
+           
+
+        }
+
+
+
+    });
+
+    //u will get in the body the order id that u wanna wipe off fully
+
+}
 

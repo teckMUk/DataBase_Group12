@@ -562,12 +562,82 @@ export const applyCoupon = (req,res)=>
     });
 
 
-    
-     
+}
 
-    
+export const monthYearSale = (req, res) =>
+{
+    //req will have month and year
+    let month = req.body.month;
+    let year = req.body.year;
+    console.log(month);
+    console.log(year);
+    let big_query;
+    if(month != null)
+    {
+        let query_mon = `Select dishassignment.orderNo, menu.dishName, orders.totalBill from orders inner join dishassignment on dishassignment.orderNo=orders.orderId inner join menu on dishassignment.dishNo=menu.dishId where menu.archived=0 and orders.orderId=(select salesrecord.orderId from salesrecord where MONTH(salesrecord.date)=${month} and YEAR(salesrecord.date)=${year} and salesrecord.archived=0);`
+        big_query = query_mon;
+    }
+    else
+    {
+        let query_year = `Select dishassignment.orderNo, menu.dishName, orders.totalBill from orders inner join dishassignment on dishassignment.orderNo=orders.orderId inner join menu on dishassignment.dishNo=menu.dishId where menu.archived=0 and orders.orderId=(select salesrecord.orderId from salesrecord where YEAR(salesrecord.date)=${year} and salesrecord.archived=0);`
+        big_query = query_year;
+    }
 
+    var connectionString = mysql.createConnection(
+        {
+            host:process.env.host,
+            user: process.env.user,
+            password:process.env.password,
+            database:process.env.database
 
+        }
+    );
 
+    let message = "";
+    let isSuccessful = false;
+    connectionString.query(big_query,(err,result)=>
+    {
+        if(err){
+            message = "query failed";
+            console.log(err);
+            res.send(
+                {
+                    "isSuccessful":isSuccessful,
+                    "message":message
+                }
+            );
+            connectionString.end();
+        }
+        else
+        {
+            if(result.length === 0)
+            {
+                message = "No sale";
+                res.send(
+                    {
+                        "isSuccessful":isSuccessful,
+                        "message":message
+                    }
+                );
+                connectionString.end();
+
+            }
+            else
+            {
+                message = "sale record found";
+                isSuccessful = true;
+                console.log(result);
+                res.send(
+                    {
+                        "isSuccessful":isSuccessful,
+                        "message":message,
+                        'result':result
+                    }
+                );
+                connectionString.end();
+            }
+        }
+    })
 
 }
+

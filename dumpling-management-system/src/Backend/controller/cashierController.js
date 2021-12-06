@@ -459,3 +459,18 @@ export const dailySaleReport = (req,res) =>
         }
     })
 }
+
+export const monthYearSale = (req, res) =>
+{
+    //req will have month and year
+    var connectionString = mysql.createConnection(
+        {
+            host:process.env.host,
+            user: process.env.user,
+            password:process.env.password,
+            database:process.env.database
+
+        }
+    );
+
+}

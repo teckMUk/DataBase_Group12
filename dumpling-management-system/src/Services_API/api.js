@@ -234,6 +234,24 @@ export const deleteOrder = async(orderId) =>{
 
 }
 
+export const editOrder = async(typeOfOrder, orderStatus, orderId, totalBill, listOrders) =>{
+    const obj={
+        "orderId" : orderId,
+        "typeOfOrder": typeOfOrder,
+        "orderStatus": orderStatus,
+        "totalBill":totalBill,
+        "listOrders":listOrders
+
+    }
+    return await axios.post(`${Url}/cashierController/editOrder`, obj,{
+    'Accept': 'application/json',
+    'content-type':'application/json'
+});
+
+}
+
+
+
 
 
 

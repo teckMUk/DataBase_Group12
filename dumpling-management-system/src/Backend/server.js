@@ -35,6 +35,7 @@ app.get("/api/cashierController/dailySaleReport",route);
 app.get("/api/managerController/monthYearSale",route);
 app.get("/api/managerController/viewEditableOrders",route);
 app.post("/api/cashierController/deleteOrder",route);
+app.post("/api/cashierController/editOrder",route);
 
 
 const PORT =  process.env.PORT || 3000;

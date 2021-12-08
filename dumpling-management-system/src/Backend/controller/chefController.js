@@ -84,7 +84,7 @@ function getChef(employeeid)
                     user: process.env.user,
                     password:process.env.password,
                     database:process.env.database
-    
+
             });
             let getChefquery = `SELECT employee.employeeId from dumpling.employee INNER JOIN account ON account.accountId=employee.accountId WHERE employee.employeeId=${employeeid} AND account.accountType="chef"`
             connectionString1.query(getChefquery,(err,result)=>{
@@ -103,7 +103,7 @@ function getChef(employeeid)
                 }
             })
     })
-    
+
 }
 export const addMenuItem = async (req,res)=>
 {
@@ -180,7 +180,7 @@ export const addMenuItem = async (req,res)=>
                             password:process.env.password,
                             database:process.env.database
                         }
-                
+
                     );
                     connectionString2.query(addintochefassignment,(err,result)=>{
 
@@ -195,7 +195,7 @@ export const addMenuItem = async (req,res)=>
                                     password:process.env.password,
                                     database:process.env.database
                                 }
-                        
+
                             );
                             connectionString3.query(updateMenu,(err,result)=>{
                                 if(err)
@@ -218,12 +218,12 @@ export const addMenuItem = async (req,res)=>
                                     connectionString2.end();
                                 }
                             })
-                            
+
                         }
                         else
                         {
                             message = "assigned the dish to the chef";
-                            isSuccessful =true; 
+                            isSuccessful =true;
                             res.send({
                                 'isSuccessful':isSuccessful,
                                 'message':message
@@ -270,7 +270,7 @@ export const removeMenuItem = (req,res)=>
             connectionString.end();
         }
         else
-        {   
+        {
             message = "Dish deleted Successfully";
             isSuccessful = true;
             res.send(
@@ -305,7 +305,7 @@ export const fetchDishIds = (req,res)=>
             res.send(
                 {
                     'isSuccessful':isSuccessful,
-                    'message':message 
+                    'message':message
                 }
             );
             connectionString.end();
@@ -318,7 +318,7 @@ export const fetchDishIds = (req,res)=>
                 res.send(
                     {
                         'isSuccessful':isSuccessful,
-                        'message':message 
+                        'message':message
                     }
                 );
                 connectionString.end();
@@ -327,7 +327,7 @@ export const fetchDishIds = (req,res)=>
             {
                 message = "Found all the dishes";
                 isSuccessful = true;
-                
+
                 let result1 = [];
                 let isArchived = [];
                 for(var i=0;i<result.length;i++)
@@ -350,7 +350,7 @@ export const fetchDishIds = (req,res)=>
                 );
                 connectionString.end();
             }
-           
+
         }
     });
 }
@@ -366,7 +366,7 @@ export const viewPlacedOrders = (req,res)=>
         }
     );
     let placedOrderQuery = ` SELECT dishassignment.orderNo,menu.dishName,orders.orderStatus
-    from dishassignment 
+    from dishassignment
     INNER JOIN dumpling.menu ON dishassignment.dishNo=menu.dishId
     INNER JOIN dumpling.orders ON dishassignment.orderNo = orders.orderId
     WHERE menu.archived = 0`;
@@ -451,7 +451,7 @@ function findCurrentStatus(orderId)
                 }
             }
         });
-        
+
     });
 }
 function updateStatus(orderId,newStatus)
@@ -480,10 +480,10 @@ function updateStatus(orderId,newStatus)
                 console.log(result);
                 resolve("orderStatus changed");
                 connectionString.end();
-                
+
             }
         });
-        
+
     });
 }
 function addRecordToSaleRecord(orderId)
@@ -514,10 +514,10 @@ function addRecordToSaleRecord(orderId)
                 console.log(result);
                 resolve("orderStatus changed");
                 connectionString.end();
-                
+
             }
         });
-        
+
     });
 }
 export const changeOrderStatus = async (req,res) =>
@@ -566,7 +566,7 @@ export const changeOrderStatus = async (req,res) =>
                     res.send({
                         "message":message,
                         "isSuccessful":isSuccessful
-                    }); 
+                    });
                 });
 
             }).catch((err)=>
@@ -588,4 +588,117 @@ export const changeOrderStatus = async (req,res) =>
         });
         console.log(err);
     });
+}
+
+export const getRandomDish = (req,res)=>
+{
+    var connectionString = mysql.createConnection(
+        {
+            host:process.env.host,
+            user: process.env.user,
+            password:process.env.password,
+            database:process.env.database
+
+        }
+    );
+    let message = "";
+    let isSuccessful = false;
+    let dishId = req.body.dishId;
+    let activeDish = `SELECT * FROM createMenu WHERE isActive='true'`;
+    connectionString.query(activeDish,(err,result)=>
+    {
+        if(err)
+        {
+            message = "Dish not deleted";
+            console.log(err);
+            res.send(
+                {
+                    'isSuccessful':isSuccessful,
+                    'message':message
+                }
+            );
+            connectionString.end();
+        }
+        else
+        {
+            if (res == NULL)
+            {
+                generateRandomDish(function(err,result){
+                    if (!err && NULL)
+                    {
+                        res.send(
+                            {
+                                'isSuccessful':isSuccessful,
+                                'message':"dish generated randomly"
+                            }
+                        );
+                    }
+
+
+                });
+            }
+            else if(!err && result)
+            {
+                let today = moment();
+                let dish_active_day = moment(result.dish_active_day);
+
+                if( today.diff(dish_active_day, 'days')  >= 1){
+                    getaRandomDish(function(err,result){
+                        if(err){
+                            res.send({
+                                'isSuccessful':false,
+                                'message':err,
+                                'data' : []
+                            })
+                        }
+                        else{
+                            // need to add code for updating isactive true and set the data
+                            res.send({
+                                'isSuccessful':true,
+                                'message':message,
+                                'data' : result
+                            })
+                        }
+                    });
+                }
+                else{
+                    res.send({
+                        'isSuccessful':true,
+                        'message':message,
+                        'data' : result
+                    })
+                }
+                //compare todays date with activeon from table momentjs
+                //if number of days difference is 0, same day so no need to update table, end back the active value
+                //if num of days>0, call generaterandomdish
+                //gerneraterandomdish: find a random value from dish table and NOT active (isActive!= true)
+                //seoncd part, update random dish with isActive==true and isActive on today's date/newDate()
+            }
+            message = "Dish deleted Successfully";
+            isSuccessful = true;
+            res.send(
+                {
+                    'isSuccessful':isSuccessful,
+                    'message':message
+                }
+            );
+            connectionString.end();
+        }
+    });
+}
+
+function getaRandomDish( callback ){
+    let randomDish = `SELECT * FROM createMenu WHERE isActive !='true' ORDER BY RAND() LIMIT 1;`;
+
+    connectionString.query(randomDish,(err,result)=>
+    {
+        if(err)
+        {
+            callback('not able to fetch random dish' , null)
+        }
+        else{
+            callback( null , result)
+        }
+    })
+
 }

@@ -34,24 +34,30 @@ export default function Tabel4()
     }
     const onPlaceOrder = () =>
     {
-
-        let obj={
-            "dishIds":dishId
-        }
-        placeOrder(orderStatus,"placed",bill,obj).then((response)=>
+        if(dishId.length===0)
         {
-            if(response.data.isSuccessful)
-            {
-                console.log(response.data.message);
-                alert(response.data.message);
-                navigate("/dashboard");
+            alert("No dish selected");
+        }
+        else
+        {
+            let obj={
+                "dishIds":dishId
             }
-            else
+            placeOrder(orderStatus,"placed",bill,obj).then((response)=>
             {
-                alert(response.data.message);
-                navigate("/dashboard");  
-            }
-        });
+                if(response.data.isSuccessful)
+                {
+                    console.log(response.data.message);
+                    alert(response.data.message);
+                    navigate("/dashboard");
+                }
+                else
+                {
+                    alert(response.data.message);
+                    navigate("/dashboard");  
+                }
+            });
+        }
     }
     const onRemove = (id,price) =>
     {
@@ -106,7 +112,7 @@ export default function Tabel4()
                 )):null}
                 </Table>
                 <div onChange={handleChange}>
-                    <input type="radio" value="DineIn" name="typeOfOrder" /> Dine In    
+                    <input type="radio" value="DineIn" name="typeOfOrder" /> Dine In<p></p>    
                     <input type="radio" value="TakeAway" name="typeOfOrder" /> Takeway
                 </div>
                 

@@ -1,12 +1,22 @@
 import React from 'react';
 import { useState, useEffect } from "react";
 import Table from 'react-bootstrap/Table';
-import {viewPlacedOrders} from '../../Services_API/api';
+import {viewPlacedOrders,updateOrderStatus} from '../../Services_API/api';
 
 export default function ViewOrders () {
         
     const [placedOrders,setPlacedOrders] = useState();
-    
+    const CompleteOrder = (orderStatus) =>
+    {
+        if(orderStatus==='completed')
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
     useEffect(() =>{
         viewPlacedOrders().then((response)=>{
             console.log(response.data);
@@ -14,7 +24,14 @@ export default function ViewOrders () {
             setPlacedOrders(response.data.result);
         });
     }, []);
-
+    const onUpdateStatus = (orderId) =>
+    {
+        updateOrderStatus(orderId).then((response)=>
+        {
+            alert(response.data.message);
+            window.location.reload();
+        });
+    }
     return(
         <div id="tableDiv">
         <Table striped bordered hover variant="dark">
@@ -22,20 +39,21 @@ export default function ViewOrders () {
             <tr>
             <th>Order ID</th>
             <th>dish Name</th>
+            <th>Order Status</th>
+            <th></th>
             </tr>
         </thead>
         {placedOrders ? placedOrders.map((placedOrder,i)=>
-        {
-            return(
-                <tbody>
+        (
+                <tbody key={i}>
                     <tr key={i}>
                     <td>{placedOrder.orderNo}</td>
                     <td>{placedOrder.dishName}</td>
+                    <td>{placedOrder.orderStatus}</td>
+                    <td><button disabled={CompleteOrder(placedOrder.orderStatus)} onClick={()=>onUpdateStatus(placedOrder.orderNo)}>Update</button></td>
                     </tr>
                 </tbody>
-            )
-        }):null
-        }
+        )):null}
         </Table>
     </div>
     )

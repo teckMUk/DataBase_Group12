@@ -2,15 +2,26 @@ import "./PlaceOrder.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Table , Button,} from "react-bootstrap";
 import {fetchDishIds,placeOrder} from '../../Services_API/api'
-import {useState, useEffect } from "react";
+import {useState, useEffect} from "react";
 import { useNavigate } from "react-router";
+import {useLocation} from "react-router-dom";
 export default function Tabel4()
 {
+    const search = useLocation().search;
+    const orderId = new URLSearchParams(search).get('orderId');
     let dishId = [];
     let orderStatus = ""
     let bill = 0;
     let navigate = useNavigate();
     const [employees,setEmployees] = useState();
+    useEffect(()=>
+    {
+        if(!!orderId)
+        {
+            console.log("run");
+            //call api here and yeild the fileds like bill and dishId
+        }
+    }, [orderId]);
     useEffect(() => {
         fetchDishIds().then((response)=>
         {
@@ -25,6 +36,7 @@ export default function Tabel4()
 
             }
         });
+
     }, []);
     const  handleChange = (e)=>
     {

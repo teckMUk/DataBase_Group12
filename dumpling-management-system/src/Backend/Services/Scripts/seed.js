@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import mysql from 'mysql';
+import mysql2 from 'mysql2';
 import express from 'express';
 import bodyParser from 'body-parser';
 import sha1 from 'sha1';
@@ -8,11 +8,12 @@ dotenv.config({path:"./src/Backend/.env"});
 var app = express();
 app.use(bodyParser.urlencoded({extended:true}));
 
-var connectionString = mysql.createConnection(
+var connectionString = mysql2.createConnection(
     {
         host:process.env.host,
         user: process.env.user,
         password:process.env.password,
+        port:process.env.port,
         database:process.env.database
     }
 );

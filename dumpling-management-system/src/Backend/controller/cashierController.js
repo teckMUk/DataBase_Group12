@@ -4,7 +4,7 @@ import express, { response } from 'express';
 import {v4 as uuidv4} from "uuid";
 dotenv.config({path:"./src/Backend/.env"});
 const app = express();
-app.use(express.json({extended:true}));
+app.use(express.json({extended:true})); 
 app.use(express.urlencoded({ extended: true }));
 function findid()
 

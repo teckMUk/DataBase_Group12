@@ -1,12 +1,12 @@
 import "./table.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Table , Button} from "react-bootstrap";
+import { Table} from "react-bootstrap";
 import { useState, useEffect } from "react";
 const initialState = {
     accountType: "",
     position: "",
 }
-export default function Table2(prop)
+export default function TableSale(prop)
 {
     const [newEmploye, setNewEmploye] = useState(initialState);
     useEffect(() => {}, [newEmploye]);

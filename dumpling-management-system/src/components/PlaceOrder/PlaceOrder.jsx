@@ -112,7 +112,7 @@ export default function Tabel4()
                 )):null}
                 </Table>
                 <div onChange={handleChange}>
-                    <input type="radio" value="DineIn" name="typeOfOrder" /> Dine In    
+                    <input type="radio" value="DineIn" name="typeOfOrder" /> Dine In<p></p>    
                     <input type="radio" value="TakeAway" name="typeOfOrder" /> Takeway
                 </div>
                 

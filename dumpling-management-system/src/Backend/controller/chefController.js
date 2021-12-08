@@ -365,11 +365,11 @@ export const viewPlacedOrders = (req,res)=>
 
         }
     );
-    let placedOrderQuery = ` SELECT dishassignment.orderNo,menu.dishName,orders.orderStatus
-    from dishassignment 
-    INNER JOIN dumpling.menu ON dishassignment.dishNo=menu.dishId
-    INNER JOIN dumpling.orders ON dishassignment.orderNo = orders.orderId
-    WHERE menu.archived = 0`;
+        let placedOrderQuery = `SELECT dishassignment.orderNo,GROUP_CONCAT(menu.dishName SEPARATOR ', ') AS dishName,orders.orderStatus
+        from dishassignment 
+        INNER JOIN dumpling.menu ON dishassignment.dishNo=menu.dishId
+        INNER JOIN dumpling.orders ON dishassignment.orderNo = orders.orderId
+        WHERE menu.archived = 0 GROUP BY orders.orderId`;
     let message = "";
     let isSuccessful = false;
     connectionString.query(placedOrderQuery,(err,result)=>

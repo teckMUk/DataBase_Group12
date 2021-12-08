@@ -574,7 +574,7 @@ export const dailySaleReport = (req,res) =>
     let month = today.getMonth()+1;
     let day = today.getDate();
     let year = today.getFullYear();
-    let querry =`Select dishassignment.orderNo,menu.dishName,orders.totalBill from orders inner join dishassignment on dishassignment.orderNo=orders.orderId inner join menu on dishassignment.dishNo=menu.dishId where menu.archived=0 and orders.orderId=(select salesrecord.orderId from salesrecord where DAY(salesrecord.date)=${day} and MONTH(salesrecord.date)=${month} and YEAR(salesrecord.date)=${year} and salesrecord.archived=0);`
+    let querry = `Select dishassignment.orderNo,GROUP_CONCAT(menu.dishName SEPARATOR ', ') as dishNames,orders.totalBill from orders inner join dishassignment on dishassignment.orderNo=orders.orderId inner join menu on dishassignment.dishNo=menu.dishId where menu.archived=0 and orders.orderId in (select salesrecord.orderId from salesrecord where DAY(salesrecord.date)=${day} and MONTH(salesrecord.date)=${month} and YEAR(salesrecord.date)=${year} and salesrecord.archived=0) GROUP BY dishassignment.orderNo;`
     console.log(querry)
     var connectionString = mysql.createConnection(
         {

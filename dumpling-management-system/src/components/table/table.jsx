@@ -118,7 +118,7 @@ export default function Table2(prop)
                                 disabled = {Object.values(newEmploye).includes("")}>Update</Button>
                                 </div>
                             </Modal>
-                             <td> <Button onClick={() =>onDelete(e.emailAddress)} > Delete</Button></td>
+                             <td> <Button onClick={() =>onDelete(e.emailAddress)} >Delete</Button></td>
                         </tr>
                        
                         </tbody>

@@ -365,11 +365,11 @@ export const viewPlacedOrders = (req,res)=>
 
         }
     );
-    let placedOrderQuery = ` SELECT dishassignment.orderNo,menu.dishName,orders.orderStatus
-    from dishassignment
-    INNER JOIN dumpling.menu ON dishassignment.dishNo=menu.dishId
-    INNER JOIN dumpling.orders ON dishassignment.orderNo = orders.orderId
-    WHERE menu.archived = 0`;
+        let placedOrderQuery = `SELECT dishassignment.orderNo,GROUP_CONCAT(menu.dishName SEPARATOR ', ') AS dishName,orders.orderStatus
+        from dishassignment
+        INNER JOIN dumpling.menu ON dishassignment.dishNo=menu.dishId
+        INNER JOIN dumpling.orders ON dishassignment.orderNo = orders.orderId
+        WHERE menu.archived = 0 GROUP BY orders.orderId`;
     let message = "";
     let isSuccessful = false;
     connectionString.query(placedOrderQuery,(err,result)=>
@@ -590,115 +590,200 @@ export const changeOrderStatus = async (req,res) =>
     });
 }
 
-export const getRandomDish = (req,res)=>
+export const dishOfTheDay = (req,res)=>
+
 {
+
     var connectionString = mysql.createConnection(
+
         {
+
             host:process.env.host,
+
             user: process.env.user,
+
             password:process.env.password,
+
             database:process.env.database
 
         }
+
     );
+
     let message = "";
+
     let isSuccessful = false;
+
     let dishId = req.body.dishId;
-    let activeDish = `SELECT * FROM createMenu WHERE isActive='true'`;
-    connectionString.query(activeDish,(err,result)=>
+
+    let checkQuery = `SELECT dishId from menu where isActive=1 AND menu.dishId="${dishId}"`;
+
+    let activeDish = `UPDATE menu SET isActive=1, updateAt=NOW() WHERE menu.dishId="${dishId}";`;
+
+    let removeActive = `UPDATE menu SET isActive=0, updateAt=NOW() WHERE menu.dishId!="${dishId}" AND isActive=1`;
+
+    connectionString.query(checkQuery,(err,result)=>
+
     {
+
         if(err)
+
         {
-            message = "Dish not deleted";
+
+            message = "Error cannot set the dish of the day";
+
             console.log(err);
+
             res.send(
+
                 {
+
                     'isSuccessful':isSuccessful,
+
                     'message':message
+
                 }
+
             );
+
             connectionString.end();
+
         }
+
         else
+
         {
-            if (res == NULL)
+
+            if(result.length===0)
+
             {
-                generateRandomDish(function(err,result){
-                    if (!err && NULL)
+
+                var connectionString1 = mysql.createConnection(
+
                     {
-                        res.send(
-                            {
-                                'isSuccessful':isSuccessful,
-                                'message':"dish generated randomly"
-                            }
-                        );
+
+                        host:process.env.host,
+
+                        user: process.env.user,
+
+                        password:process.env.password,
+
+                        database:process.env.database
+
+
+
                     }
 
+                );
+
+                connectionString1.query(activeDish,(err,result2)=>{
+
+                    if(err)
+
+                    {
+
+                        message = "Cannot set the dish to the dish of the day";
+
+                        res.send({
+
+                            'isSuccessful':isSuccessful,
+
+                            'message':message
+
+                        });
+
+                        connectionString1.end();
+
+                        connectionString.end();
+
+                    }
+
+                    else
+
+                    {
+
+                        console.log("Dish of the day setted now removing the dish");
+
+                        var connectionString2 = mysql.createConnection(
+
+                            {
+
+                                host:process.env.host,
+
+                                user: process.env.user,
+
+                                password:process.env.password,
+
+                                database:process.env.database
+
+
+
+                            }
+
+                        );
+
+                        connectionString2.query(removeActive,(err,result)=>{
+
+                            if(err)
+
+                            {
+
+                                message = "cannot remove active dish";
+
+                                res.send({
+
+                                    'isSuccessful':isSuccessful,
+
+                                    'message':message
+
+                                });
+
+                            }
+
+                            else
+
+                            {
+
+                                console.log("Successflly removed and also set new dish");
+
+                                message ="Successfully removed the active dish and set the new dish";
+
+                                isSuccessful= true;
+
+                                res.send(
+
+                                    {
+
+                                    'isSuccessful':isSuccessful,
+
+                                    'message':message
+
+                                }
+
+                                );
+
+                                connectionString2.end();
+
+                                connectionString1.end();
+
+                                connectionString.end();
+
+                            }
+
+                        });
+
+
+
+                    }
 
                 });
-            }
-            else if(!err && result)
-            {
-                let today = moment();
-                let dish_active_day = moment(result.dish_active_day);
 
-                if( today.diff(dish_active_day, 'days')  >= 1){
-                    getaRandomDish(function(err,result){
-                        if(err){
-                            res.send({
-                                'isSuccessful':false,
-                                'message':err,
-                                'data' : []
-                            })
-                        }
-                        else{
-                            // need to add code for updating isactive true and set the data
-                            res.send({
-                                'isSuccessful':true,
-                                'message':message,
-                                'data' : result
-                            })
-                        }
-                    });
-                }
-                else{
-                    res.send({
-                        'isSuccessful':true,
-                        'message':message,
-                        'data' : result
-                    })
-                }
-                //compare todays date with activeon from table momentjs
-                //if number of days difference is 0, same day so no need to update table, end back the active value
-                //if num of days>0, call generaterandomdish
-                //gerneraterandomdish: find a random value from dish table and NOT active (isActive!= true)
-                //seoncd part, update random dish with isActive==true and isActive on today's date/newDate()
+
+
             }
-            message = "Dish deleted Successfully";
-            isSuccessful = true;
-            res.send(
-                {
-                    'isSuccessful':isSuccessful,
-                    'message':message
-                }
-            );
-            connectionString.end();
+
         }
+
     });
-}
-
-function getaRandomDish( callback ){
-    let randomDish = `SELECT * FROM createMenu WHERE isActive !='true' ORDER BY RAND() LIMIT 1;`;
-
-    connectionString.query(randomDish,(err,result)=>
-    {
-        if(err)
-        {
-            callback('not able to fetch random dish' , null)
-        }
-        else{
-            callback( null , result)
-        }
-    })
 
 }

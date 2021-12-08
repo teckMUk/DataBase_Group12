@@ -161,7 +161,173 @@ function iffound(element,noOfOrders,finalDishIds)
 }
 
 
+export const editOrder= async (req,res)=>
+{
+    var connectionString = mysql.createConnection(
+        {
+            host:process.env.host,
+            user: process.env.user,
+            password:process.env.password,
+            database:process.env.database
+        }
+    );
+    let typeOfOrder = req.body.typeOfOrder;
+    let orderStatus = req.body.orderStatus;
+    let orderId = req.body.orderId;
+    let totalBill = req.body.totalBill;
+    let listOrders = req.body.listOrders;
 
+
+    let dishIds = Object.values(JSON.parse(listOrders));//Object.values((JSON.parse(JSON.stringify(listOrders))));//
+    let message = "";
+    let isSuccessful=false;
+    let finalDishIds = dishIds[0];
+    //console.log(finalDishIds);
+    let noOfOrders = finalDishIds.length;
+    const toFindDuplicates = finalDishIds => finalDishIds.filter((item,index,ar)=> ar.indexOf(item) ===index);
+    var duplicateElements = toFindDuplicates(finalDishIds);
+    const counts = {};
+    console.log(duplicateElements);
+    for (var i=0;i<duplicateElements.length;i++)
+    {
+        if (iffound(duplicateElements[i],noOfOrders,finalDishIds)===true)
+        {
+            continue;
+        }
+        else if (iffound(duplicateElements[i],noOfOrders,finalDishIds)!==true )
+        {
+            let ans = iffound(duplicateElements[i],noOfOrders,finalDishIds);
+            // duplicateElements.push(ans);
+            if(duplicateElements.find(element => element===ans))
+            {
+                continue;
+            }
+            else
+            {
+                duplicateElements.push(ans);
+            }
+        }
+       
+    }
+    //console.log("This is the final array",duplicateElements);
+    let finalLengthToinsert = duplicateElements.length;
+    finalDishIds.forEach(element => {
+        counts[element] = (counts[element]||0)+1; 
+    });
+    console.log("counts");
+    console.log(counts);
+
+    let editOrderQuery =
+
+    `UPDATE dumpling.orders SET typeOfOrder = "${typeOfOrder}", orderStatus = "${orderStatus}", totalBill = ${totalBill},updatedAt = NOW() WHERE orderId = "${orderId}";`;
+
+    connectionString.query(editOrderQuery,(err,result)=>
+    {
+        if(err)
+        {
+            message = "Query failed";
+            console.log(err);
+
+            res.send({
+
+                'isSuccessful':isSuccessful,
+
+                'message':message
+
+            });
+
+            connectionString.end();
+
+        }
+        else
+        {
+            connectionString.end();
+            let foreignDelete = 
+            `DELETE FROM dumpling.dishassignment WHERE orderNo = "${orderId}";`;
+            var connectionString2 = mysql.createConnection(
+                {
+                    host:process.env.host,
+                    user: process.env.user,
+                    password:process.env.password,
+                    database:process.env.database
+                }
+        
+            );
+
+            connectionString2.query(foreignDelete,(err,result)=>{
+                if(err)
+                {
+                    message = "Query failed";
+                    console.log(err);
+
+                    res.send({
+
+                        'isSuccessful':isSuccessful,
+
+                        'message':message
+
+                    });
+
+                    connectionString2.end();
+
+                }
+
+                else
+                {
+                    connectionString2.end();
+                    for(var i=0;i<finalLengthToinsert;i++)
+                    {
+                        addIntoDA(orderId,duplicateElements[i],counts[duplicateElements[i]]).then((response)=>
+                        {
+
+
+                        }).catch((err)=>
+
+                        {
+
+                            console.log(err);
+
+                            message = "Error encountered while adding into dish assignment";
+
+                            res.send({
+
+                                'isSuccessful':isSuccessful,
+                                'message':message
+
+                            });
+
+                        });
+
+                    }
+
+                    message = "Succesfully edited";
+                    isSuccessful = true;
+
+                    res.send({
+
+                        'isSuccessful':isSuccessful,
+                        'message':message
+
+                    });
+
+                }
+
+
+            });
+
+
+
+
+
+        }
+
+    });
+
+    
+
+
+
+}
 
 
 
@@ -408,7 +574,7 @@ export const dailySaleReport = (req,res) =>
     let month = today.getMonth()+1;
     let day = today.getDate();
     let year = today.getFullYear();
-    let querry =`Select dishassignment.orderNo,menu.dishName,orders.totalBill from orders inner join dishassignment on dishassignment.orderNo=orders.orderId inner join menu on dishassignment.dishNo=menu.dishId where menu.archived=0 and orders.orderId=(select salesrecord.orderId from salesrecord where DAY(salesrecord.date)=${day} and MONTH(salesrecord.date)=${month} and YEAR(salesrecord.date)=${year} and salesrecord.archived=0);`
+    let querry = `Select dishassignment.orderNo,GROUP_CONCAT(menu.dishName SEPARATOR ', ') as dishNames,orders.totalBill from orders inner join dishassignment on dishassignment.orderNo=orders.orderId inner join menu on dishassignment.dishNo=menu.dishId where menu.archived=0 and orders.orderId in (select salesrecord.orderId from salesrecord where DAY(salesrecord.date)=${day} and MONTH(salesrecord.date)=${month} and YEAR(salesrecord.date)=${year} and salesrecord.archived=0) GROUP BY dishassignment.orderNo;`
     console.log(querry)
     var connectionString = mysql.createConnection(
         {

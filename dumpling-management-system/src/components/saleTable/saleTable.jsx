@@ -8,14 +8,14 @@ const initialState = {
 }
 export default function TableSale(prop)
 {
-    const [newEmploye, setNewEmploye] = useState(initialState);
-    useEffect(() => {}, [newEmploye]);
+    // const [newEmploye, setNewEmploye] = useState(initialState);
+    // useEffect(() => {}, [newEmploye]);
    
-    const handle = (e) =>
-    {
-        const {name, value} = e.target;
-        setNewEmploye({...newEmploye, [name]: value});
-    }
+    // const handle = (e) =>
+    // {
+    //     const {name, value} = e.target;
+    //     setNewEmploye({...newEmploye, [name]: value});
+    // }
     let emp = prop.employeeDetails;
     //let navigate = useNavigate(); 
     return (

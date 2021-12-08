@@ -15,6 +15,14 @@ export default function Sale()
                 <div>
                     <Nav2/>
                 </div>
+            
+                <div onChange={}>  
+                    <p>Select The Sale Type</p>
+                    <p><input type="radio" value="yearly" name="accountType" />Yearly Sales</p>
+                    <p><input type="radio" value="monthly" name="accountType" />Monthly Sales</p>
+                   
+                </div>
+        
 
                 <div>
                     <SaleTable/>

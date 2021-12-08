@@ -247,7 +247,13 @@ export const editOrder = async(typeOfOrder, orderStatus, orderId, totalBill, lis
     'Accept': 'application/json',
     'content-type':'application/json'
 });
-
+}
+export const updateOrderStatus = async(orderId) =>
+{
+    const obj = {
+        "orderId":orderId
+    }
+    return await axios.post(`${Url}/managerController/updateOrderStatus`,obj);
 }
 
 export const dishOfTheDay = async (dishId) => {

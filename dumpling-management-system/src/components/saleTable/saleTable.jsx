@@ -1,8 +1,6 @@
 import "./table.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Table , Button,Container, Form} from "react-bootstrap";
-import {deleteAccount,updateAccount} from '../../Services_API/api'
-import {useNavigate} from 'react-router-dom';
 import { useModal } from 'react-hooks-use-modal';
 import { useState, useEffect } from "react";
 const initialState = {

@@ -84,7 +84,7 @@ function getChef(employeeid)
                     user: process.env.user,
                     password:process.env.password,
                     database:process.env.database
-    
+
             });
             let getChefquery = `SELECT employee.employeeId from dumpling.employee INNER JOIN account ON account.accountId=employee.accountId WHERE employee.employeeId=${employeeid} AND account.accountType="chef"`
             connectionString1.query(getChefquery,(err,result)=>{
@@ -103,7 +103,7 @@ function getChef(employeeid)
                 }
             })
     })
-    
+
 }
 export const addMenuItem = async (req,res)=>
 {
@@ -180,7 +180,7 @@ export const addMenuItem = async (req,res)=>
                             password:process.env.password,
                             database:process.env.database
                         }
-                
+
                     );
                     connectionString2.query(addintochefassignment,(err,result)=>{
 
@@ -195,7 +195,7 @@ export const addMenuItem = async (req,res)=>
                                     password:process.env.password,
                                     database:process.env.database
                                 }
-                        
+
                             );
                             connectionString3.query(updateMenu,(err,result)=>{
                                 if(err)
@@ -218,12 +218,12 @@ export const addMenuItem = async (req,res)=>
                                     connectionString2.end();
                                 }
                             })
-                            
+
                         }
                         else
                         {
                             message = "assigned the dish to the chef";
-                            isSuccessful =true; 
+                            isSuccessful =true;
                             res.send({
                                 'isSuccessful':isSuccessful,
                                 'message':message
@@ -270,7 +270,7 @@ export const removeMenuItem = (req,res)=>
             connectionString.end();
         }
         else
-        {   
+        {
             message = "Dish deleted Successfully";
             isSuccessful = true;
             res.send(
@@ -305,7 +305,7 @@ export const fetchDishIds = (req,res)=>
             res.send(
                 {
                     'isSuccessful':isSuccessful,
-                    'message':message 
+                    'message':message
                 }
             );
             connectionString.end();
@@ -318,7 +318,7 @@ export const fetchDishIds = (req,res)=>
                 res.send(
                     {
                         'isSuccessful':isSuccessful,
-                        'message':message 
+                        'message':message
                     }
                 );
                 connectionString.end();
@@ -327,7 +327,7 @@ export const fetchDishIds = (req,res)=>
             {
                 message = "Found all the dishes";
                 isSuccessful = true;
-                
+
                 let result1 = [];
                 let isArchived = [];
                 for(var i=0;i<result.length;i++)
@@ -350,7 +350,7 @@ export const fetchDishIds = (req,res)=>
                 );
                 connectionString.end();
             }
-           
+
         }
     });
 }
@@ -366,7 +366,7 @@ export const viewPlacedOrders = (req,res)=>
         }
     );
         let placedOrderQuery = `SELECT dishassignment.orderNo,GROUP_CONCAT(menu.dishName SEPARATOR ', ') AS dishName,orders.orderStatus
-        from dishassignment 
+        from dishassignment
         INNER JOIN dumpling.menu ON dishassignment.dishNo=menu.dishId
         INNER JOIN dumpling.orders ON dishassignment.orderNo = orders.orderId
         WHERE menu.archived = 0 GROUP BY orders.orderId`;
@@ -451,7 +451,7 @@ function findCurrentStatus(orderId)
                 }
             }
         });
-        
+
     });
 }
 function updateStatus(orderId,newStatus)
@@ -480,10 +480,10 @@ function updateStatus(orderId,newStatus)
                 console.log(result);
                 resolve("orderStatus changed");
                 connectionString.end();
-                
+
             }
         });
-        
+
     });
 }
 function addRecordToSaleRecord(orderId)
@@ -514,10 +514,10 @@ function addRecordToSaleRecord(orderId)
                 console.log(result);
                 resolve("orderStatus changed");
                 connectionString.end();
-                
+
             }
         });
-        
+
     });
 }
 export const changeOrderStatus = async (req,res) =>
@@ -566,7 +566,7 @@ export const changeOrderStatus = async (req,res) =>
                     res.send({
                         "message":message,
                         "isSuccessful":isSuccessful
-                    }); 
+                    });
                 });
 
             }).catch((err)=>
@@ -588,4 +588,202 @@ export const changeOrderStatus = async (req,res) =>
         });
         console.log(err);
     });
+}
+
+export const dishOfTheDay = (req,res)=>
+
+{
+
+    var connectionString = mysql.createConnection(
+
+        {
+
+            host:process.env.host,
+
+            user: process.env.user,
+
+            password:process.env.password,
+
+            database:process.env.database
+
+        }
+
+    );
+
+    let message = "";
+
+    let isSuccessful = false;
+
+    let dishId = req.body.dishId;
+
+    let checkQuery = `SELECT dishId from menu where isActive=1 AND menu.dishId="${dishId}"`;
+
+    let activeDish = `UPDATE menu SET isActive=1, updateAt=NOW() WHERE menu.dishId="${dishId}";`;
+
+    let removeActive = `UPDATE menu SET isActive=0, updateAt=NOW() WHERE menu.dishId!="${dishId}" AND isActive=1`;
+
+    connectionString.query(checkQuery,(err,result)=>
+
+    {
+
+        if(err)
+
+        {
+
+            message = "Error cannot set the dish of the day";
+
+            console.log(err);
+
+            res.send(
+
+                {
+
+                    'isSuccessful':isSuccessful,
+
+                    'message':message
+
+                }
+
+            );
+
+            connectionString.end();
+
+        }
+
+        else
+
+        {
+
+            if(result.length===0)
+
+            {
+
+                var connectionString1 = mysql.createConnection(
+
+                    {
+
+                        host:process.env.host,
+
+                        user: process.env.user,
+
+                        password:process.env.password,
+
+                        database:process.env.database
+
+
+
+                    }
+
+                );
+
+                connectionString1.query(activeDish,(err,result2)=>{
+
+                    if(err)
+
+                    {
+
+                        message = "Cannot set the dish to the dish of the day";
+
+                        res.send({
+
+                            'isSuccessful':isSuccessful,
+
+                            'message':message
+
+                        });
+
+                        connectionString1.end();
+
+                        connectionString.end();
+
+                    }
+
+                    else
+
+                    {
+
+                        console.log("Dish of the day setted now removing the dish");
+
+                        var connectionString2 = mysql.createConnection(
+
+                            {
+
+                                host:process.env.host,
+
+                                user: process.env.user,
+
+                                password:process.env.password,
+
+                                database:process.env.database
+
+
+
+                            }
+
+                        );
+
+                        connectionString2.query(removeActive,(err,result)=>{
+
+                            if(err)
+
+                            {
+
+                                message = "cannot remove active dish";
+
+                                res.send({
+
+                                    'isSuccessful':isSuccessful,
+
+                                    'message':message
+
+                                });
+
+                            }
+
+                            else
+
+                            {
+
+                                console.log("Successflly removed and also set new dish");
+
+                                message ="Successfully removed the active dish and set the new dish";
+
+                                isSuccessful= true;
+
+                                res.send(
+
+                                    {
+
+                                    'isSuccessful':isSuccessful,
+
+                                    'message':message
+
+                                }
+
+                                );
+
+                                connectionString2.end();
+
+                                connectionString1.end();
+
+                                connectionString.end();
+
+                            }
+
+                        });
+
+
+
+                    }
+
+                });
+
+
+
+            }
+
+        }
+
+    });
+
 }

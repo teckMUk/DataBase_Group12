@@ -8,7 +8,7 @@ export const LogIn = async (Email, Password) => {
         "email" : Email,
         "password":Password
     }
-   
+
     return await axios.post(`${Url}/userController/login`,object,{
         'Accept': 'application/json',
         'content-type':'application/json'
@@ -97,12 +97,12 @@ export const validateSecurity = async(email, answerOne,answerTwo)=>{
 export const placeOrder = async(typeOfOrder,orderStatus,totalBill,listOrders) =>{
     console.log("In placed orders api in server_api");
     const obj={
-      
+
         "typeOfOrder" : typeOfOrder,
         "orderStatus":orderStatus,
         "totalBill" : totalBill,
-        "listOrders" : listOrders     
-        
+        "listOrders" : listOrders
+
     }
     // console.log(obj);
     return await axios.post(`${Url}/cashierController/placeOrder`, obj,)
@@ -255,6 +255,16 @@ export const updateOrderStatus = async(orderId) =>
     }
     return await axios.post(`${Url}/managerController/updateOrderStatus`,obj);
 }
+
+export const dishOfTheDay = async (dishId) => {
+    const object3 = {"dishId" : dishId
+    }
+    return await axios.post(`${Url}/chefController/dishOfTheDay`, object3)
+}
+
+
+
+
 
 
 

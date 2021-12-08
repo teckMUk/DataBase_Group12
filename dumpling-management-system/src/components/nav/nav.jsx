@@ -165,7 +165,9 @@ const isChef= (role) =>{
                             <NavDropdown.Item href='/updateSalaryOfEmployees'>Update Salary</NavDropdown.Item>
                             <NavDropdown.Item href='/giveBonuses'>Give Bonus</NavDropdown.Item>
                             <NavDropdown.Item href= '/removeitem'>Remove iten from Menu</NavDropdown.Item> 
-                            <NavDropdown.Item href= '/viewPlacedOrders'>View Orders</NavDropdown.Item>  
+                            <NavDropdown.Item href= '/viewPlacedOrders'>View Orders</NavDropdown.Item>
+                            <NavDropdown.Item href= '/addCoupon'>Add Coupons</NavDropdown.Item> 
+
                         </div>
                         }
 

@@ -9,7 +9,8 @@ export default function ViewOrders () {
     
     useEffect(() =>{
         viewPlacedOrders().then((response)=>{
-            console.log(response);
+            console.log(response.data);
+            console.log("esh");
             setPlacedOrders(response.data.result);
         });
     }, []);

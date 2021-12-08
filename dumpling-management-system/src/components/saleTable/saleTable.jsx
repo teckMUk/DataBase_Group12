@@ -1,7 +1,6 @@
 import "./table.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Table , Button,Container, Form} from "react-bootstrap";
-import { useModal } from 'react-hooks-use-modal';
+import { Table , Button} from "react-bootstrap";
 import { useState, useEffect } from "react";
 const initialState = {
     accountType: "",
@@ -26,10 +25,9 @@ export default function Table2(prop)
                 <thead>
                     <tr>
                     <th>#</th>
-                    <th>Employee name</th>
-                    <th>Email address</th>
-                    <th>position</th>
-                    <th>account Type</th>
+                    <th>Order Number</th>
+                    <th>Dish Names</th>
+                    <th>Total Bill</th>
                     </tr>
                 </thead>
 
@@ -38,16 +36,13 @@ export default function Table2(prop)
                         
                         <tr>
                             <td>{i}</td>
-                            <td>{e.employeeName}</td>
-                            <td>{e.emailAddress} </td>
-                            <td>{e.position} </td>
-                            <td>{e.accountType} </td>
-                            <td> <Button onClick={open}>Update</Button></td>
-                          
-                             <td> <Button > Delete</Button></td>
+                            <td>{e.orderNo}</td>
+                            <td>{e.dishNames} </td>
+                            <td>{e.totalBill} </td>
+                           
                         </tr>
                        
-                        </tbody>
+                    </tbody>
                 ))}
                 
                 </Table>

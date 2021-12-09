@@ -11,55 +11,30 @@ import {useNavigate} from 'react-router-dom';
 
 import Dropdown from '../../components/dropdown/dropdown';
 
-
+import {useLocation} from "react-router-dom";
 
 
 
 
 export default class DynamicTable extends React.Component {
-
     constructor(props) {
-
       super(props);
-
- 
-
       this.state = {
-
         message: "",
-
         typeOfOrder: "",
-
         orderStatus: "placed",
-
         totalBill:0,
-
         items: [],
-
-       
-
       }
 
     }
 
- 
-
-   
 
     handleClick(e) {
-
         e.preventDefault();
-
         var items = this.state.items;
-
         console.log(items);
-
-     
-
         items.push(Number(this.state.message));
-
-     
-
         this.setState({
 
           items: items
@@ -71,19 +46,10 @@ export default class DynamicTable extends React.Component {
  
 
       handleItemDelete(i,event) {
-
           event.preventDefault();
-
         var items = this.state.items;
-
-     
-
         items.splice(i, 1);
-
-     
-
         this.setState({
-
           items: items
 
         });
@@ -93,84 +59,43 @@ export default class DynamicTable extends React.Component {
      onValueChange(event)
 
      {
-
         event.preventDefault();
-
          console.log(event);
-
          this.setState(
-
              {
-
                 typeOfOrder:event.target.value
-
              }
-
          )
-
      }
 
  
 
       handleSubmit(e){
-
           e.preventDefault();
-
           let listOrders = {
-
               "dishIds":this.state.items
-
           }
 
           console.log(this.state);
 
           placeOrder(this.state.typeOfOrder, this.state.orderStatus, this.state.totalBill,listOrders).then((response)=>{
 
- 
-
- 
-
- 
-
             if(response.data.isSuccessful)
-
- 
-
             {
-
- 
-
                 alert(response.data.message);
-
- 
-
                 //navigate('/dashboard');
-
- 
-
             }
 
  
 
             else{
-
- 
-
                 alert(response.data.message);
-
- 
-
                 //navigate('/dashboard');
-
- 
-
             }
 
  
 
     });
-
- 
 
       }
 
@@ -258,6 +183,10 @@ export default class DynamicTable extends React.Component {
  
 
     render() {
+      const search = useLocation().search;
+      const x = new URLSearchParams(search).get('orderId');
+      
+      console.log(x);
 
       return (
         

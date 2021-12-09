@@ -2,9 +2,11 @@ import React from 'react';
 import { useState, useEffect } from "react";
 import Table from 'react-bootstrap/Table';
 import {viewPlacedOrders,updateOrderStatus} from '../../Services_API/api';
+import {createSearchParams, useNavigate} from 'react-router-dom';
 
-export default function ViewOrders () {
-        
+
+export default function EditOrder () {
+     let navigate = useNavigate();   
     const [placedOrders,setPlacedOrders] = useState();
     const CompleteOrder = (orderStatus) =>
     {
@@ -24,13 +26,11 @@ export default function ViewOrders () {
             setPlacedOrders(response.data.result);
         });
     }, []);
-    const onUpdateStatus = (orderId) =>
+    const onUpdateOrder = (orderId) =>
     {
-        updateOrderStatus(orderId).then((response)=>
-        {
-            alert(response.data.message);
-            window.location.reload();
-        });
+        const prams = {"orderId":orderId};
+        navigate({pathname:'/placeOrder',
+        search: `?${createSearchParams(prams)}`});
     }
     return(
         <div id="tableDiv">
@@ -50,7 +50,7 @@ export default function ViewOrders () {
                     <td>{placedOrder.orderNo}</td>
                     <td>{placedOrder.dishName}</td>
                     <td>{placedOrder.orderStatus}</td>
-                    <td><button disabled={CompleteOrder(placedOrder.orderStatus)} onClick={()=>onUpdateStatus(placedOrder.orderNo)}>Update</button></td>
+                    <td><button disabled={CompleteOrder(placedOrder.orderStatus)} onClick={()=>onUpdateOrder(placedOrder.orderNo)}>Change</button></td>
                     </tr>
                 </tbody>
         )):null}

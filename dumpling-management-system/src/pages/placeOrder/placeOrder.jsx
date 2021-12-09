@@ -183,10 +183,6 @@ export default class DynamicTable extends React.Component {
  
 
     render() {
-      const search = useLocation().search;
-      const x = new URLSearchParams(search).get('orderId');
-      
-      console.log(x);
 
       return (
         

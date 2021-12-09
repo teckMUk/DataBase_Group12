@@ -67,7 +67,7 @@ export default function Tabel4()
             let index = dishId.indexOf(id)
             if(dishId.indexOf(id)!==-1)
             {
-                bill = bill-price;
+                bill = bill-Number(price);
                 dishId.splice(index,1);
 
             }
@@ -78,7 +78,7 @@ export default function Tabel4()
     const onAdddish = (id,price) =>
     {
 
-        bill = bill+price;
+        bill = bill+Number(price);
         dishId.push(id);
         console.log("THis is the bil",bill);
         console.log(dishId);

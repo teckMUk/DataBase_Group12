@@ -1,8 +1,8 @@
-import dotenv from "dotenv";
-import mysql from 'mysql';
+import dotenv from 'dotenv';
+import mysql2 from 'mysql2';
 import express, { response } from 'express';
-import {v4 as uuidv4} from "uuid";
-dotenv.config({path:"./src/Backend/.env"});
+import {v4 as uuidv4} from 'uuid';
+dotenv.config({path:'./src/Backend/.env'});
 const app = express();
 app.use(express.json({extended:true})); 
 app.use(express.urlencoded({ extended: true }));
@@ -14,27 +14,22 @@ function findid()
 
     {
 
-        var connectionString1 = mysql.createConnection(
+        var connectionString1 = mysql2.createConnection(
 
             {
 
-                    host:process.env.host,
-
-                    user: process.env.user,
-
-                    password:process.env.password,
-
-                    database:process.env.database
-
-       
-
+                host:process.env.host,
+                user: process.env.user,
+                password:process.env.password,
+                port:process.env.port,
+                database:process.env.database
             }
 
             );
 
         let orderId = uuidv4();
 
-        let checkQuery =`SELECT * FROM dumpling.orders WHERE orders.orderId = "${orderId}"`;
+        let checkQuery =`SELECT * FROM dumpling.orders WHERE orders.orderId = '${orderId}'`;
 
         connectionString1.query(checkQuery, (err,res)=>
 
@@ -44,10 +39,10 @@ function findid()
 
             {
 
-                console.log("error");
+                console.log('error');
                 console.log(err);
 
-                reject("querry failed");
+                reject('querry failed');
 
                 connectionString1.end();
 
@@ -71,7 +66,7 @@ function findid()
 
                 {
 
-                    reject("order id in use");
+                    reject('order id in use');
 
                     connectionString1.end();
 
@@ -93,16 +88,14 @@ function addIntoDA(orderId,toAddintoDA,quantity)
 
     {
 
-        var connectionString2 = mysql.createConnection(
+        var connectionString2 = mysql2.createConnection(
 
             {
 
                 host:process.env.host,
-
                 user: process.env.user,
-
                 password:process.env.password,
-
+                port:process.env.port,
                 database:process.env.database
 
    
@@ -111,7 +104,7 @@ function addIntoDA(orderId,toAddintoDA,quantity)
 
         );
 
-        let addIntoDishAss = `INSERT INTO dumpling.dishassignment(orderNo,dishNo,quantity) VALUES("${orderId}","${toAddintoDA}",${quantity});`;
+        let addIntoDishAss = `INSERT INTO dumpling.dishassignment(orderNo,dishNo,quantity) VALUES('${orderId}','${toAddintoDA}',${quantity});`;
 
         connectionString2.query(addIntoDishAss,(err,result)=>
 
@@ -121,10 +114,10 @@ function addIntoDA(orderId,toAddintoDA,quantity)
 
             {
 
-                console.log("Error");
+                console.log('Error');
                 console.log(err);
 
-                reject("Query failed");
+                reject('Query failed');
 
                 connectionString2.end();
 
@@ -163,11 +156,12 @@ function iffound(element,noOfOrders,finalDishIds)
 
 export const editOrder= async (req,res)=>
 {
-    var connectionString = mysql.createConnection(
+    var connectionString = mysql2.createConnection(
         {
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
+            port:process.env.port,
             database:process.env.database
         }
     );
@@ -179,7 +173,7 @@ export const editOrder= async (req,res)=>
 
 
     let dishIds = Object.values(JSON.parse(listOrders));//Object.values((JSON.parse(JSON.stringify(listOrders))));//
-    let message = "";
+    let message = '';
     let isSuccessful=false;
     let finalDishIds = dishIds[0];
     //console.log(finalDishIds);
@@ -209,23 +203,23 @@ export const editOrder= async (req,res)=>
         }
        
     }
-    //console.log("This is the final array",duplicateElements);
+    //console.log('This is the final array',duplicateElements);
     let finalLengthToinsert = duplicateElements.length;
     finalDishIds.forEach(element => {
         counts[element] = (counts[element]||0)+1; 
     });
-    console.log("counts");
+    console.log('counts');
     console.log(counts);
 
     let editOrderQuery =
 
-    `UPDATE dumpling.orders SET typeOfOrder = "${typeOfOrder}", orderStatus = "${orderStatus}", totalBill = ${totalBill},updatedAt = NOW() WHERE orderId = "${orderId}";`;
+    `UPDATE dumpling.orders SET typeOfOrder = '${typeOfOrder}', orderStatus = '${orderStatus}', totalBill = ${totalBill},updatedAt = NOW() WHERE orderId = '${orderId}';`;
 
     connectionString.query(editOrderQuery,(err,result)=>
     {
         if(err)
         {
-            message = "Query failed";
+            message = 'Query failed';
             console.log(err);
 
             res.send({
@@ -243,12 +237,13 @@ export const editOrder= async (req,res)=>
         {
             connectionString.end();
             let foreignDelete = 
-            `DELETE FROM dumpling.dishassignment WHERE orderNo = "${orderId}";`;
-            var connectionString2 = mysql.createConnection(
+            `DELETE FROM dumpling.dishassignment WHERE orderNo = '${orderId}';`;
+            var connectionString2 = mysql2.createConnection(
                 {
                     host:process.env.host,
                     user: process.env.user,
                     password:process.env.password,
+                    port:process.env.port,
                     database:process.env.database
                 }
         
@@ -257,7 +252,7 @@ export const editOrder= async (req,res)=>
             connectionString2.query(foreignDelete,(err,result)=>{
                 if(err)
                 {
-                    message = "Query failed";
+                    message = 'Query failed';
                     console.log(err);
 
                     res.send({
@@ -287,7 +282,7 @@ export const editOrder= async (req,res)=>
 
                             console.log(err);
 
-                            message = "Error encountered while adding into dish assignment";
+                            message = 'Error encountered while adding into dish assignment';
 
                             res.send({
 
@@ -300,7 +295,7 @@ export const editOrder= async (req,res)=>
 
                     }
 
-                    message = "Succesfully edited";
+                    message = 'Succesfully edited';
                     isSuccessful = true;
 
                     res.send({
@@ -335,16 +330,14 @@ export const placeOrder = async (req,res)=>
 
 {
 
-    var connectionString = mysql.createConnection(
+    var connectionString = mysql2.createConnection(
 
         {
 
             host:process.env.host,
-
             user: process.env.user,
-
             password:process.env.password,
-
+            port:process.env.port,
             database:process.env.database
 
  
@@ -361,7 +354,7 @@ export const placeOrder = async (req,res)=>
 
     {
 
-        console.log("In while");
+        console.log('In while');
 
         await findid().then((response)=>
 
@@ -381,7 +374,7 @@ export const placeOrder = async (req,res)=>
 
     }
 
-    let message = "";
+    let message = '';
 
     let isSuccessful=false;
 
@@ -425,14 +418,14 @@ export const placeOrder = async (req,res)=>
         }
        
     }
-    console.log("This is the final array",duplicateElements);
+    console.log('This is the final array',duplicateElements);
     let finalLengthToinsert = duplicateElements.length;
     finalDishIds.forEach(element => {
         counts[element] = (counts[element]||0)+1; 
     });
-    console.log("counts");
+    console.log('counts');
     console.log(counts);
-    // console.log("This is the number of orders",noOfOrders);
+    // console.log('This is the number of orders',noOfOrders);
 
     // console.log(typeOfOrder,orderStatus,totalBill,listOrders,noOfOrders,finalDishIds);
 
@@ -440,7 +433,7 @@ export const placeOrder = async (req,res)=>
 
     `INSERT INTO dumpling.orders(orderId,typeOfOrder,OrderStatus,totalBill,createdAt)
 
-    VALUES("${orderId}","${typeOfOrder}","${orderStatus}",${totalBill},NOW());`;
+    VALUES('${orderId}','${typeOfOrder}','${orderStatus}',${totalBill},NOW());`;
 
  
 
@@ -452,7 +445,7 @@ export const placeOrder = async (req,res)=>
 
         {
 
-            message = "Cannot add order to the order table";
+            message = 'Cannot add order to the order table';
 
             console.log(err);
 
@@ -472,7 +465,7 @@ export const placeOrder = async (req,res)=>
 
         {
 
-            console.log("Now adding into dish assignment");
+            console.log('Now adding into dish assignment');
 
            
 
@@ -480,14 +473,14 @@ export const placeOrder = async (req,res)=>
 
             {
 
-                // console.log("Here is the first dish id",finalDishIds[i]);
-                console.log("This is the count",counts[duplicateElements[i]]);
+                // console.log('Here is the first dish id',finalDishIds[i]);
+                console.log('This is the count',counts[duplicateElements[i]]);
 
                 addIntoDA(orderId,duplicateElements[i],counts[duplicateElements[i]]).then((response)=>
 
                 {
 
-                   console.log("Successfully added into DA");
+                   console.log('Successfully added into DA');
 
                 //    console.log(response);
 
@@ -499,7 +492,7 @@ export const placeOrder = async (req,res)=>
 
                     console.log(err);
 
-                    message = "Error encountered while adding into dish assignment";
+                    message = 'Error encountered while adding into dish assignment';
 
                     res.send({
 
@@ -515,7 +508,7 @@ export const placeOrder = async (req,res)=>
 
             }
 
-            message = "Succesfully added";
+            message = 'Succesfully added';
 
             isSuccessful = true;
 
@@ -532,23 +525,24 @@ export const placeOrder = async (req,res)=>
 
 }
 export const viewOrderSummary = (req,res)=>{
-    var connectionString = mysql.createConnection(
+    var connectionString = mysql2.createConnection(
         {
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
+            port:process.env.port,
             database:process.env.database
         }
 
     )
-    let message = "";
+    let message = '';
     let isSuccessful = false;
     let orderId = req.body.orderId;
-    let orderSummary = `SELECT * FROM orders INNER JOIN dishassignment on orders.orderId = dishassignment.orderNo INNER JOIN menu on menu.dishId = dishassignment.dishNo WHERE orders.orderId = "${orderId}";`;
+    let orderSummary = `SELECT * FROM orders INNER JOIN dishassignment on orders.orderId = dishassignment.orderNo INNER JOIN menu on menu.dishId = dishassignment.dishNo WHERE orders.orderId = '${orderId}';`;
     connectionString.query(orderSummary,(err,result)=>{
         if(err)
         {
-            message = "Cannot display order summary";
+            message = 'Cannot display order summary';
             res.send({
                 'isSuccessful':isSuccessful,
                 'message':message
@@ -557,7 +551,7 @@ export const viewOrderSummary = (req,res)=>{
         }
         else
         {
-            message = "Sucessfully displaying the order summary";
+            message = 'Sucessfully displaying the order summary';
             isSuccessful = true;
             res.send({
                 'isSuccessful':isSuccessful,
@@ -576,26 +570,27 @@ export const dailySaleReport = (req,res) =>
     let year = today.getFullYear();
     let querry = `Select dishassignment.orderNo,GROUP_CONCAT(menu.dishName SEPARATOR ', ') as dishNames,orders.totalBill from orders inner join dishassignment on dishassignment.orderNo=orders.orderId inner join menu on dishassignment.dishNo=menu.dishId where menu.archived=0 and orders.orderId in (select salesrecord.orderId from salesrecord where DAY(salesrecord.date)=${day} and MONTH(salesrecord.date)=${month} and YEAR(salesrecord.date)=${year} and salesrecord.archived=0) GROUP BY dishassignment.orderNo;`
     console.log(querry)
-    var connectionString = mysql.createConnection(
+    var connectionString = mysql2.createConnection(
         {
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
+            port:process.env.port,
             database:process.env.database
 
         }
     );
-    let message = "";
+    let message = '';
     let isSuccessful = false;
     connectionString.query(querry,(err,result)=>
     {
         if(err){
-            message = "querry failed";
+            message = 'querry failed';
             console.log(err);
             res.send(
                 {
-                    "isSuccessful":isSuccessful,
-                    "message":message
+                    'isSuccessful':isSuccessful,
+                    'message':message
                 }
             );
             connectionString.end();
@@ -604,11 +599,11 @@ export const dailySaleReport = (req,res) =>
         {
             if(result.length === 0)
             {
-                message = "No sale today";
+                message = 'No sale today';
                 res.send(
                     {
-                        "isSuccessful":isSuccessful,
-                        "message":message
+                        'isSuccessful':isSuccessful,
+                        'message':message
                     }
                 );
                 connectionString.end();
@@ -616,13 +611,13 @@ export const dailySaleReport = (req,res) =>
             }
             else
             {
-                message = "sale record for day found";
+                message = 'sale record for day found';
                 isSuccessful = true;
                 console.log(result);
                 res.send(
                     {
-                        "isSuccessful":isSuccessful,
-                        "message":message,
+                        'isSuccessful':isSuccessful,
+                        'message':message,
                         'result':result
                     }
                 );
@@ -636,33 +631,34 @@ export const dailySaleReport = (req,res) =>
 
 export const viewEditableOrders = (req,res) =>
 {
-    var connectionString = mysql.createConnection(
+    var connectionString = mysql2.createConnection(
         {
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
+            port:process.env.port,
             database:process.env.database
         }
 
     )
-    let a = "placed";
-    let b = "created";
+    let a = 'placed';
+    let b = 'created';
 
     let query = 
-    `SELECT * FROM dumpling.orders WHERE orderStatus = "${a}" OR orderStatus = "${b}";`;
-    let message = "";
+    `SELECT * FROM dumpling.orders WHERE orderStatus = '${a}' OR orderStatus = '${b}';`;
+    let message = '';
     let isSuccessful = false;
 
     connectionString.query(query,(err,result)=>
     {
         if(err)
         {
-            message = "query failed";
+            message = 'query failed';
             console.log(err);
             res.send(
                 {
-                    "isSuccessful":isSuccessful,
-                    "message":message
+                    'isSuccessful':isSuccessful,
+                    'message':message
                 }
             );
             connectionString.end();
@@ -671,11 +667,11 @@ export const viewEditableOrders = (req,res) =>
         {
             if(result.length === 0)
             {
-                message = "No orders placed or created";
+                message = 'No orders placed or created';
                 res.send(
                     {
-                        "isSuccessful":isSuccessful,
-                        "message":message
+                        'isSuccessful':isSuccessful,
+                        'message':message
                     }
                 );
                 connectionString.end();
@@ -683,11 +679,11 @@ export const viewEditableOrders = (req,res) =>
             }
             else
             {
-                message = "Orders found that were created or placed";
+                message = 'Orders found that were created or placed';
                 res.send(
                     {
-                        "isSuccessful":true,
-                        "message":message,
+                        'isSuccessful':true,
+                        'message':message,
                         'result':result
                     }
                 );
@@ -708,16 +704,17 @@ export const viewEditableOrders = (req,res) =>
 
 export const deleteOrder = (req,res) =>
 {
-    var connectionString = mysql.createConnection(
+    var connectionString = mysql2.createConnection(
         {
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
+            port:process.env.port,
             database:process.env.database
         }
 
     )
-    let message = "";
+    let message = '';
     let isSuccessful = false;
     let orderId = req.body.orderId;
     
@@ -726,11 +723,11 @@ export const deleteOrder = (req,res) =>
 
 
     let foreignDelete = 
-    `DELETE FROM dumpling.dishassignment WHERE orderNo = "${orderId}";`;
+    `DELETE FROM dumpling.dishassignment WHERE orderNo = '${orderId}';`;
     connectionString.query(foreignDelete,(err,result)=>{
         if(err)
         {
-            message = "Query failed";
+            message = 'Query failed';
             console.log(err);
             res.send({
                 'isSuccessful':isSuccessful,
@@ -741,26 +738,27 @@ export const deleteOrder = (req,res) =>
         }
         else
         {
-            console.log("Deletion from the dish assignment table succeeded");
+            console.log('Deletion from the dish assignment table succeeded');
             //now set the archive bit of that particular orderId to be 1
             connectionString.end();
-            var connectionString2 = mysql.createConnection(
+            var connectionString2 = mysql2.createConnection(
                 {
                     host:process.env.host,
                     user: process.env.user,
                     password:process.env.password,
+                    port:process.env.port,
                     database:process.env.database
                 }
         
             )
             let n = 1;
             let orderArchive = 
-            `UPDATE dumpling.orders SET archived =${n} WHERE orderId = "${orderId}";`;
+            `UPDATE dumpling.orders SET archived =${n} WHERE orderId = '${orderId}';`;
             connectionString2.query(orderArchive,(err,result)=>
             {
                 if(err)
                 {
-                    message = "Failed to set archive";
+                    message = 'Failed to set archive';
                     console.log(err);
                     res.send({
                     'isSuccessful':false,
@@ -771,7 +769,7 @@ export const deleteOrder = (req,res) =>
                 }
                 else
                 {
-                    message = "Archive set successfully";
+                    message = 'Archive set successfully';
                     res.send({
                         'isSuccessful':true,
                         'message':message

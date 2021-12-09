@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const Url = "http://localhost:3000/api"
+const Url = "http://localhost:25060/api"
 
 export const LogIn = async (Email, Password) => {
 
@@ -108,7 +108,8 @@ export const placeOrder = async(typeOfOrder,orderStatus,totalBill,listOrders) =>
     return await axios.post(`${Url}/cashierController/placeOrder`, obj,)
 }
 
-export const addMenuItem = async(dishName, dishType,dishPrice,preparationTime,calories,dishOfday, allergens, image) =>{
+export const addMenuItem = async(dishName, dishType,dishPrice,preparationTime,calories,dishOfday, allergens, image,employeeId) =>{
+    console.log(employeeId);
     const obj={
         "dishName" : dishName,
         "dishType" : dishType,
@@ -117,7 +118,8 @@ export const addMenuItem = async(dishName, dishType,dishPrice,preparationTime,ca
         "calories" : calories,
         "dishOfday" : dishOfday,
         "allergens" : allergens,
-        "image": image
+        "image": image,
+        "employeeId":employeeId
 
     }
     return await axios.post(`${Url}/chefController/addMenuItem`, obj,{

@@ -7,7 +7,7 @@ const app = express();
 app.use(bodyParser.urlencoded({extended:true}));
 
 var connectionString = mysql.createConnection(
-    { 
+    {
         host:process.env.host,
         user: process.env.user,
         password:process.env.password
@@ -82,10 +82,10 @@ const createDishAssignment = `CREATE TABLE IF NOT EXISTS dumpling.dishassignment
     dishNo VARCHAR(50) NOT NULL,
     quantity INT DEFAULT 0,
     PRIMARY KEY (orderNo,dishNo))`;
-const alterdishAssignment1 = `ALTER TABLE dumpling.dishassignment 
+const alterdishAssignment1 = `ALTER TABLE dumpling.dishassignment
 ADD INDEX dishNo_idx (dishNo ASC) VISIBLE;`;
 const alterdishAssignment2=
-`ALTER TABLE dumpling.dishassignment 
+`ALTER TABLE dumpling.dishassignment
 ADD CONSTRAINT orderNo
   FOREIGN KEY (orderNo)
   REFERENCES dumpling.orders(orderId)
@@ -125,7 +125,7 @@ const createAccount = `CREATE TABLE IF NOT EXISTS dumpling.account(
     archived INT NOT NULL DEFAULT 0,
     PRIMARY KEY (accountId));`;
 
-    
+
 const createEmpolyee = `CREATE TABLE IF NOT EXISTS dumpling.employee(
     employeeId INT NOT NULL AUTO_INCREMENT,
     employeeName VARCHAR(100) NOT NULL,
@@ -150,6 +150,7 @@ const createMenu = `CREATE TABLE IF NOT EXISTS dumpling.menu (
     dishId VARCHAR(50) NOT NULL,
     dishName VARCHAR(45) NOT NULL,
     dishPrice DECIMAL(5,2) NOT NULL,
+    isActive INT DEFAULT 0,
     dishType VARCHAR(45) NOT NULL,
     preparationTime INT NOT NULL,
     calories INT NOT NULL,

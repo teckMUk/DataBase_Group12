@@ -329,6 +329,104 @@ export const editOrder= async (req,res)=>
 
 }
 
+export const getOrder = async(req,res)=>
+{
+    var connectionString = mysql.createConnection(
+
+        {
+
+            host:process.env.host,
+
+            user: process.env.user,
+
+            password:process.env.password,
+
+            database:process.env.database
+
+ 
+
+        }
+
+    );
+
+    let isSuccessful = false;
+    let message = "";
+    let orderId = req.body.orderId;
+
+    let getOrderQuery = 
+    `SELECT * FROM orders INNER JOIN dishassignment on orders.orderId = dishassignment.orderNo INNER JOIN menu on menu.dishId = dishassignment.dishNo WHERE orders.orderId = '${orderId}';`;
+
+
+    connectionString.query(getOrderQuery,(err,result)=>{
+        if(err)
+        {
+            message = "Failed";
+            res.send({
+                'isSuccessful':isSuccessful,
+                'message':message
+            });
+
+        }
+        else
+        {
+            message = "Found the order";
+            isSuccessful = true;
+            
+            //console.log(result);
+            let len_result = result.length;
+            let x = 0;
+            const dish_ids = []
+            const dictionary_dishes = []
+            while(x<len_result)
+            {
+                let to_be_checked = result[x].dishNo;
+                let idx = dish_ids.indexOf(to_be_checked);
+                //console.log("here");
+                //console.log(JSON.parse(JSON.stringify(result[x])))
+                let res2 = JSON.parse(JSON.stringify(result[x]));
+                //console.log(res2["dishName"]);
+                let d_name = res2["dishName"];
+                let d_id = res2["dishNo"]
+                let d_price = res2["dishPrice"];
+                
+               
+                    var dict = {
+
+                        "dishNumber" : d_id,
+                        "dishName" : d_name,
+                        "dishPrice" : d_price,
+                        "quantity" : res2["quantity"]
+                        
+
+                    };
+                    dictionary_dishes.push(dict);
+                    dish_ids.push(to_be_checked);
+
+
+                
+                
+                x = x+1;
+            }
+
+            //console.log(dictionary_dishes);
+            
+            res.send({
+                'isSuccessful':isSuccessful,
+                'message':message,
+                'result':dictionary_dishes
+            });
+        }
+    })
+
+
+
+
+}
+
+
+
+
+
 
 
 export const placeOrder = async (req,res)=>

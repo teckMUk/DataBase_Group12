@@ -21,7 +21,7 @@ function findid()
                 host:process.env.host,
                 user: process.env.user,
                 password:process.env.password,
-                port:process.env.port,
+                port:process.env.port1,
                 database:process.env.database
             }
 
@@ -95,7 +95,7 @@ function addIntoDA(orderId,toAddintoDA,quantity)
                 host:process.env.host,
                 user: process.env.user,
                 password:process.env.password,
-                port:process.env.port,
+                port:process.env.port1,
                 database:process.env.database
 
    
@@ -161,7 +161,7 @@ export const editOrder= async (req,res)=>
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
-            port:process.env.port,
+            port:process.env.port1,
             database:process.env.database
         }
     );
@@ -243,7 +243,7 @@ export const editOrder= async (req,res)=>
                     host:process.env.host,
                     user: process.env.user,
                     password:process.env.password,
-                    port:process.env.port,
+                    port:process.env.port1,
                     database:process.env.database
                 }
         
@@ -326,7 +326,7 @@ export const editOrder= async (req,res)=>
 
 export const getOrder = async(req,res)=>
 {
-    var connectionString = mysql.createConnection(
+    var connectionString = mysql2.createConnection(
 
         {
 
@@ -435,7 +435,7 @@ export const placeOrder = async (req,res)=>
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
-            port:process.env.port,
+            port:process.env.port1,
             database:process.env.database
 
  
@@ -628,7 +628,7 @@ export const viewOrderSummary = (req,res)=>{
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
-            port:process.env.port,
+            port:process.env.port1,
             database:process.env.database
         }
 
@@ -673,7 +673,7 @@ export const dailySaleReport = (req,res) =>
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
-            port:process.env.port,
+            port:process.env.port1,
             database:process.env.database
 
         }
@@ -734,7 +734,7 @@ export const viewEditableOrders = (req,res) =>
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
-            port:process.env.port,
+            port:process.env.port1,
             database:process.env.database
         }
 
@@ -807,7 +807,7 @@ export const deleteOrder = (req,res) =>
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
-            port:process.env.port,
+            port:process.env.port1,
             database:process.env.database
         }
 
@@ -844,7 +844,7 @@ export const deleteOrder = (req,res) =>
                     host:process.env.host,
                     user: process.env.user,
                     password:process.env.password,
-                    port:process.env.port,
+                    port:process.env.port1,
                     database:process.env.database
                 }
         

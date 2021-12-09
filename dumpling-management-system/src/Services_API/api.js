@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const Url = "http://localhost:25060/api"
+const Url = "http://localhost:3000/api"
 
 export const LogIn = async (Email, Password) => {
 

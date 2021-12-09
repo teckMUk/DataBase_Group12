@@ -15,7 +15,7 @@ export const updateEmployeeSalary = (req,res)=>
             host:process.env.host,
                 user: process.env.user,
                 password:process.env.password,
-                port:process.env.port,
+                port:process.env.port1,
                 database:process.env.database
         }
     );
@@ -50,7 +50,7 @@ export const updateEmployeeSalary = (req,res)=>
                         host:process.env.host,
                         user: process.env.user,
                         password:process.env.password,
-                        port:process.env.port,
+                        port:process.env.port1,
                         database:process.env.database
                     }
             
@@ -103,7 +103,7 @@ export const fetchAllEmployee = (req,res)=>
             host:process.env.host,
                 user: process.env.user,
                 password:process.env.password,
-                port:process.env.port,
+                port:process.env.port1,
                 database:process.env.database
         }
     );
@@ -159,7 +159,7 @@ export const giveBonuses = (req,res)=>
             host:process.env.host,
                 user: process.env.user,
                 password:process.env.password,
-                port:process.env.port,
+                port:process.env.port1,
                 database:process.env.database
         }
     );
@@ -194,7 +194,7 @@ export const giveBonuses = (req,res)=>
                         host:process.env.host,
                         user: process.env.user,
                         password:process.env.password,
-                        port:process.env.port,
+                        port:process.env.port1,
                         database:process.env.database
                     }
                 );
@@ -241,7 +241,7 @@ export const addCoupon = (req,res)=>
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
-            port:process.env.port,
+            port:process.env.port1,
             database:process.env.database
         }
 
@@ -318,7 +318,7 @@ export const applyCoupon = (req,res)=>
             host:process.env.host,
                 user: process.env.user,
                 password:process.env.password,
-                port:process.env.port,
+                port:process.env.port1,
                 database:process.env.database
         }
 
@@ -365,7 +365,7 @@ export const applyCoupon = (req,res)=>
                 }
                 else
                 {
-                    if(result.length == 0)
+                    if(result.length === 0)
                     {
                         //this means that no coupons of this kind were found
                         console.log('No matching coupon found');
@@ -413,7 +413,7 @@ export const applyCoupon = (req,res)=>
                                     host:process.env.host,
                 user: process.env.user,
                 password:process.env.password,
-                port:process.env.port,
+                port:process.env.port1,
                 database:process.env.database
                                 }
                         
@@ -469,7 +469,7 @@ export const applyCoupon = (req,res)=>
                                                     host:process.env.host,
                                                     user: process.env.user,
                                                     password:process.env.password,
-                                                    port:process.env.port,
+                                                    port:process.env.port1,
                                                     database:process.env.database
                                                 }
                                         
@@ -597,7 +597,7 @@ export const monthYearSale = (req, res) =>
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
-            port:process.env.port,
+            port:process.env.port1,
             database:process.env.database
 
         }

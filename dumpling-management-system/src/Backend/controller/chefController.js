@@ -20,7 +20,7 @@ function findDishId()
                 host:process.env.host,
                 user: process.env.user,
                 password:process.env.password,
-                port:process.env.port,
+                port:process.env.port1,
                 database:process.env.database
 
             }
@@ -84,7 +84,7 @@ function getChef(employeeid)
                 host:process.env.host,
                 user: process.env.user,
                 password:process.env.password,
-                port:process.env.port,
+                port:process.env.port1,
                 database:process.env.database
 
             });
@@ -114,7 +114,7 @@ export const addMenuItem = async (req,res)=>
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
-            port:process.env.port,
+            port:process.env.port1,
             database:process.env.database
         }
 
@@ -181,7 +181,7 @@ export const addMenuItem = async (req,res)=>
                             host:process.env.host,
                             user: process.env.user,
                             password:process.env.password,
-                            port:process.env.port,
+                            port:process.env.port1,
                             database:process.env.database
                         }
 
@@ -197,7 +197,7 @@ export const addMenuItem = async (req,res)=>
                                     host:process.env.host,
                                     user: process.env.user,
                                     password:process.env.password,
-                                    port:process.env.port,
+                                    port:process.env.port1,
                                     database:process.env.database
                                 }
 
@@ -252,7 +252,7 @@ export const removeMenuItem = (req,res)=>
             host:process.env.host,
                 user: process.env.user,
                 password:process.env.password,
-                port:process.env.port,
+                port:process.env.port1,
                 database:process.env.database
 
         }
@@ -296,7 +296,7 @@ export const fetchDishIds = (req,res)=>
             host:process.env.host,
                 user: process.env.user,
                 password:process.env.password,
-                port:process.env.port,
+                port:process.env.port1,
                 database:process.env.database
         }
     );
@@ -367,7 +367,7 @@ export const viewPlacedOrders = (req,res)=>
             host:process.env.host,
                 user: process.env.user,
                 password:process.env.password,
-                port:process.env.port,
+                port:process.env.port1,
                 database:process.env.database
 
         }
@@ -435,7 +435,7 @@ function findCurrentStatus(orderId)
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
-            port:process.env.port,
+            port:process.env.port1,
             database:process.env.database
         });
         connectionString.query(curretStatusQuerry,(err,result)=>
@@ -475,7 +475,7 @@ function updateStatus(orderId,newStatus)
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
-            port:process.env.port,
+            port:process.env.port1,
             database:process.env.database
         });
         connectionString.query(updateQuerry,(err,result)=>
@@ -509,7 +509,7 @@ function addRecordToSaleRecord(orderId)
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
-            port:process.env.port,
+            port:process.env.port1,
             database:process.env.database
         });
         connectionString.query(updateQuerry,(err,result)=>
@@ -610,7 +610,7 @@ export const dishOfTheDay = (req,res)=>
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
-            port:process.env.port,
+            port:process.env.port1,
             database:process.env.database
 
         }
@@ -672,7 +672,7 @@ export const dishOfTheDay = (req,res)=>
                         host:process.env.host,
                 user: process.env.user,
                 password:process.env.password,
-                port:process.env.port,
+                port:process.env.port1,
                 database:process.env.database
 
 
@@ -716,7 +716,7 @@ export const dishOfTheDay = (req,res)=>
                                 host:process.env.host,
                                 user: process.env.user,
                                 password:process.env.password,
-                                port:process.env.port,
+                                port:process.env.port1,
                                 database:process.env.database
 
 

@@ -17,7 +17,7 @@ export const findUsers = (req,res)=>
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
-            port:process.env.port,
+            port:process.env.port1,
             database:process.env.database
 
         }
@@ -107,7 +107,7 @@ export const addUser = (req,res)=>{
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
-            port:process.env.port,
+            port:process.env.port1,
             database:process.env.database
         }
     );
@@ -237,7 +237,7 @@ export const getSQ = (req,res)=>{
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
-            port:process.env.port,
+            port:process.env.port1,
             database:process.env.database
 
         }
@@ -311,7 +311,7 @@ export const changePassword = (req,res) =>{
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
-            port:process.env.port,
+            port:process.env.port1,
             database:process.env.database
 
         }
@@ -459,7 +459,7 @@ export const validateSecurity = (req,res)=>{
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
-            port:process.env.port,
+            port:process.env.port1,
             database:process.env.database
 
         }
@@ -534,7 +534,7 @@ export const accountExistence = (req, res) =>{
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
-            port:process.env.port,
+            port:process.env.port1,
             database:process.env.database
 
         }
@@ -594,7 +594,7 @@ export const forgetPassword = (req,res)=>{
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
-            port:process.env.port,
+            port:process.env.port1,
             database:process.env.database
 
         }
@@ -667,7 +667,7 @@ export const updateAccount = (req,res) =>
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
-            port:process.env.port,
+            port:process.env.port1,
             database:process.env.database
 
         }
@@ -823,7 +823,7 @@ export const deleteAccount = (req,res) =>
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
-            port:process.env.port,
+            port:process.env.port1,
             database:process.env.database
 
         }
@@ -959,7 +959,7 @@ export const getEmployeeDetails = (req,res)=>
         host:process.env.host,
         user: process.env.user,
         password:process.env.password,
-        port:process.env.port,
+        port:process.env.port1,
         database:process.env.database
 
     });

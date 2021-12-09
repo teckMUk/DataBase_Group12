@@ -1,7 +1,7 @@
-import "./table.css";
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Table} from "react-bootstrap";
-import { useState, useEffect } from "react";
+//import { useState, useEffect } from "react";
 const initialState = {
     accountType: "",
     position: "",
@@ -16,7 +16,8 @@ export default function TableSale(prop)
     //     const {name, value} = e.target;
     //     setNewEmploye({...newEmploye, [name]: value});
     // }
-    let emp = prop.employeeDetails;
+    let emp = [{"orderNo" : 1, "dishNames": ['h', 'k'], "totalBill": 200}, {"orderNo" : 2, "dishNames": ['h', 'k'], "totalBill": 230}]
+    //let emp = prop.employeeDetails;
     //let navigate = useNavigate(); 
     return (
         <>

@@ -16,7 +16,7 @@ import  BonusTable from './components/bonusTable/bonusTable.jsx';
 import ViewOrders from './components/viewOrders/viewOrders.jsx';
 import Table3 from "./components/removeMenu/removeMenu";
 import Table4 from "./components/PlaceOrder/PlaceOrder";
-import Sales from "./pages/saleTable/saleTable";
+import Sales from "./pages/viewSale/viewSale";
 
 const App = () => {
   

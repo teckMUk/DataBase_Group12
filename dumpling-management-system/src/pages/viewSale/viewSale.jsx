@@ -2,7 +2,7 @@ import React from 'react';
 import SaleTable from '../../components/saleTable/saleTable';
 import Nav2 from '../../components/nav/nav';
 //import { useLocation } from 'react-router-dom';
-
+import { useState, useEffect } from "react";
 const initialState = {
     SaleType: ""
 }
@@ -28,7 +28,7 @@ export default function Sale()
         {
             check = 1;
         }
-
+        console.log('here ',newEmploye.SaleType);
     }   
 
     useEffect(() => {}, [newEmploye]);

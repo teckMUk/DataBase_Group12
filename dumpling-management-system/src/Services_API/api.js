@@ -44,6 +44,14 @@ export const updateAccount = async (accountType, position, emailAddress,role) =>
     return await axios.post(`${Url}/userController/updateAccount`, object2)
 }
 
+export const getSales = async (year, month) => {
+    const object2 = {
+    "year":year,
+    "month" : month,
+    }
+    return await axios.post(`${Url}/managerController/monthYearSale`, object2)
+}
+
 export const deleteAccount = async(emailAddress) =>
 {
     const obj = {

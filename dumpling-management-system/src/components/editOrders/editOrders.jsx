@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from "react";
 import Table from 'react-bootstrap/Table';
-import {viewPlacedOrders,updateOrderStatus} from '../../Services_API/api';
+import {viewPlacedOrders} from '../../Services_API/api';
 import {createSearchParams, useNavigate} from 'react-router-dom';
 
 
@@ -10,7 +10,7 @@ export default function EditOrder () {
     const [placedOrders,setPlacedOrders] = useState();
     const CompleteOrder = (orderStatus) =>
     {
-        if(orderStatus==='completed')
+        if(orderStatus==='completed' || orderStatus==='preparing') 
         {
             return true;
         }

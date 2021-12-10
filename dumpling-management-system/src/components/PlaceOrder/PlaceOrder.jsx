@@ -245,7 +245,7 @@ export default function Tabel4()
                     <tr>
                     <th>#</th>
                     <th>Dish name</th>
-                    <th>Alergents</th>
+                    <th>Allergens</th>
                     <th>Price</th>
                     </tr>
                 </thead>

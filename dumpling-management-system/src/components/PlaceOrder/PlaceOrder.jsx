@@ -66,8 +66,6 @@ export default function Tabel4()
             );
 
 
-            //call api here and yeild the fileds like bill and dishId
-
         }
 
 

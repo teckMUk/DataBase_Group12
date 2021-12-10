@@ -1,37 +1,38 @@
 import React from 'react';
 import SaleTable from '../../components/saleTable/saleTable';
 import Nav2 from '../../components/nav/nav';
-//import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from "react";
-const initialState = {
-    SaleType: ""
-}
-
-
 
 export default function Sale()
 {
-    // const {state} = useLocation();
-    // const {employeeDetails} = state;
-    // console.log('obj is ', employeeDetails);
-    const [newEmploye, setNewEmploye] = useState(initialState);
+    
+    const [newEmploye, setNewEmploye] = useState('');
+    useEffect(() => {}, [newEmploye]);
     let check = 0;
+
     const handle = (e)=>
     {   
-        const {name, value} = e.target;
-        setNewEmploye({...newEmploye, [name]: value});
-        if(value === "yearly")
+        console.log('xyz', e.target);
+        const value = e.target.value;
+        console.log("val is ",value);
+       
+        setNewEmploye(...newEmploye, value);
+        console.log('here1 ',newEmploye);
+     
+        if(newEmploye=== "yearly")
         {
+            console.log('check 0 ', check);
+            check = 0;
+        }
+        else if(newEmploye === "monthly")
+        {
+            console.log('check 1 ', check);
             check = 1;
         }
-        else if(value === "monthly")
-        {
-            check = 1;
-        }
-        console.log('here ',newEmploye.SaleType);
+        
     }   
 
-    useEffect(() => {}, [newEmploye]);
+ 
 
     return (
         <>
@@ -41,9 +42,9 @@ export default function Sale()
                 </div>
             
                 <div onChange={handle}>  
-                    <p>Select The Sale Type</p>
-                    <p><input type="radio" value="yearly" name="SaleType" />Yearly Sales</p>
-                    <p><input type="radio" value="monthly" name="SaleType" />Monthly Sales</p>
+                    <h1>Select The Sale Type</h1>
+                    <p><input type="radio" value="yearly" />Yearly Sales</p>
+                    <p><input type="radio" value="monthly" />Monthly Sales</p>
                    
                 </div>
         

@@ -42,6 +42,7 @@ export default function RegisterForm()
     useEffect(() => {}, [newEmploye]);
 
     let navigate = useNavigate();
+    
     const handle = e => {
         const {name, value} = e.target;
         setNewEmploye({...newEmploye, [name]: value});

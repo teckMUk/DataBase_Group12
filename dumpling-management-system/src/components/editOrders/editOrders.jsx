@@ -7,6 +7,7 @@ import {createSearchParams, useNavigate} from 'react-router-dom';
 
 export default function EditOrder () {
      let navigate = useNavigate();   
+    
     const [placedOrders,setPlacedOrders] = useState();
     const CompleteOrder = (orderStatus) =>
     {

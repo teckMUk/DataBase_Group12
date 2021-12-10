@@ -186,6 +186,7 @@ const isChef= (role) =>{
                         {// is cashier
                             isCashier(role)&& <div> 
                                 <NavDropdown.Item href='/placeOrder'>Place Order</NavDropdown.Item> 
+                                <NavDropdown.Item href= '/editOrders'>Edit Order</NavDropdown.Item>
                             </div>
                         }
 

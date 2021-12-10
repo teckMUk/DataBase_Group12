@@ -81,8 +81,9 @@ export default function Nav2()
             console.log('tru');
             return true;
         }
-        else{
-            //is cashier
+        else
+        {
+            
             console.log('false');
             return false;
         }

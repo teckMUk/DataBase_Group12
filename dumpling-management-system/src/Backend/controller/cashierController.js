@@ -178,7 +178,7 @@ export const editOrder= async (req,res)=>
     let listOrders = req.body.listOrders;
 
 
-    let dishIds = Object.values(JSON.parse(listOrders));//Object.values((JSON.parse(JSON.stringify(listOrders))));//
+    let dishIds = Object.values((JSON.parse(JSON.stringify(listOrders))));//Object.values(JSON.parse(listOrders));//
     let message = "";
     let isSuccessful=false;
     let finalDishIds = dishIds[0];
@@ -371,8 +371,9 @@ export const getOrder = async(req,res)=>
         {
             message = "Found the order";
             isSuccessful = true;
-            
-            //console.log(result);
+            let res3 = (JSON.parse(JSON.stringify(result[0])))["totalBill"];
+            console.log(res3);
+            console.log(result);
             let len_result = result.length;
             let x = 0;
             const dish_ids = []
@@ -409,11 +410,13 @@ export const getOrder = async(req,res)=>
             }
 
             //console.log(dictionary_dishes);
-            
+            const ret = [];
+            ret.push(dictionary_dishes);
+            ret.push(res3);
             res.send({
                 'isSuccessful':isSuccessful,
                 'message':message,
-                'result':dictionary_dishes
+                'result':ret
             });
         }
     })

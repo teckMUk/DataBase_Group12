@@ -269,7 +269,7 @@ export const dishOfTheDay = async (dishId) => {
 export const getOrder = async (orderId) => {
     const object3 = {"orderId" : orderId
     }
-    return await axios.post(`${Url}/chefController/dishOfTheDay`, object3)
+    return await axios.post(`${Url}/cashierController/getOrder`, object3)
 }
 
 

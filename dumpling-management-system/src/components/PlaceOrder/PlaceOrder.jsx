@@ -204,7 +204,7 @@ export default function Tabel4()
         else 
         {
             console.log("here2")
-            return <Button onClick={onPlaceOrder}>Cancel Order</Button>
+            return <Button onClick={handleCancel}>Cancel Order</Button>
         }
       }
       const handleDelete = () =>
@@ -229,6 +229,8 @@ export default function Tabel4()
 
       const handleCancel = () =>
       {
+        navigate("/dashboard");
+
 
       }
 

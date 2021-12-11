@@ -781,6 +781,14 @@ export const dishOfTheDay = (req,res)=>
 
 
             }
+            else
+            {
+                message = "Dish is already the dish of the day";
+                res.send({
+                    'isSuccessful':isSuccessful,
+                    'message':message
+                })
+            }
 
         }
 

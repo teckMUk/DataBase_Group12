@@ -16,13 +16,14 @@ import  BonusTable from './components/bonusTable/bonusTable.jsx';
 import ViewOrders from './components/viewOrders/viewOrders.jsx';
 import Table3 from "./components/removeMenu/removeMenu";
 import Table4 from "./components/PlaceOrder/PlaceOrder";
+import DishOfday from './components/dishoftheday/dishoftheday';
 
 const App = () => {
-  
+
   return (
     <Router>
     <div className="App">
-      <Routes> 
+      <Routes>
       <Route path='/' element={<Login/>} />
       <Route path='/dashboard' element={<Dashboard/>} />
       <Route path='/create_account' element={<CreateAccount/>} />
@@ -38,6 +39,8 @@ const App = () => {
       <Route path='/viewPlacedOrders' element={<ViewOrders/>} />
       <Route path='/removeitem' element={<Table3/>}/>
       <Route path='/placeOrder' element={<Table4/>}/>
+      <Route path='/dishOfTheDay' element={<DishOfday/>}/>
+
       </Routes>
     </div>
     </Router>

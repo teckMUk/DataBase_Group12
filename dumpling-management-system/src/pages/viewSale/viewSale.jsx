@@ -25,7 +25,7 @@ export default function Sale()
         console.log('val is:',value);
         
         setNewEmploye({...newEmploye, [name]: value});
-
+        
         if(newEmploye.saleType=== "yearly")
         {
             console.log('check 0 ', check);
@@ -50,7 +50,7 @@ export default function Sale()
                     <h1>Select The Sale Type</h1>
                     <p><input type="radio" name = "saleType" value="yearly" />Yearly Sales</p>
                     <p><input type="radio" name = "saleType" value="monthly" />Monthly Sales</p>
-                   
+                   {console.log("hello")}
                 </div>
         
 

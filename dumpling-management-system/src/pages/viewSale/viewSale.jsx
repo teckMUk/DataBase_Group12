@@ -3,10 +3,13 @@ import SaleTable from '../../components/saleTable/saleTable';
 import Nav2 from '../../components/nav/nav';
 import { useState, useEffect } from "react";
 
+const initialState = {
+    saleType: ""
+};
 export default function Sale()
 {
     
-    const [newEmploye, setNewEmploye] = useState('');
+    const [newEmploye, setNewEmploye] = useState(initialState);
     useEffect(() => {}, [newEmploye]);
     let check = 0;
 
@@ -31,8 +34,6 @@ export default function Sale()
         }
         
     }   
-
- 
 
     return (
         <>

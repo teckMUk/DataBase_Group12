@@ -16,7 +16,11 @@ import  BonusTable from './components/bonusTable/bonusTable.jsx';
 import ViewOrders from './components/viewOrders/viewOrders.jsx';
 import Table3 from "./components/removeMenu/removeMenu";
 import Table4 from "./components/PlaceOrder/PlaceOrder";
-import DishOfday from './components/dishoftheday/dishoftheday';
+import AddCoupon from "./pages/addCoupon/addCoupon";
+import EditOrders from "./components/editOrders/editOrders";
+
+
+
 
 const App = () => {
   
@@ -39,7 +43,8 @@ const App = () => {
       <Route path='/viewPlacedOrders' element={<ViewOrders/>} />
       <Route path='/removeitem' element={<Table3/>}/>
       <Route path='/placeOrder' element={<Table4/>}/>
-      <Route path="/dishOfTheDay" element={<DishOfday/>} />
+      <Route path='/addCoupon' element={<AddCoupon/>}/>
+      <Route path='/editOrders' element={<EditOrders/>}/>
       </Routes>
     </div>
     </Router>

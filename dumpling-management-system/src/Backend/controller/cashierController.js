@@ -624,7 +624,9 @@ export const placeOrder = async (req,res)=>
 
                 'isSuccessful':isSuccessful,
 
-                'message':message
+                'message':message,
+
+                'orderId':orderId
 
             });
         }
@@ -645,7 +647,7 @@ export const viewOrderSummary = (req,res)=>{
     let message = "";
     let isSuccessful = false;
     let orderId = req.body.orderId;
-    let orderSummary = `SELECT * FROM orders INNER JOIN dishassignment on orders.orderId = dishassignment.orderNo INNER JOIN menu on menu.dishId = dishassignment.dishNo WHERE orders.orderId = "${orderId}";`;
+    let orderSummary = `SELECT totalBill, GROUP_CONCAT(dishName SEPARATOR ",") as dishNames FROM orders INNER JOIN dishassignment on orders.orderId = dishassignment.orderNo INNER JOIN menu on menu.dishId = dishassignment.dishNo WHERE orders.orderId ='${orderId}' GROUP BY orderId;`;
     connectionString.query(orderSummary,(err,result)=>{
         if(err)
         {
@@ -660,10 +662,14 @@ export const viewOrderSummary = (req,res)=>{
         {
             message = "Sucessfully displaying the order summary";
             isSuccessful = true;
+            console.log(result[0]);
+            let dishNames = result[0].dishNames.split(",");
             res.send({
                 'isSuccessful':isSuccessful,
                 'message':message,
-                'result':result
+                'orderId':result[0].orderId,
+                'dishNames':dishNames,
+                'totalBill':result[0].totalBill
             });
         }
     })

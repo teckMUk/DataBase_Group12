@@ -1,10 +1,11 @@
 import "./PlaceOrder.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Table , Button,} from "react-bootstrap";
-import {fetchDishIds,placeOrder, getOrder, editOrder,deleteOrder} from '../../Services_API/api'
+import { Table , Button} from "react-bootstrap";
+import {fetchDishIds,placeOrder, getOrder, editOrder,deleteOrder,viewOrderSummary} from '../../Services_API/api'
 import {useState, useEffect} from "react";
 import { useNavigate } from "react-router";
 import {useLocation} from "react-router-dom";
+import { useModal } from "react-hooks-use-modal";
 export default function Tabel4()
 {
     const search = useLocation().search;
@@ -14,7 +15,14 @@ export default function Tabel4()
     let control_bool = false;
     let bill = 0;
     let navigate = useNavigate();
+    const [placedorder,setplacedorder] = useState(false);
     const [employees,setEmployees] = useState();
+    const [orderSummary,setOrderSummary] = useState({
+        'totalBill':0,
+        'dishNames':[]
+    });
+    const [orderId1,setorderId1] = useState("");
+    const [dishNames1,setdishNames] = useState([]);
 
     const setter = () =>
     {
@@ -88,11 +96,84 @@ export default function Tabel4()
         });
 
     }, []);
+    const [Modal,open,close] = useModal('root', {
+        preventScroll: true,
+        closeOnOverlayClick: false
+      });
     const  handleChange = (e)=>
     {
         const {name,value} = e.target;
         console.log(name,value);
         orderStatus = value;
+    }
+    const viewOrderSummaryformodal = (orderId1) =>{
+
+        viewOrderSummary(orderId1).then((response)=>{
+            if(response.data.isSuccessful)
+            {
+                console.log(response.data.dishNames);
+                console.log(response.data.totalBill);
+                let ans = {
+                    'totalBill':response.data.totalBill,
+                    'dishNames':response.data.dishNames
+                }
+                setOrderSummary(ans);
+                setdishNames(response.data.dishNames);
+                setplacedorder(true);
+                open();
+
+            }
+        });
+
+    }
+    const checkPayment = (payment)=>
+    {
+        // console.log(payment);
+        if(Number(payment) === orderSummary.totalBill)
+        {
+            alert("Successfully paid");
+            close();
+            window.location.reload();
+        }
+        else
+        {
+            alert("Insufficent amount. Enter again");
+        }
+    }
+    const makeOrderSumm = (placeOrder) =>{
+        
+        if(placeOrder)
+        {
+            return(
+                <div>
+                    <Table responsive>
+                    <thead>
+                        <tr>
+                        <th>Order Id</th>
+                        <th>Dish names</th>
+                        <th>Total bill</th>
+                        <th>Press the button to Pay or Cancel</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><p>{orderId1}</p></td>
+                        <td>{dishNames1.map(function(element,index){
+                            return <li key={index}>{element}</li>
+                        })}</td>
+                        <td><p>{orderSummary.totalBill}</p></td>
+                        <td>
+                         <Button onClick={()=>{checkPayment(orderSummary.totalBill)}}>Pay</Button><p></p>
+                         <Button onClick={()=>{handleCancel()}}>Cancel Order</Button>
+                        </td>
+                    </tr>
+                    </tbody>
+                    </Table>
+                </div>
+                )
+        }
+        
+        
     }
     const renderAuthButton = () => 
     {
@@ -103,8 +184,18 @@ export default function Tabel4()
         } 
         else 
         {
-            console.log("here2")
-            return <Button onClick={onPlaceOrder}> Place Order</Button>
+            console.log("here2");
+            console.log("THis is the order summary",orderSummary);
+            return (
+            <div>
+            <Button onClick={()=>{onPlaceOrder()}}>Place Order</Button><p></p>
+            <Modal>
+            <h5>Order Summary</h5>
+                {makeOrderSumm(placedorder)}
+            </Modal>
+            </div>
+            )
+
         }
       }
 
@@ -159,7 +250,9 @@ export default function Tabel4()
                 {
                     console.log(response.data.message);
                     alert(response.data.message);
-                    navigate("/dashboard");
+                    // console.log(response.data.orderId);
+                    setorderId1(response.data.orderId);
+                    viewOrderSummaryformodal(response.data.orderId);
                 }
                 else
                 {
@@ -177,7 +270,7 @@ export default function Tabel4()
             let index = dishId.indexOf(id)
             if(dishId.indexOf(id)!==-1)
             {
-                bill = bill-price;
+                bill = bill-Number(price);
                 dishId.splice(index,1);
 
             }
@@ -188,9 +281,9 @@ export default function Tabel4()
     const onAdddish = (id,price) =>
     {
 
-        bill = bill+price;
+        bill = bill+Number(price);
         dishId.push(id);
-        console.log("THis is the bil",bill);
+        console.log("This is the bill",bill);
         console.log(dishId);
     }
 
@@ -201,11 +294,6 @@ export default function Tabel4()
             console.log("here");
             return <Button onClick={handleDelete}>Delete Order</Button>
         } 
-        else 
-        {
-            console.log("here2")
-            return <Button onClick={handleCancel}>Cancel Order</Button>
-        }
       }
       const handleDelete = () =>
       {
@@ -229,9 +317,8 @@ export default function Tabel4()
 
       const handleCancel = () =>
       {
+        alert("Order Successfully Cancelled");
         navigate("/dashboard");
-
-
       }
 
 

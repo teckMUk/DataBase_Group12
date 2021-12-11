@@ -200,9 +200,17 @@ export const viewPlacedOrders = async()=>{
     });
 }
 
+export const viewOrderSummary = async(orderId)=>{
 
-
-
+    console.log("in order summary");
+    let obj1 = {
+        "orderId":orderId
+    }
+    return await axios.post(`${Url}/cashierController/viewOrderSummary`,obj1,{
+        'Accept': 'application/json',
+        'content-type':'application/json'
+    });
+}
 
 
 

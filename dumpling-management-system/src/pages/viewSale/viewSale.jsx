@@ -16,25 +16,29 @@ export default function Sale()
     const handle = (e)=>
     {   
         console.log('xyz', e.target);
-        const value = e.target.value;
-        console.log("val is ",value);
-       
-        setNewEmploye(...newEmploye, value);
-        console.log('here1 ',newEmploye);
-     
-        if(newEmploye=== "yearly")
+        const value1 = e.target.value;
+        console.log("val is",value1);
+        
+        const {name, value} = e.target;
+        console.log(name);
+        console.log('name is:',name);
+        console.log('val is:',value);
+        
+        setNewEmploye({...newEmploye, [name]: value});
+
+        if(newEmploye.saleType=== "yearly")
         {
             console.log('check 0 ', check);
             check = 0;
         }
-        else if(newEmploye === "monthly")
+        else if(newEmploye.saleType === "monthly")
         {
             console.log('check 1 ', check);
             check = 1;
         }
         
     }   
-
+  
     return (
         <>
             <div>
@@ -44,8 +48,8 @@ export default function Sale()
             
                 <div onChange={handle}>  
                     <h1>Select The Sale Type</h1>
-                    <p><input type="radio" value="yearly" />Yearly Sales</p>
-                    <p><input type="radio" value="monthly" />Monthly Sales</p>
+                    <p><input type="radio" name = "saleType" value="yearly" />Yearly Sales</p>
+                    <p><input type="radio" name = "saleType" value="monthly" />Monthly Sales</p>
                    
                 </div>
         

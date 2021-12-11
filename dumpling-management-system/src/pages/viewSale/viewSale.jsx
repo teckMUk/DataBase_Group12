@@ -2,8 +2,10 @@ import React from 'react';
 import SaleTable from '../../components/saleTable/saleTable';
 import Nav2 from '../../components/nav/nav';
 import { useState, useEffect } from "react";
-import { Container, Dropdown, Form} from 'react-bootstrap';
+import { Container, Dropdown, Form, Button} from 'react-bootstrap';
 //import { Button, FormGroup, Label, Input, FormText } from 'reactstrap';
+import {getSales} from  '../../Services_API/api.js';
+
 const initialState = {
     saleType: "",
     month:"",
@@ -11,6 +13,7 @@ const initialState = {
 };
 export default function Sale()
 {
+    let sales;
     const [newEmploye, setNewEmploye] = useState(initialState);
     useEffect(() => {}, [newEmploye]);
     let check = 0;
@@ -62,6 +65,7 @@ export default function Sale()
     const retYear = () =>
     {
         return <div>
+           
             <Container id="main-container" className="d-grid h-100">
                 <Form className= 'text-center'>
                     <Form.Group className="mb-3" controlId="formBasicName">
@@ -73,6 +77,30 @@ export default function Sale()
             </Container>
         </div>
     }
+
+    const getAllSales = () =>
+    {
+        let month = Number(newEmploye.month);
+        let year = Number(newEmploye.year);
+        if(year !== undefined || month !== undefined)
+        {
+        getSales(year, month).then((response)=>{
+
+                if(response.data.isSuccessful)
+                {
+                    alert(response.data.message);
+                    sales = response.data.result;
+                    console.log('sale is ', sales);
+                }
+                else{
+                    alert(response.data.message);
+                    
+                }
+        }); 
+    }
+    }
+
+
     console.log(newEmploye);
     return (
         <>
@@ -87,12 +115,14 @@ export default function Sale()
                     <p><input type="radio" name = "saleType" value="monthly"/>Monthly Sales</p>
                 </div>
 
-                {retMonth()}
-                <br></br>
-                {retYear()}
-                
-                {(checkHandle()=== 2) && <div>
-                    <SaleTable/></div>}
+                {(checkHandle()=== 1)&& retYear()}
+                {(checkHandle()=== 2)&& <div> {retMonth()} <br></br> {retYear()}</div>}
+
+                <Button onClick = {getAllSales}>Done</Button>
+                {/* {getAllSales(newEmploye.year, newEmploye.month)}     */}
+                <div>
+                    <SaleTable/>
+                </div>
             
             </div>
         </>

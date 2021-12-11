@@ -100,7 +100,6 @@ export default function Sale()
     }
     }
 
-
     console.log(newEmploye);
     return (
         <>
@@ -119,9 +118,9 @@ export default function Sale()
                 {(checkHandle()=== 2)&& <div> {retMonth()} <br></br> {retYear()}</div>}
 
                 <Button onClick = {getAllSales}>Done</Button>
-                {/* {getAllSales(newEmploye.year, newEmploye.month)}     */}
+                {/* {getAllSales(newEmploye.year, newEmploye.month)}*/}
                 <div>
-                    <SaleTable/>
+                    <SaleTable saleData = {sales}/>
                 </div>
             
             </div>

@@ -2,11 +2,12 @@ import React from 'react';
 import SaleTable from '../../components/saleTable/saleTable';
 import Nav2 from '../../components/nav/nav';
 import { useState, useEffect } from "react";
-import { Dropdown} from 'react-bootstrap';
-
+import { Container, Dropdown, Form} from 'react-bootstrap';
+//import { Button, FormGroup, Label, Input, FormText } from 'reactstrap';
 const initialState = {
     saleType: "",
-    month:""
+    month:"",
+    year:""
 };
 export default function Sale()
 {
@@ -58,6 +59,20 @@ export default function Sale()
         </div>
     }
 
+    const retYear = () =>
+    {
+        return <div>
+            <Container id="main-container" className="d-grid h-100">
+                <Form className= 'text-center'>
+                    <Form.Group className="mb-3" controlId="formBasicName">
+                        <Form.Label>Enter Year</Form.Label>
+                        <Form.Control type="text" placeholder="Enter Year" name ="year"
+                        value = {newEmploye.year} onChange = {handle}/>
+                    </Form.Group>
+                </Form>
+            </Container>
+        </div>
+    }
     console.log(newEmploye);
     return (
         <>
@@ -68,15 +83,17 @@ export default function Sale()
             
                 <div onChange={handle}>  
                     <h1>Select The Sale Type</h1>
-                    <p><input type="radio" name = "saleType" value="yearly" />Yearly Sales</p>
-                    <p><input type="radio" name = "saleType" value="monthly" />Monthly Sales</p>
+                    <p><input type="radio" name = "saleType" value="yearly"/>Yearly Sales</p>
+                    <p><input type="radio" name = "saleType" value="monthly"/>Monthly Sales</p>
                 </div>
 
                 {retMonth()}
+                <br></br>
+                {retYear()}
                 
                 {(checkHandle()=== 2) && <div>
                     <SaleTable/></div>}
-                
+            
             </div>
         </>
     )

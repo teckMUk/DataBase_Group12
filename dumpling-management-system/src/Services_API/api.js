@@ -194,6 +194,7 @@ export const viewPlacedOrders = async()=>{
 
 export const viewOrderSummary = async(orderId)=>{
 
+    console.log("in order summary");
     let obj1 = {
         "orderId":orderId
     }
@@ -202,8 +203,6 @@ export const viewOrderSummary = async(orderId)=>{
         'content-type':'application/json'
     });
 }
-
-
 
 
 

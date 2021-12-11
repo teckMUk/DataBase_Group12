@@ -625,7 +625,7 @@ export const placeOrder = async (req,res)=>
                 'isSuccessful':isSuccessful,
 
                 'message':message,
-                
+
                 'orderId':orderId
 
             });
@@ -662,6 +662,7 @@ export const viewOrderSummary = (req,res)=>{
         {
             message = "Sucessfully displaying the order summary";
             isSuccessful = true;
+            console.log(result[0]);
             let dishNames = result[0].dishNames.split(",");
             res.send({
                 'isSuccessful':isSuccessful,

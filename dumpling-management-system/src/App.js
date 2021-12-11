@@ -17,6 +17,9 @@ import ViewOrders from './components/viewOrders/viewOrders.jsx';
 import Table3 from "./components/removeMenu/removeMenu";
 import Table4 from "./components/PlaceOrder/PlaceOrder";
 import Sales from "./pages/viewSale/viewSale";
+import AddCoupon from "./pages/addCoupon/addCoupon";
+import EditOrders from "./components/editOrders/editOrders";
+
 
 const App = () => {
   
@@ -40,6 +43,8 @@ const App = () => {
       <Route path='/removeitem' element={<Table3/>}/>
       <Route path='/placeOrder' element={<Table4/>}/>
       <Route path='/saleTable' element={<Sales/>}/>
+      <Route path='/addCoupon' element={<AddCoupon/>}/>
+      <Route path='/editOrders' element={<EditOrders/>}/>
       </Routes>
     </div>
     </Router>

@@ -81,8 +81,9 @@ export default function Nav2()
             console.log('tru');
             return true;
         }
-        else{
-            //is cashier
+        else
+        {
+            
             console.log('false');
             return false;
         }
@@ -167,6 +168,11 @@ const isChef= (role) =>{
                             <NavDropdown.Item href= '/removeitem'>Remove iten from Menu</NavDropdown.Item> 
                             <NavDropdown.Item href= '/viewPlacedOrders'>View Orders</NavDropdown.Item>  
                             <NavDropdown.Item href='/saleTable'>View Sales</NavDropdown.Item>
+                            <NavDropdown.Item href= '/viewPlacedOrders'>View Orders</NavDropdown.Item>
+                            <NavDropdown.Item href= '/addCoupon'>Add Coupons</NavDropdown.Item>
+                            <NavDropdown.Item href= '/editOrders'>Edit Order</NavDropdown.Item> 
+
+
                         </div>
                         }
 
@@ -182,6 +188,7 @@ const isChef= (role) =>{
                         {// is cashier
                             isCashier(role)&& <div> 
                                 <NavDropdown.Item href='/placeOrder'>Place Order</NavDropdown.Item> 
+                                <NavDropdown.Item href= '/editOrders'>Edit Order</NavDropdown.Item>
                             </div>
                         }
 

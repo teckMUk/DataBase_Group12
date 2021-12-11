@@ -202,6 +202,10 @@ export const viewPlacedOrders = async()=>{
 
 
 
+
+
+
+
 export const addCoupon = async(couponId, couponName, discount, issueDate, expiryDate) =>{
     const obj={
         "couponId" : couponId,
@@ -268,6 +272,12 @@ export const dishOfTheDay = async (dishId) => {
     const object3 = {"dishId" : dishId
     }
     return await axios.post(`${Url}/chefController/dishOfTheDay`, object3)
+}
+
+export const getOrder = async (orderId) => {
+    const object3 = {"orderId" : orderId
+    }
+    return await axios.post(`${Url}/cashierController/getOrder`, object3)
 }
 
 

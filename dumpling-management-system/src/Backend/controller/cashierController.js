@@ -214,7 +214,6 @@ export const editOrder= async (req,res)=>
     finalDishIds.forEach(element => {
         counts[element] = (counts[element]||0)+1; 
     });
-    console.log("counts");
     console.log(counts);
 
     let editOrderQuery =

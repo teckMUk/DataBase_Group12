@@ -31,7 +31,7 @@ route.post("/api/cashierController/viewOrderSummary",viewOrderSummary);
 route.get("/api/cashierController/dailySaleReport",dailySaleReport);
 route.get("/api/cashierController/viewEditableOrders",viewEditableOrders);
 route.post("/api/cashierController/deleteOrder",deleteOrder);
-route.get("/api/managerController/monthYearSale",monthYearSale);
+route.post("/api/managerController/monthYearSale",monthYearSale);
 route.post("/api/cashierController/editOrder",editOrder);
 route.post("/api/chefController/dishOfTheDay",dishOfTheDay);
 route.post("/api/cashierController/getOrder",getOrder);

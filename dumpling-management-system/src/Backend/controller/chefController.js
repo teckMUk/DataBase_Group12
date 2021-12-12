@@ -186,7 +186,7 @@ export const addMenuItem = async (req,res)=>
 
                         if(err){
                             // console.log(err);
-                            message = "Cannot assign dish to chef as chef did not exists";
+                            message = "Cannot assign dish to chef as chef does not exist";
                             let updateMenu = `UPDATE dumpling.menu SET archived = 1 WHERE menu.dishId="${dishId2}"`;
                             var connectionString3 =  mysql.createConnection(
                                 {

@@ -10,6 +10,12 @@ export default function TableSale(prop)
     //let emp = [{"orderNo" : 1, "dishNames": ['h', 'k'], "totalBill": 200}, {"orderNo" : 2, "dishNames": ['h', 'k'], "totalBill": 230}]
     let emp = prop.saleData;
     console.log('emp', emp);
+    let sum = 0;
+    const findSum = (total) =>
+    {
+        sum = sum + total;
+    }
+
     const retTable = () =>
     {
         return <div>
@@ -31,12 +37,21 @@ export default function TableSale(prop)
                             <td>{e.orderNo}</td>
                             <td>{e.dishNames} </td>
                             <td>{e.totalBill} </td>
-                           
+                            {findSum(e.totalBill)}
                         </tr>
                        
                     </tbody>
                 ))}
-                
+
+                <tbody>
+                        <tr>
+                            <td>      </td>
+                            <td>      </td>
+                            <td>      </td>
+                            <td>{sum}</td>
+                        </tr>
+                    </tbody>
+          
                 </Table>
             </div>
     }

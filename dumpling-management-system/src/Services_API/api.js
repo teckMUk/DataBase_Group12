@@ -192,6 +192,18 @@ export const viewPlacedOrders = async()=>{
     });
 }
 
+export const viewOrderSummary = async(orderId)=>{
+
+    console.log("in order summary");
+    let obj1 = {
+        "orderId":orderId
+    }
+    return await axios.post(`${Url}/cashierController/viewOrderSummary`,obj1,{
+        'Accept': 'application/json',
+        'content-type':'application/json'
+    });
+}
+
 
 
 export const addCoupon = async(couponId, couponName, discount, issueDate, expiryDate) =>{
@@ -247,13 +259,25 @@ export const editOrder = async(typeOfOrder, orderStatus, orderId, totalBill, lis
     'Accept': 'application/json',
     'content-type':'application/json'
 });
-
+}
+export const updateOrderStatus = async(orderId) =>
+{
+    const obj = {
+        "orderId":orderId
+    }
+    return await axios.post(`${Url}/managerController/updateOrderStatus`,obj);
 }
 
 export const dishOfTheDay = async (dishId) => {
     const object3 = {"dishId" : dishId
     }
     return await axios.post(`${Url}/chefController/dishOfTheDay`, object3)
+}
+
+export const getOrder = async (orderId) => {
+    const object3 = {"orderId" : orderId
+    }
+    return await axios.post(`${Url}/cashierController/getOrder`, object3)
 }
 
 

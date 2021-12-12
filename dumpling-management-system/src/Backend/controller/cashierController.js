@@ -178,7 +178,7 @@ export const editOrder= async (req,res)=>
     let listOrders = req.body.listOrders;
 
 
-    let dishIds = Object.values(JSON.parse(listOrders));//Object.values((JSON.parse(JSON.stringify(listOrders))));//
+    let dishIds = Object.values((JSON.parse(JSON.stringify(listOrders))));//Object.values(JSON.parse(listOrders));//
     let message = "";
     let isSuccessful=false;
     let finalDishIds = dishIds[0];
@@ -328,6 +328,107 @@ export const editOrder= async (req,res)=>
 
 
 }
+
+export const getOrder = async(req,res)=>
+{
+    var connectionString = mysql.createConnection(
+
+        {
+
+            host:process.env.host,
+
+            user: process.env.user,
+
+            password:process.env.password,
+
+            database:process.env.database
+
+ 
+
+        }
+
+    );
+
+    let isSuccessful = false;
+    let message = "";
+    let orderId = req.body.orderId;
+
+    let getOrderQuery = 
+    `SELECT * FROM orders INNER JOIN dishassignment on orders.orderId = dishassignment.orderNo INNER JOIN menu on menu.dishId = dishassignment.dishNo WHERE orders.orderId = '${orderId}';`;
+
+
+    connectionString.query(getOrderQuery,(err,result)=>{
+        if(err)
+        {
+            message = "Failed";
+            res.send({
+                'isSuccessful':isSuccessful,
+                'message':message
+            });
+
+        }
+        else
+        {
+            message = "Found the order";
+            isSuccessful = true;
+            let res3 = (JSON.parse(JSON.stringify(result[0])))["totalBill"];
+            console.log(res3);
+            console.log(result);
+            let len_result = result.length;
+            let x = 0;
+            const dish_ids = []
+            const dictionary_dishes = []
+            while(x<len_result)
+            {
+                let to_be_checked = result[x].dishNo;
+                let idx = dish_ids.indexOf(to_be_checked);
+                //console.log("here");
+                //console.log(JSON.parse(JSON.stringify(result[x])))
+                let res2 = JSON.parse(JSON.stringify(result[x]));
+                //console.log(res2["dishName"]);
+                let d_name = res2["dishName"];
+                let d_id = res2["dishNo"]
+                let d_price = res2["dishPrice"];
+                
+               
+                    var dict = {
+
+                        "dishNumber" : d_id,
+                        "dishName" : d_name,
+                        "dishPrice" : d_price,
+                        "quantity" : res2["quantity"]
+                        
+
+                    };
+                    dictionary_dishes.push(dict);
+                    dish_ids.push(to_be_checked);
+
+
+                
+                
+                x = x+1;
+            }
+
+            //console.log(dictionary_dishes);
+            const ret = [];
+            ret.push(dictionary_dishes);
+            ret.push(res3);
+            res.send({
+                'isSuccessful':isSuccessful,
+                'message':message,
+                'result':ret
+            });
+        }
+    })
+
+
+
+
+}
+
+
+
+
 
 
 
@@ -523,7 +624,9 @@ export const placeOrder = async (req,res)=>
 
                 'isSuccessful':isSuccessful,
 
-                'message':message
+                'message':message,
+
+                'orderId':orderId
 
             });
         }
@@ -544,7 +647,7 @@ export const viewOrderSummary = (req,res)=>{
     let message = "";
     let isSuccessful = false;
     let orderId = req.body.orderId;
-    let orderSummary = `SELECT * FROM orders INNER JOIN dishassignment on orders.orderId = dishassignment.orderNo INNER JOIN menu on menu.dishId = dishassignment.dishNo WHERE orders.orderId = "${orderId}";`;
+    let orderSummary = `SELECT totalBill, GROUP_CONCAT(dishName SEPARATOR ",") as dishNames FROM orders INNER JOIN dishassignment on orders.orderId = dishassignment.orderNo INNER JOIN menu on menu.dishId = dishassignment.dishNo WHERE orders.orderId ='${orderId}' GROUP BY orderId;`;
     connectionString.query(orderSummary,(err,result)=>{
         if(err)
         {
@@ -559,10 +662,14 @@ export const viewOrderSummary = (req,res)=>{
         {
             message = "Sucessfully displaying the order summary";
             isSuccessful = true;
+            console.log(result[0]);
+            let dishNames = result[0].dishNames.split(",");
             res.send({
                 'isSuccessful':isSuccessful,
                 'message':message,
-                'result':result
+                'orderId':result[0].orderId,
+                'dishNames':dishNames,
+                'totalBill':result[0].totalBill
             });
         }
     })

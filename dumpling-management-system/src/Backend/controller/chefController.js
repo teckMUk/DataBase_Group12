@@ -28,7 +28,7 @@ function findDishId()
 
         let dishId1= uuidv4();
 
-        let checkQuery =`SELECT * FROM dumpling.menu WHERE menu.dishId = "${dishId1}"`;
+        let checkQuery =`SELECT * FROM dumpling.menu WHERE menu.dishId = '${dishId1}'`;
 
         connectionString1.query(checkQuery, (err,res)=>
 
@@ -141,7 +141,7 @@ export const addMenuItem = async (req,res)=>
     let image = req.body.image;
     let addDishQuery =
     `INSERT INTO dumpling.menu (dishId,dishName,dishType,dishPrice,preparationTime,calories,dishOfday,allergens,image,createdAt)
-    VALUES("${dishId2}","${dishName}","${dishType}",${dishPrice},${preparationTime},${calories},${dishOfday},"${allergens}","${image}",NOW());`;
+    VALUES('${dishId2}','${dishName}','${dishType}',${dishPrice},${preparationTime},${calories},${dishOfday},'${allergens}','${image}',NOW());`;
     connectionString.connect((error)=>{
         if(error)
         {
@@ -172,7 +172,7 @@ export const addMenuItem = async (req,res)=>
                 else
                 {
                     let ansquery = `SELECT employee.employeeId from dumpling.employee INNER JOIN account ON account.accountId=employee.accountId WHERE employee.employeeId=${employeeId} AND account.accountType="chef"`
-                    let addintochefassignment =  `INSERT INTO dumpling.chefassignment(dishID,chefId)VALUES("${dishId2}",(${ansquery}))`;
+                    let addintochefassignment =  `INSERT INTO dumpling.chefassignment(dishID,chefId)VALUES('${dishId2}',(${ansquery}))`;
                     var connectionString2 =  mysql.createConnection(
                         {
                             host:process.env.host,
@@ -187,7 +187,7 @@ export const addMenuItem = async (req,res)=>
                         if(err){
                             // console.log(err);
                             message = "Cannot assign dish to chef as chef did not exists";
-                            let updateMenu = `UPDATE dumpling.menu SET archived = 1 WHERE menu.dishId="${dishId2}"`;
+                            let updateMenu = `UPDATE dumpling.menu SET archived = 1 WHERE menu.dishId='${dishId2}'`;
                             var connectionString3 =  mysql.createConnection(
                                 {
                                     host:process.env.host,
@@ -296,7 +296,7 @@ export const fetchDishIds = (req,res)=>
     );
     let isSuccessful = false;
     let message = "";
-    let fetchIds = `SELECT dishId, dishName, allergens, dishPrice, archived from dumpling.menu`;
+    let fetchIds = `SELECT dishId, dishName, allergens, dishPrice, isActive, archived from dumpling.menu`;
     connectionString.query(fetchIds,(err,result)=>
     {
         if(err)
@@ -421,7 +421,7 @@ function findCurrentStatus(orderId)
 {
     return new Promise((resolve,reject)=>
     {
-        let curretStatusQuerry = `select orderStatus from orders where orderId="${orderId}" and orderStatus!="completed"`;
+        let curretStatusQuerry = `select orderStatus from orders where orderId='${orderId}' and orderStatus!="completed"`;
         console.log(curretStatusQuerry);
         var connectionString = mysql.createConnection(
         {
@@ -459,8 +459,8 @@ function updateStatus(orderId,newStatus)
     return new Promise((resolve,reject)=>
     {
         let updateQuerry = `update orders
-        set orderStatus="${newStatus}"
-        where orderId="${orderId}"`;
+        set orderStatus='${newStatus}'
+        where orderId='${orderId}'`;
         console.log(updateQuerry);
         var connectionString = mysql.createConnection(
         {
@@ -493,7 +493,7 @@ function addRecordToSaleRecord(orderId)
         var today = new Date();
         var date = today.getFullYear() + '-' + (today.getMonth()+1) + "-" + today.getDate();
         let updateQuerry = `Insert into salesrecord (orderId,date,createdAt)
-        values("${orderId}","${date}",NOW());`;
+        values('${orderId}','${date}',NOW());`;
         console.log(updateQuerry);
         var connectionString = mysql.createConnection(
         {
@@ -594,204 +594,127 @@ export const dishOfTheDay = (req,res)=>
 
 {
 
+    console.log("here in dish of the day function");
     var connectionString = mysql.createConnection(
 
         {
-
             host:process.env.host,
-
             user: process.env.user,
-
             password:process.env.password,
-
             database:process.env.database
-
         }
-
     );
 
     let message = "";
-
     let isSuccessful = false;
-
     let dishId = req.body.dishId;
-
-    let checkQuery = `SELECT dishId from menu where isActive=1 AND menu.dishId="${dishId}"`;
-
-    let activeDish = `UPDATE menu SET isActive=1, updateAt=NOW() WHERE menu.dishId="${dishId}";`;
-
-    let removeActive = `UPDATE menu SET isActive=0, updateAt=NOW() WHERE menu.dishId!="${dishId}" AND isActive=1`;
+    let checkQuery = `SELECT dishId from menu where isActive=1 AND menu.dishId='${dishId}'`;
+    let activeDish = `UPDATE menu SET isActive=1, updateAt=NOW() WHERE menu.dishId='${dishId}';`;
+    let removeActive = `UPDATE menu SET isActive=0, updateAt=NOW() WHERE menu.dishId!='${dishId}' AND isActive=1`;
 
     connectionString.query(checkQuery,(err,result)=>
 
     {
 
+        console.log("here in the first query");
         if(err)
 
         {
 
             message = "Error cannot set the dish of the day";
-
             console.log(err);
-
             res.send(
 
                 {
-
                     'isSuccessful':isSuccessful,
-
                     'message':message
-
                 }
 
             );
-
             connectionString.end();
 
         }
-
         else
-
         {
-
             if(result.length===0)
-
             {
-
+                console.log("here where the result length is zero");
                 var connectionString1 = mysql.createConnection(
 
                     {
-
                         host:process.env.host,
-
                         user: process.env.user,
-
                         password:process.env.password,
-
                         database:process.env.database
-
-
-
                     }
-
                 );
-
                 connectionString1.query(activeDish,(err,result2)=>{
-
                     if(err)
 
                     {
-
                         message = "Cannot set the dish to the dish of the day";
 
                         res.send({
 
                             'isSuccessful':isSuccessful,
-
                             'message':message
 
                         });
 
                         connectionString1.end();
-
                         connectionString.end();
-
                     }
-
                     else
-
                     {
-
                         console.log("Dish of the day setted now removing the dish");
-
                         var connectionString2 = mysql.createConnection(
 
                             {
-
                                 host:process.env.host,
-
                                 user: process.env.user,
-
                                 password:process.env.password,
-
                                 database:process.env.database
 
-
-
                             }
-
                         );
-
                         connectionString2.query(removeActive,(err,result)=>{
-
                             if(err)
-
                             {
-
                                 message = "cannot remove active dish";
-
                                 res.send({
-
                                     'isSuccessful':isSuccessful,
-
                                     'message':message
-
                                 });
-
                             }
-
                             else
-
                             {
-
                                 console.log("Successflly removed and also set new dish");
-
                                 message ="Successfully removed the active dish and set the new dish";
-
                                 isSuccessful= true;
-
                                 res.send(
-
                                     {
-
                                     'isSuccessful':isSuccessful,
-
                                     'message':message
-
                                 }
-
                                 );
-
                                 connectionString2.end();
-
                                 connectionString1.end();
-
                                 connectionString.end();
 
                             }
-
                         });
-
-
-
                     }
-
                 });
-
-
-
             }
             else
             {
                 message = "Dish is already the dish of the day";
                 res.send({
-                    'isSuccessful':isSuccessful,
+                    'isSucessful':isSuccessful,
                     'message':message
-                })
+                });
             }
-
         }
-
     });
 
 }

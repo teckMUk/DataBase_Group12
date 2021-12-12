@@ -357,7 +357,7 @@ export const changePassword = (req,res) =>{
                         console.log("password matched");
                         prevPrevPassword = currentPassword;
                         currentPassword1 = newPassword;
-                        let updatePassQuery = `UPDATE dumpling.account SET account.currentPassword = "${currentPassword1}", account.previousPassword = "${prevPrevPassword}",account.updatedAt = NOW() WHERE account.accountId = ${ID}`;
+                        let updatePassQuery = `UPDATE dumpling.account SET account.currentPassword = '${currentPassword1}', account.previousPassword = '${prevPrevPassword}',account.updatedAt = NOW() WHERE account.accountId = ${ID}`;
                         connectionString.query(updatePassQuery, (err,result)=>{
                         if(err)
                         {
@@ -404,7 +404,7 @@ export const changePassword = (req,res) =>{
                         console.log("password matched");
                         let prevPrevPassword = currentPassword;
                         currentPassword1 = newPassword;
-                        let updatePassQuery = `UPDATE dumpling.account SET account.currentPassword = "${currentPassword1}", account.previousPassword = "${prevPrevPassword}",account.updatedAt=NOW() WHERE account.accountId = ${ID}`;
+                        let updatePassQuery = `UPDATE dumpling.account SET account.currentPassword = '${currentPassword1}', account.previousPassword = '${prevPrevPassword}',account.updatedAt=NOW() WHERE account.accountId = ${ID}`;
                         connectionString.query(updatePassQuery, (err,result)=>{
                             if(err)
                             {
@@ -465,7 +465,7 @@ export const validateSecurity = (req,res)=>{
     let message = "";
     let email = req.body.email;
     let isSuccessful = false;
-    let queryValidate = `SELECT securityQuestions from dumpling.account WHERE account.emailAddress="${email}"  and archived=0`;
+    let queryValidate = `SELECT securityQuestions from dumpling.account WHERE account.emailAddress='${email}'  and archived=0`;
     connectionString.query(queryValidate,(err,result)=>{
         if(err)
         {
@@ -540,7 +540,7 @@ export const accountExistence = (req, res) =>{
     connectionString.query(checkExistence,(err,result)=>{
 
         if(err)
-        {  
+        {
             message = "Query execution failed";
             res.send({
                 'isSuccessful':isSuccessful,
@@ -572,8 +572,8 @@ export const accountExistence = (req, res) =>{
                 connectionString.end();
 
             }
-            
-        
+
+
 
         }
 
@@ -596,10 +596,10 @@ export const forgetPassword = (req,res)=>{
     let newPass = sha1(req.body.newPass);
     let message = "";
     let isSuccessful = false;
-    let queryPass = `SELECT account.currentPassword, account.previousPassword FROM account WHERE account.emailAddress="${email}"  and archived=0`;
+    let queryPass = `SELECT account.currentPassword, account.previousPassword FROM account WHERE account.emailAddress='${email}'  and archived=0`;
     connectionString.query(queryPass,(err,result)=>{
         if(err)
-        {  
+        {
             message = "Query execution failed";
             res.send({
                 'isSuccessful':isSuccessful,
@@ -622,9 +622,9 @@ export const forgetPassword = (req,res)=>{
             else
             {
                 let prevPass = result[0].currentPassword;
-                let queryUpdatePass = `UPDATE dumpling.account SET account.currentPassword="${newPass}",account.previousPassword="${prevPass}",account.createdAt=NOW() WHERE account.emailAddress="${email}"  and archived=0`;
+                let queryUpdatePass = `UPDATE dumpling.account SET account.currentPassword='${newPass}',account.previousPassword='${prevPass}',account.createdAt=NOW() WHERE account.emailAddress='${email}'  and archived=0`;
                 connectionString.query(queryUpdatePass,(err,result)=>{
-                    if(err) 
+                    if(err)
                     {
                         message = "Updation failed";
                         res.send({
@@ -642,12 +642,12 @@ export const forgetPassword = (req,res)=>{
                        });
                     }
 
-           
+
                 });
             }
         }
     });
-   
+
 
 
 }
@@ -665,7 +665,7 @@ export const updateAccount = (req,res) =>
         }
     );
     //check if person is admin
-    
+
     let role = req.body.role; //admin
 
     let emailCheck =  `SELECT * FROM account WHERE emailAddress="${req.body.emailAddress}"  and archived=0`;
@@ -694,17 +694,17 @@ export const updateAccount = (req,res) =>
                         "message":message
                     }
                 );
-                connectionString.end();                
+                connectionString.end();
             }
             else{
 
-           
+
             connectionString.query(emailCheck,(errEmail,result)=>{
 
                 if(errEmail)
                 {
                     console.log("validateQuery failed");
-               
+
                     message = "Unable to validate email address atm";
                     res.send(
                         {
@@ -718,7 +718,7 @@ export const updateAccount = (req,res) =>
                 {
                     if(result.length !== 0)
                     {
-                        
+
                         connectionString.query(updateQuery ,(errUser,result1)=>{
                             if(errUser)
                             {
@@ -763,7 +763,7 @@ export const updateAccount = (req,res) =>
                                         );
                                         connectionString.end();
                                     }
-                                });  
+                                });
                             }
                         });
                     }
@@ -777,20 +777,20 @@ export const updateAccount = (req,res) =>
                                 "message":message
                             }
                         );
-                        connectionString.end(); 
+                        connectionString.end();
                     }
 
                 }
 
 
              });
-            //if it is admin write update query 
-           
+            //if it is admin write update query
+
             }
 
 
         });
-    
+
     }
     else
     {
@@ -809,7 +809,7 @@ export const updateAccount = (req,res) =>
 
 export const deleteAccount = (req,res) =>
 {
-   
+
     var connectionString = mysql.createConnection(
         {
             host:process.env.host,
@@ -820,7 +820,7 @@ export const deleteAccount = (req,res) =>
         }
     );
     //check if person is admin
-  
+
     let emailCheck =  `SELECT * FROM account WHERE emailAddress="${req.body.emailAddress}"  and archived=0`;
     let updateQuery = `UPDATE account
                     SET archived=1, updatedAt= NOW()
@@ -832,7 +832,7 @@ export const deleteAccount = (req,res) =>
     let message ="";
     let isSuccessful = false;
     console.log(emailCheck);
-   
+
         connectionString.connect((err) => {
 
             if(err)
@@ -846,7 +846,7 @@ export const deleteAccount = (req,res) =>
                         "message":message
                     }
                 );
-                connectionString.end();                
+                connectionString.end();
             }
             else{
 
@@ -855,7 +855,7 @@ export const deleteAccount = (req,res) =>
                 if(errEmail)
                 {
                     console.log("validateQuery failed");
-               
+
                     message = "Unable to validate email address atm";
                     res.send(
                         {
@@ -913,7 +913,7 @@ export const deleteAccount = (req,res) =>
                                             );
                                             connectionString.end();
                                         }
-                                    });                                   
+                                    });
                             }
                         });
                     }
@@ -927,18 +927,18 @@ export const deleteAccount = (req,res) =>
                                 "message":message
                             }
                         );
-                        connectionString.end(); 
+                        connectionString.end();
                     }
 
                 }
              });
-            //if it is admin write update query 
-           
+            //if it is admin write update query
+
             }
         });
-    
+
 }
-   
+
 export const getEmployeeDetails = (req,res)=>
 {
     let query = `SELECT employee.employeeid,employee.employeeName,account.emailAddress,employee.position,account.accountType
@@ -994,7 +994,7 @@ export const getEmployeeDetails = (req,res)=>
                 );
                 connectionString.end();
             }
-            
+
         }
     });
 }

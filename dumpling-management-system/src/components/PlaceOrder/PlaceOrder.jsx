@@ -1,7 +1,7 @@
 import "./PlaceOrder.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Table , Button} from "react-bootstrap";
-import {fetchDishIds,placeOrder, getOrder, editOrder,deleteOrder,viewOrderSummary} from '../../Services_API/api'
+import { Table , Button, Form} from "react-bootstrap";
+import {fetchDishIds,placeOrder, getOrder, editOrder,deleteOrder,viewOrderSummary, applyCoupon} from '../../Services_API/api'
 import {useState, useEffect} from "react";
 import { useNavigate } from "react-router";
 import {useLocation} from "react-router-dom";
@@ -13,6 +13,7 @@ export default function Tabel4()
     let dishId = [];
     let orderStatus = ""
     let control_bool = false;
+    let couponID = "";
     let bill = 0;
     let navigate = useNavigate();
     const [placedorder,setplacedorder] = useState(false);
@@ -23,6 +24,9 @@ export default function Tabel4()
     });
     const [orderId1,setorderId1] = useState("");
     const [dishNames1,setdishNames] = useState([]);
+    const [coupounId,setcouponId] = useState();
+    const [newbill,setnewbill] = useState();
+    const [couponApplied, setCouponApplied] = useState(false);
 
     const setter = () =>
     {
@@ -135,6 +139,14 @@ export default function Tabel4()
             close();
             window.location.reload();
         }
+        else if (Number(payment) === newbill)
+        {
+            alert("Successfully paid with discount");
+            close();
+            window.location.reload();
+
+            
+        }
         else
         {
             alert("Insufficent amount. Enter again");
@@ -161,9 +173,19 @@ export default function Tabel4()
                         <td>{dishNames1.map(function(element,index){
                             return <li key={index}>{element}</li>
                         })}</td>
-                        <td><p>{orderSummary.totalBill}</p></td>
+                        <td><p>{couponApplied?newbill:orderSummary.totalBill}</p></td>
+
+
+                        <Form.Group className="mb-3" controlId="formBasicName">
+                            <Form.Control type="text" placeholder="Enter Coupon ID" name = 'couponID'
+                             value = {coupounId} onChange = {(e)=>setcouponId(e.target.value)}/>
+                        </Form.Group>
+
+                        <Button onClick={()=>{handleCoupon(coupounId,orderId1)}}>Apply Coupon</Button><p></p>
+
+
                         <td>
-                         <Button onClick={()=>{checkPayment(orderSummary.totalBill)}}>Pay</Button><p></p>
+                         <Button onClick={()=>{couponApplied?checkPayment(newbill):checkPayment(orderSummary.totalBill)}}>Pay</Button><p></p>
                          <Button onClick={()=>{handleCancel()}}>Cancel Order</Button>
                         </td>
                     </tr>
@@ -175,6 +197,41 @@ export default function Tabel4()
         
         
     }
+
+    const handleCoupon = (couponID,orderId1) =>
+    {
+        applyCoupon(couponID,orderId1).then((response)=>
+            {
+                if(response.data.isSuccessful)
+                {
+                    console.log(response.data.newBill);
+                    alert(response.data.message);
+                    setCouponApplied(true);
+                    setnewbill(response.data.newBill);
+
+                    // navigate("/dashboard");
+                }
+                else
+                {
+                    alert(response.data.message);
+                    navigate("/dashboard");  
+                }
+
+
+
+
+            });
+
+    }
+
+
+    const handle = e => {
+
+        couponID = e.target.value;
+
+
+    }
+
     const renderAuthButton = () => 
     {
         if (control_bool) 

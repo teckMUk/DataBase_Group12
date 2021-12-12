@@ -35,7 +35,7 @@ function seedData(q)
 }
 let password = "dumpling@123";
 let hash = sha1(password);
-//let x = JSON.stringify({"I love cats":"Yes" , "I hate cats":"No"});
+
 
 const addAdminaccount = `INSERT INTO dumpling.account (userName,accountType,currentPassword,emailAddress,securityQuestions,createdAt)
  VALUES("admin","admin","${hash}","dumpling@gmail.com","none",NOW());`;

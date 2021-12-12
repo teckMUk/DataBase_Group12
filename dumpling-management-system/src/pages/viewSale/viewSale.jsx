@@ -4,7 +4,7 @@ import Nav2 from '../../components/nav/nav';
 import { useState, useEffect } from "react";
 import { Container, Dropdown, Form, Button} from 'react-bootstrap';
 //import { Button, FormGroup, Label, Input, FormText } from 'reactstrap';
-import {getSales} from  '../../Services_API/api.js';
+import {getSales, getSalesDaily} from  '../../Services_API/api.js';
 
 const initialState = {
     saleType: "",
@@ -106,6 +106,27 @@ export default function Sale()
             }); 
         }
     }
+
+    const getDailySales = () =>
+    {
+        
+        getSalesDaily().then((response)=>{
+                console.log(response.data.result);
+                if(response.data.isSuccessful)
+                {
+                    setNewEmploye({...newEmploye, isTable: "1", sales: response.data.result});
+                    alert(response.data.message);
+                }
+                else{
+                    //console.log('sale is 1', response.data.message);
+                    alert(response.data.message);
+                    setNewEmploye({...newEmploye, isTable: "0"});       
+                }
+        }); 
+    
+    }
+
+
     console.log('sale is 1', newEmploye.sales);
     console.log(newEmploye);
     return (
@@ -119,13 +140,13 @@ export default function Sale()
                     <h1>Select The Sale Type</h1>
                     <p><input type="radio" name = "saleType" value="yearly"/>Yearly Sales</p>
                     <p><input type="radio" name = "saleType" value="monthly"/>Monthly Sales</p>
-                    <p><input type="radio" name = "saleType" value="daily"/>Monthly Sales</p>
+                    <p><input type="radio" name = "saleType" value="daily"/>Today's Sales</p>
                 </div>
 
                 {(checkHandle()=== 1)&& retYear()}
                 {(checkHandle()=== 2)&& <div> {retMonth()} <br></br> {retYear()}</div>}
 
-                <Button onClick = {() => getAllSales()}>Done</Button>
+                <Button onClick = {newEmploye.saleType !== "daily"?() => getAllSales(): () => {getDailySales()}}>Done</Button>
 
                 
                 {(newEmploye.isTable === "1") &&

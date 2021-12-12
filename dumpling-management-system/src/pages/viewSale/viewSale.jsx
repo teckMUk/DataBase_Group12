@@ -9,21 +9,24 @@ import {getSales} from  '../../Services_API/api.js';
 const initialState = {
     saleType: "",
     month:"",
-    year:""
+    year:"",
+    isTable: ""
 };
 export default function Sale()
 {
     let sales;
     const [newEmploye, setNewEmploye] = useState(initialState);
+    
     useEffect(() => {}, [newEmploye]);
     let check = 0;
-
+  
     const handle = (e)=>
     {   
         const {name, value} = e.target;
         
         setNewEmploye({...newEmploye, [name]: value});
     }   
+
     const checkHandle = () => {
         if(newEmploye.saleType=== "yearly")
         {
@@ -82,22 +85,24 @@ export default function Sale()
     {
         let month = Number(newEmploye.month);
         let year = Number(newEmploye.year);
-        if(year !== undefined || month !== undefined)
+        if(year !== undefined)
         {
-        getSales(year, month).then((response)=>{
-
-                if(response.data.isSuccessful)
-                {
-                    alert(response.data.message);
-                    sales = response.data.result;
-                    console.log('sale is ', sales);
-                }
-                else{
-                    alert(response.data.message);
-                    
-                }
-        }); 
-    }
+            getSales(year, month).then((response)=>{
+                  
+                    if(response.data.isSuccessful)
+                    {
+                        sales = response.data.result;
+                        console.log('sale is 1', response.data.message);
+                        setNewEmploye({...newEmploye, isTable: "1"});
+                        alert(response.data.message);
+                    }
+                    else{
+                        console.log('sale is 1', response.data.message);
+                        alert(response.data.message);
+                        setNewEmploye({...newEmploye, isTable: "0"});       
+                    }
+            }); 
+        }
     }
 
     console.log(newEmploye);
@@ -117,12 +122,14 @@ export default function Sale()
                 {(checkHandle()=== 1)&& retYear()}
                 {(checkHandle()=== 2)&& <div> {retMonth()} <br></br> {retYear()}</div>}
 
-                <Button onClick = {getAllSales}>Done</Button>
-                {/* {getAllSales(newEmploye.year, newEmploye.month)}*/}
-                <div>
-                    <SaleTable saleData = {sales}/>
-                </div>
-            
+                <Button onClick = {() => getAllSales()}>Done</Button>
+               
+                {(newEmploye.isTable === 1) &&
+                    <div>
+                    <SaleTable saleData = {sales}/></div>}
+                    
+                {(newEmploye.isTable === 0) && <div> <h4>No sales in this period</h4></div>}
+           
             </div>
         </>
     )

@@ -7,12 +7,12 @@ import { Table} from "react-bootstrap";
 
 export default function TableSale(prop)
 {
-    
     let emp = [{"orderNo" : 1, "dishNames": ['h', 'k'], "totalBill": 200}, {"orderNo" : 2, "dishNames": ['h', 'k'], "totalBill": 230}]
     
-    return (
-        <>
-            <div>
+    
+    const retTable = () =>
+    {
+        return <div>
             <Table responsive>
                 <thead>
                     <tr>
@@ -39,6 +39,26 @@ export default function TableSale(prop)
                 
                 </Table>
             </div>
-        </>
+    }
+    
+    // const chooseDisplay = () =>
+    // {
+    //     console.log('message is ', prop.message);
+    //     if(prop.message === 'No sale')
+    //     {
+    //         return <div><h4>No Sale in this time period</h4></div>
+    //     }
+
+    //     else
+    //     {
+    //         return retTable();
+    //     }
+        
+    // }
+    
+    return (
+            <div>
+             {retTable()}
+            </div>
     )
 }

@@ -27,7 +27,7 @@ const initialState = {
     allergens: "",
 
     image: "",
-
+    employeeId: "",
    
 
   };
@@ -39,14 +39,26 @@ const initialState = {
 {
 
     const [newDish, setNewDish] = useState(initialState);
-
-   
+    let navigate = useNavigate();
 
     useEffect(() => {}, [newDish]);
+    useEffect(()=>{
+        let id = localStorage.getItem('dumplingUserId');
+        if(!!id)
+        {
+            newDish.employeeId = id;
+            console.log(id);
+        }
+        else
+        {
+            alert("U need to be logged into the system");
+            navigate('/');
+        }
+    })
 
  
 
-    let navigate = useNavigate();
+    
 
  
 

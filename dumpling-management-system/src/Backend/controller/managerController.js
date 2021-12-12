@@ -1,8 +1,8 @@
-import dotenv from "dotenv";
-import mysql from 'mysql';
+import dotenv from 'dotenv';
+import mysql2 from 'mysql2';
 import express from 'express';
-import bodyParser from "body-parser";
-dotenv.config({path:"./src/Backend/.env"});
+import bodyParser from 'body-parser';
+dotenv.config({path:'./src/Backend/.env'});
 const app = express();
 app.use(bodyParser.json({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -10,15 +10,16 @@ app.use(bodyParser.urlencoded({ extended: true }));
 export const updateEmployeeSalary = (req,res)=>
 {
     
-    var connectionString = mysql.createConnection(
+    var connectionString = mysql2.createConnection(
         {
             host:process.env.host,
-            user: process.env.user,
-            password:process.env.password,
-            database:process.env.database
+                user: process.env.user,
+                password:process.env.password,
+                port:process.env.port1,
+                database:process.env.database
         }
     );
-    let message = "";
+    let message = '';
     let isSuccessful = false;
     let employeeId = req.body.employeeId;
     let updatedSalary = req.body.updatedSalary;
@@ -29,26 +30,27 @@ export const updateEmployeeSalary = (req,res)=>
     {
         if(err)
         {
-            message = "Cannot get the employees";
+            message = 'Cannot get the employees';
             console.log(err);
             res.send(
                 { 
-                    "isSuccessful":isSuccessful,
-                    "message":message    
+                    'isSuccessful':isSuccessful,
+                    'message':message    
                 }
             );
             connectionString.end();
         }
         else
         {
-            if(result[0].accountType === "admin"|| result[0].accountType === "Admin"  || result[0].accountType === "manager"||  result[0].accountType === "Manager")
+            if(result[0].accountType === 'admin'|| result[0].accountType === 'Admin'  || result[0].accountType === 'manager'||  result[0].accountType === 'Manager')
             {
-                console.log("Manager or admin role found");
-                var connectionString1= mysql.createConnection(
+                console.log('Manager or admin role found');
+                var connectionString1= mysql2.createConnection(
                     {
                         host:process.env.host,
                         user: process.env.user,
                         password:process.env.password,
+                        port:process.env.port1,
                         database:process.env.database
                     }
             
@@ -57,24 +59,24 @@ export const updateEmployeeSalary = (req,res)=>
                 {
                     if(err)
                     {
-                        message = "Failed to update the salary";
+                        message = 'Failed to update the salary';
                         console.log(err);
                         res.send(
                             {
-                                "isSuccessful":isSuccessful,
-                                "message":message 
+                                'isSuccessful':isSuccessful,
+                                'message':message 
                             }
                         );
                         connectionString1.end();
                     }
                     else
                     {
-                        message = "Successfully updated the salary of the given employee";
+                        message = 'Successfully updated the salary of the given employee';
                         isSuccessful = true;
                         res.send(
                             {
-                                "isSuccessful":isSuccessful,
-                                "message":message 
+                                'isSuccessful':isSuccessful,
+                                'message':message 
                             }
                         );
                         connectionString1.end();
@@ -83,11 +85,11 @@ export const updateEmployeeSalary = (req,res)=>
             }
             else
             {
-                message = "Not an admin or Manager";
+                message = 'Not an admin or Manager';
                 isSuccessful = false;
                 res.send({
-                    "isSuccessful":isSuccessful,
-                    "message":message 
+                    'isSuccessful':isSuccessful,
+                    'message':message 
                 });
                 connectionString.end();
             }
@@ -96,32 +98,33 @@ export const updateEmployeeSalary = (req,res)=>
 }
 export const fetchAllEmployee = (req,res)=>
 {
-    var connectionString = mysql.createConnection(
+    var connectionString = mysql2.createConnection(
         {
             host:process.env.host,
-            user: process.env.user,
-            password:process.env.password,
-            database:process.env.database
+                user: process.env.user,
+                password:process.env.password,
+                port:process.env.port1,
+                database:process.env.database
         }
     );
-    let message = "";
+    let message = '';
     let isSuccessful = false;
     let fetchQuery = `SELECT employee.employeeId, employee.employeeName, employee.salary , employee.position, employee.archived FROM dumpling.employee`;
     connectionString.query(fetchQuery,(err,result)=>
     {
         if(err)
         {
-            message = "Could not fetch the details for the employees";
+            message = 'Could not fetch the details for the employees';
             res.send(
                 {
-                    "isSuccessful":isSuccessful,
-                    "message":message 
+                    'isSuccessful':isSuccessful,
+                    'message':message 
                 }
             )
         }
         else
         {
-            message = "Successfully fetched the details of the employees";
+            message = 'Successfully fetched the details of the employees';
             // console.log(result);
             // console.log(result.length);
             isSuccessful = true;
@@ -151,45 +154,47 @@ export const fetchAllEmployee = (req,res)=>
 }
 export const giveBonuses = (req,res)=>
 {
-    var connectionString = mysql.createConnection(
+    var connectionString = mysql2.createConnection(
         {
             host:process.env.host,
-            user: process.env.user,
-            password:process.env.password,
-            database:process.env.database
+                user: process.env.user,
+                password:process.env.password,
+                port:process.env.port1,
+                database:process.env.database
         }
     );
-    let message = "";
+    let message = '';
     let isSuccessful = false;
     let checkForId = req.body.checkId;
     let giveBonusToEmployeeId= req.body.employeeId;
     let reason = req.body.reason;
     let date = req.body.date;
     let checkForIdQuery = `SELECT account.accountType FROM dumpling.account WHERE account.accountId=${checkForId}`;
-    let giveBonus = `INSERT INTO dumpling.bonus(employeeId,reason,date,createdAt) VALUES (${giveBonusToEmployeeId},"${reason}","${date}",NOW())`;
+    let giveBonus = `INSERT INTO dumpling.bonus(employeeId,reason,date,createdAt) VALUES (${giveBonusToEmployeeId},'${reason}','${date}',NOW())`;
     connectionString.query(checkForIdQuery,(err,result)=>
     {
         if(err)
         {
-            message = "Cannot get any employee";
+            message = 'Cannot get any employee';
             res.send(
                 {
-                    "isSuccessful":isSuccessful,
-                    "message":message 
+                    'isSuccessful':isSuccessful,
+                    'message':message 
                 }
             );
             connectionString.end();
         }
         else
         {
-            if(result[0].accountType === "admin"|| result[0].accountType === "Admin"  || result[0].accountType === "manager"||  result[0].accountType === "Manager")
+            if(result[0].accountType === 'admin'|| result[0].accountType === 'Admin'  || result[0].accountType === 'manager'||  result[0].accountType === 'Manager')
             {
-                console.log("Manager or admin found");
-                var connectionString1= mysql.createConnection(
+                console.log('Manager or admin found');
+                var connectionString1= mysql2.createConnection(
                     {
                         host:process.env.host,
                         user: process.env.user,
                         password:process.env.password,
+                        port:process.env.port1,
                         database:process.env.database
                     }
                 );
@@ -197,20 +202,20 @@ export const giveBonuses = (req,res)=>
                 {
                     if(err1)
                     {
-                        message = "Cannot give bonus to the employee";
+                        message = 'Cannot give bonus to the employee';
                         console.log(err1);
                         res.send({
-                            "isSuccessful":isSuccessful,
-                            "message":message 
+                            'isSuccessful':isSuccessful,
+                            'message':message 
                         });
                     }
                     else
                     {
-                        message = "Given the bonus and made an entry in the bonus table";
+                        message = 'Given the bonus and made an entry in the bonus table';
                         isSuccessful = true;
                         res.send({
-                            "isSuccessful":isSuccessful,
-                            "message":message 
+                            'isSuccessful':isSuccessful,
+                            'message':message 
                         });
                     }
                 });
@@ -218,10 +223,10 @@ export const giveBonuses = (req,res)=>
             }
             else
             {
-                message = "Not an admin or manager";    
+                message = 'Not an admin or manager';    
                 res.send({
-                    "isSuccessful":isSuccessful,
-                    "message":message 
+                    'isSuccessful':isSuccessful,
+                    'message':message 
                 });
             connectionString.end();
             }
@@ -231,17 +236,18 @@ export const giveBonuses = (req,res)=>
 
 export const addCoupon = (req,res)=>
 {
-    var connectionString = mysql.createConnection(
+    var connectionString = mysql2.createConnection(
         {
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
+            port:process.env.port1,
             database:process.env.database
         }
 
     );
 
-    let message ="";
+    let message ='';
     let isSuccessful = false;
 
     let couponId = req.body.couponId;
@@ -251,7 +257,7 @@ export const addCoupon = (req,res)=>
     let expiryDate = req.body.expiryDate;
     let addCouponQuery = 
     `INSERT INTO dumpling.coupons(couponId,couponName,discount,issueDate,expiryDate,createdAt)
-    VALUES(${couponId},"${couponName}",${discount},"${issueDate}","${expiryDate}",NOW());`; 
+    VALUES(${couponId},'${couponName}',${discount},'${issueDate}','${expiryDate}',NOW());`; 
 
     connectionString.connect((error)=>{
         if(error)
@@ -266,13 +272,13 @@ export const addCoupon = (req,res)=>
             {
                 if(err)
                 {
-                    console.log("Error found");
+                    console.log('Error found');
                     console.log(err);
-                    message = "Failed to insert coupon into the menu";
+                    message = 'Failed to insert coupon into the menu';
                     res.send(
                         {
-                            "isSuccessful":isSuccessful,
-                            "message":message
+                            'isSuccessful':isSuccessful,
+                            'message':message
                         }
 
                     );
@@ -282,13 +288,13 @@ export const addCoupon = (req,res)=>
                 }
                 else
                 {
-                    console.log("Coupon has been added successfully");
+                    console.log('Coupon has been added successfully');
                     isSuccessful = true;
-                    message="Coupon has been added";
+                    message='Coupon has been added';
                     res.send(
                         {
-                            "isSuccessful":isSuccessful,
-                            "message":message
+                            'isSuccessful':isSuccessful,
+                            'message':message
                         }
                     );
 
@@ -307,17 +313,18 @@ export const addCoupon = (req,res)=>
 export const applyCoupon = (req,res)=>
 {
 
-    var connectionString = mysql.createConnection(
+    var connectionString = mysql2.createConnection(
         {
             host:process.env.host,
-            user: process.env.user,
-            password:process.env.password,
-            database:process.env.database
+                user: process.env.user,
+                password:process.env.password,
+                port:process.env.port1,
+                database:process.env.database
         }
 
     );
 
-    let message ="";
+    let message ='';
     let isSuccessful = false;
     let couponId = req.body.couponId;
     let orderId = req.body.orderId;
@@ -342,13 +349,13 @@ export const applyCoupon = (req,res)=>
             {
                 if(err)
                 {
-                    console.log("Error found in querying the coupons table for coupon existnce");
+                    console.log('Error found in querying the coupons table for coupon existnce');
                     console.log(err);
-                    message = "Error found in querying the coupons table for coupon existnce";
+                    message = 'Error found in querying the coupons table for coupon existnce';
                     res.send(
                         {
-                            "isSuccessful":isSuccessful,
-                            "message":message
+                            'isSuccessful':isSuccessful,
+                            'message':message
                         }
 
                     );
@@ -358,15 +365,15 @@ export const applyCoupon = (req,res)=>
                 }
                 else
                 {
-                    if(result.length == 0)
+                    if(result.length === 0)
                     {
                         //this means that no coupons of this kind were found
-                        console.log("No matching coupon found");
-                        message = "No coupon with this ID found";
+                        console.log('No matching coupon found');
+                        message = 'No coupon with this ID found';
                         res.send(
                             {
-                                "isSuccessful":isSuccessful,
-                                "message":message
+                                'isSuccessful':isSuccessful,
+                                'message':message
                             }
 
                         );
@@ -375,9 +382,9 @@ export const applyCoupon = (req,res)=>
                     }
                     else
                     {
-                        let list_split = result[0].expiryDate.toISOString().split( "T" );
+                        let list_split = result[0].expiryDate.toISOString().split( 'T' );
                         let exp_date = list_split[0];
-                        let today = ((new Date()).toISOString().split( "T" ))[0];
+                        let today = ((new Date()).toISOString().split( 'T' ))[0];
                         let exp_date_date = new Date(exp_date);
                         let today_date = new Date(today);
                         coupon_percentage = result[0].discount;
@@ -385,12 +392,12 @@ export const applyCoupon = (req,res)=>
                         
                         if(today>list_split)
                         {
-                            console.log("expired");
-                            message = "Coupon expired";
+                            console.log('expired');
+                            message = 'Coupon expired';
                             res.send(
                                 {
-                                    "isSuccessful":false,
-                                    "message":message
+                                    'isSuccessful':false,
+                                    'message':message
                                 }
 
                         );
@@ -400,19 +407,20 @@ export const applyCoupon = (req,res)=>
                         {
                         
                             // connectionString.end();
-                            console.log(" not expired");
-                            var connectionString2 = mysql.createConnection(
+                            console.log(' not expired');
+                            var connectionString2 = mysql2.createConnection(
                                 {
                                     host:process.env.host,
-                                    user: process.env.user,
-                                    password:process.env.password,
-                                    database:process.env.database
+                user: process.env.user,
+                password:process.env.password,
+                port:process.env.port1,
+                database:process.env.database
                                 }
                         
                             );
                             //now extract the total bill
                             let extract_bill = 
-                            `SELECT * FROM dumpling.orders WHERE dumpling.orders.orderId = "${orderId}";`;
+                            `SELECT * FROM dumpling.orders WHERE dumpling.orders.orderId = '${orderId}';`;
                             connectionString2.connect((error)=>{
                                 if(error)
                                 {
@@ -429,13 +437,13 @@ export const applyCoupon = (req,res)=>
 
                                         if(err)
                                         {
-                                            console.log("Error found in querying the orders table for bill");
+                                            console.log('Error found in querying the orders table for bill');
                                             console.log(err);
-                                            message = "Error found in querying the orders table for bill";
+                                            message = 'Error found in querying the orders table for bill';
                                             res.send(
                                                 {
-                                                    "isSuccessful":isSuccessful,
-                                                    "message":message
+                                                    'isSuccessful':isSuccessful,
+                                                    'message':message
                                                 }
 
                                             );
@@ -449,24 +457,25 @@ export const applyCoupon = (req,res)=>
                                             
                                             console.log(result)
                                             lucky_bill = result[0].totalBill;
-                                            console.log("here");
+                                            console.log('here');
                                             console.log(lucky_bill);
                                             new_bill = lucky_bill - ((coupon_percentage*1.0/100)*lucky_bill)
                                             console.log(new_bill);
                                             connectionString2.end();
                                             //now we have the new bill...just update the total bill in the orders table.
                                             //now create another connection string
-                                            var connectionString3 = mysql.createConnection(
+                                            var connectionString3 = mysql2.createConnection(
                                                 {
                                                     host:process.env.host,
                                                     user: process.env.user,
                                                     password:process.env.password,
+                                                    port:process.env.port1,
                                                     database:process.env.database
                                                 }
                                         
                                             );
                                             let update_bill = 
-                                            `UPDATE dumpling.orders SET orders.totalBill=${new_bill},orders.updatedAt=NOW() WHERE orders.orderId ="${orderId}"`;
+                                            `UPDATE dumpling.orders SET orders.totalBill=${new_bill},orders.updatedAt=NOW() WHERE orders.orderId ='${orderId}'`;
                                             connectionString3.connect((error)=>{
                                                 if(error)
                                                 {
@@ -483,11 +492,11 @@ export const applyCoupon = (req,res)=>
                                                         {
                                                                 
                                                                 console.log(err);
-                                                                message = "Error in applying coupon";
+                                                                message = 'Error in applying coupon';
                                                                 res.send(
                                                                     {
-                                                                        "isSuccessful":false,
-                                                                        "message":message
+                                                                        'isSuccessful':false,
+                                                                        'message':message
                                                                     }
 
                                                                 );
@@ -496,11 +505,11 @@ export const applyCoupon = (req,res)=>
                                                         }
                                                         else
                                                         {
-                                                                message = "Coupon applied";
+                                                                message = 'Coupon applied';
                                                                 res.send(
                                                                     {
-                                                                        "isSuccessful":true,
-                                                                        "message":message
+                                                                        'isSuccessful':true,
+                                                                        'message':message
                                                                     }
 
                                                                 );
@@ -587,27 +596,28 @@ export const monthYearSale = (req, res) =>
         big_query = query_year;
     }
 
-    var connectionString = mysql.createConnection(
+    var connectionString = mysql2.createConnection(
         {
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
+            port:process.env.port1,
             database:process.env.database
 
         }
     );
 
-    let message = "";
+    let message = '';
     let isSuccessful = false;
     connectionString.query(big_query,(err,result)=>
     {
         if(err){
-            message = "query failed";
+            message = 'query failed';
             console.log(err);
             res.send(
                 {
-                    "isSuccessful":isSuccessful,
-                    "message":message
+                    'isSuccessful':isSuccessful,
+                    'message':message
                 }
             );
             connectionString.end();
@@ -617,11 +627,11 @@ export const monthYearSale = (req, res) =>
             console.log('res is', result);
             if(result.length === 0)
             {
-                message = "No sale";
+                message = 'No sale';
                 res.send(
                     {
-                        "isSuccessful":isSuccessful,
-                        "message":message
+                        'isSuccessful':isSuccessful,
+                        'message':message
                     }
                 );
                 connectionString.end();
@@ -629,13 +639,13 @@ export const monthYearSale = (req, res) =>
             }
             else
             {
-                message = "sale record found";
+                message = 'sale record found';
                 isSuccessful = true;
                 console.log(result);
                 res.send(
                     {
-                        "isSuccessful":isSuccessful,
-                        "message":message,
+                        'isSuccessful':isSuccessful,
+                        'message':message,
                         'result':result
                     }
                 );

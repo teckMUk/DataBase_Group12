@@ -1,16 +1,17 @@
 import dotenv from "dotenv";
-import mysql from 'mysql';
+import mysql2 from 'mysql2';
 import express from 'express';
 import bodyParser from 'body-parser';
 dotenv.config({path:"./src/Backend/.env"});
 const app = express();
 app.use(bodyParser.urlencoded({extended:true}));
 
-var connectionString = mysql.createConnection(
+var connectionString = mysql2.createConnection(
     {
         host:process.env.host,
         user: process.env.user,
-        password:process.env.password
+        password:process.env.password,
+        port:process.env.port1
     }
 );
 function createTable(q)

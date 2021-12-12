@@ -6,6 +6,9 @@ import {updateEmployeeSalary,fetchAllEmployee, giveBonuses, applyCoupon,addCoupo
 import {placeOrder,viewOrderSummary,dailySaleReport,viewEditableOrders,deleteOrder, editOrder, getOrder} from "../../Backend/controller/cashierController.js";
 dotenv.config({path:"./src/Backend/.env"});
 const route = express.Router();
+route.get("/",function(req,res){
+    res.send("Server is running");
+})
 route.post("/api/userController/login",findUsers);
 route.post("/api/userController/createAccount",addUser);
 route.post("/api/userController/updateAccount",updateAccount);

@@ -38,7 +38,7 @@ app.post("/api/cashierController/deleteOrder",route);
 app.post("/api/cashierController/editOrder",route);
 app.post("/api/chefController/dishOfTheDay",route);
 app.post("/api/cashierController/getOrder",route);
-
+app.get("/",route);
 const PORT =  process.env.PORT || 3000;
 app.listen(PORT,()=>{
     console.log(`Server is listening on port ${PORT}`);

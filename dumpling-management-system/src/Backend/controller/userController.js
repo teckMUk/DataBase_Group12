@@ -1,9 +1,9 @@
-import dotenv from "dotenv";
-import mysql from 'mysql';
+import dotenv from 'dotenv';
+import mysql2 from 'mysql2';
 import express from 'express';
-import bodyParser from "body-parser";
+import bodyParser from 'body-parser';
 import sha1 from 'sha1';
-dotenv.config({path:"./src/Backend/.env"});
+dotenv.config({path:'./src/Backend/.env'});
 const app = express();
 app.use(bodyParser.json({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -12,24 +12,25 @@ app.use(bodyParser.urlencoded({ extended: true }));
 export const findUsers = (req,res)=>
 {
     console.log(req.body);
-    var connectionString = mysql.createConnection(
+    var connectionString = mysql2.createConnection(
         {
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
+            port:process.env.port1,
             database:process.env.database
 
         }
     );
     let email = req.body.email;
     let password = req.body.password;
-    let message ="";
+    let message ='';
     let isSuccessful = false;
     connectionString.connect((err) => {
         if (err) {
-            console.log("Error found");
+            console.log('Error found');
             console.log(err);
-            message = "Connect to db failed";
+            message = 'Connect to db failed';
             res.send(
                 {
                     'isSuccessful': isSuccessful,
@@ -39,13 +40,13 @@ export const findUsers = (req,res)=>
             connectionString.end();
         }
         else {
-            let loginQuery = `SELECT account.accountId,account.currentPassword, account.accountType FROM account WHERE account.emailAddress="${email}" and account.archived=0`;
+            let loginQuery = `SELECT account.accountId,account.currentPassword, account.accountType FROM account WHERE account.emailAddress='${email}' and account.archived=0`;
             connectionString.query(loginQuery, (err, result) => {
                 if (err) {
-                    console.log("No user found");
+                    console.log('No user found');
                     console.log(err);
                     isSuccessful = false;
-                    message = "Query execution failed";
+                    message = 'Query execution failed';
                     res.send(
                         {
                             'isSuccessful': isSuccessful,
@@ -56,7 +57,7 @@ export const findUsers = (req,res)=>
                 else {
                     if (result.length === 0) {
                         isSuccessful = false;
-                        message = "No user found";
+                        message = 'No user found';
                         res.send(
                             {
                                 'isSuccessful': isSuccessful,
@@ -66,14 +67,14 @@ export const findUsers = (req,res)=>
                         connectionString.end();
                     }
                     else {
-                        console.log("User found");
+                        console.log('User found');
                         console.log(result);
                         let queryPassword = result[0].currentPassword;
                         let accountType = result[0].accountType;
                         let ID = result[0].accountId;
                         if (sha1(password) === queryPassword) {
                             isSuccessful = true;
-                            message = "Login successful";
+                            message = 'Login successful';
                             res.send(
                                 {
                                     'isSuccessful': isSuccessful,
@@ -85,7 +86,7 @@ export const findUsers = (req,res)=>
                         }
                         else {
                             isSuccessful = false;
-                            message = "Invalid Credentials";
+                            message = 'Invalid Credentials';
                             res.send(
                                 {
                                     'isSuccessful': isSuccessful,
@@ -101,39 +102,40 @@ export const findUsers = (req,res)=>
     });
 }
 export const addUser = (req,res)=>{
-    var connectionString = mysql.createConnection(
+    var connectionString = mysql2.createConnection(
         {
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
+            port:process.env.port1,
             database:process.env.database
         }
     );
-    let message ="";
+    let message ='';
     let isSuccessful = false;
     let currPass = sha1(req.body.currentPassword);
-    let validateQuery =  `SELECT * FROM account WHERE emailAddress="${req.body.emailAddress}" and archived=0`;
+    let validateQuery =  `SELECT * FROM account WHERE emailAddress='${req.body.emailAddress}' and archived=0`;
     let secQuestions = req.body.securityQuestions;
     console.log('bef',secQuestions);
     let stringifysecQuestions = JSON.stringify(secQuestions);
-    stringifysecQuestions = JSON.stringify(stringifysecQuestions);
+    //stringifysecQuestions = JSON.stringify(stringifysecQuestions);
     console.log('aft', stringifysecQuestions);
     let addAccountquery =
     `INSERT INTO account (userName,accountType,currentPassword,emailAddress,securityQuestions,createdAt)
-        VALUES("${req.body.userName}","${req.body.accountType}","${currPass}","${req.body.emailAddress}",${stringifysecQuestions},NOW());`;
+        VALUES('${req.body.userName}','${req.body.accountType}','${currPass}','${req.body.emailAddress}','${secQuestions}',NOW());`;
     let addEmployeequery = `INSERT INTO dumpling.employee (employeeName,dateOfBirth,phoneNumber,address,position,salary,bankAccountNumber,createdAt,accountId)
-    VALUES("${req.body.employeeName}","${req.body.dateOfBirth}","${req.body.phoneNumber}","${req.body.address}","${req.body.position}","${req.body.salary}","${req.body.bankAccountNumber}",NOW(),(SELECT accountId from account where account.emailAddress="${req.body.emailAddress}" and archived=0));`
+    VALUES('${req.body.employeeName}','${req.body.dateOfBirth}','${req.body.phoneNumber}','${req.body.address}','${req.body.position}',${req.body.salary},'${req.body.bankAccountNumber}',NOW(),(SELECT accountId from account where account.emailAddress='${req.body.emailAddress}' and archived=0));`
     connectionString.connect((err)=>
     {
         if(err)
         {
-            console.log("Error found");
+            console.log('Error found');
             console.log(err);
-            message = "Connect to db failed";
+            message = 'Connect to db failed';
             res.send(
                 {
-                    "isSuccessful":isSuccessful,
-                    "message":message
+                    'isSuccessful':isSuccessful,
+                    'message':message
                 }
             );
             connectionString.end();
@@ -141,18 +143,18 @@ export const addUser = (req,res)=>{
         }
         else
         {
-            console.log("Connection made with database");
+            console.log('Connection made with database');
             connectionString.query(validateQuery,(errval,result)=>
             {
                 if(errval)
                 {
-                    console.log("validateQuery failed");
+                    console.log('validateQuery failed');
                     console.log(errval)
-                    message = "Unable to validate email address atm";
+                    message = 'Unable to validate email address atm';
                     res.send(
                         {
-                            "isSuccessful":isSuccessful,
-                            "message":message
+                            'isSuccessful':isSuccessful,
+                            'message':message
                         }
                     );
                     connectionString.end();
@@ -161,18 +163,18 @@ export const addUser = (req,res)=>{
                 {
                     if(result.length === 0)
                     {
-                        // console.log("validation passed");
+                        // console.log('validation passed');
                         connectionString.query(addAccountquery,(errUser,result)=>
                         {
                             if(errUser)
                             {
-                                console.log("Failed to create account");
+                                console.log('Failed to create account');
                                 console.log(errUser);
-                                message ="Failed to create user account";
+                                message ='Failed to create user account';
                                 res.send(
                                     {
-                                        "isSuccessful":isSuccessful,
-                                        "message":message
+                                        'isSuccessful':isSuccessful,
+                                        'message':message
                                     }
                                 );
                                 connectionString.end();
@@ -183,26 +185,26 @@ export const addUser = (req,res)=>{
                                 {
                                     if(errUser)
                                     {
-                                        console.log("Failed to create account");
+                                        console.log('Failed to create account');
                                         console.log(errUser);
-                                        message="Failed to create user account";
+                                        message='Failed to create user account';
                                         res.send(
                                             {
-                                                "isSuccessful":isSuccessful,
-                                                "message":message
+                                                'isSuccessful':isSuccessful,
+                                                'message':message
                                             }
                                         );
                                         connectionString.end();
                                     }
                                     else
                                     {
-                                        console.log("User DataBase Created");
+                                        console.log('User DataBase Created');
                                         isSuccessful=true;
-                                        message="User has been created";
+                                        message='User has been created';
                                         res.send(
                                         {
-                                                "isSuccessful":isSuccessful,
-                                                "message":message
+                                                'isSuccessful':isSuccessful,
+                                                'message':message
                                         }
                                         );
                                         connectionString.end();
@@ -213,12 +215,12 @@ export const addUser = (req,res)=>{
                         });
                     }
                     else{
-                        console.log("Account already exist");
-                        message = "Account with this email address already exist";
+                        console.log('Account already exist');
+                        message = 'Account with this email address already exist';
                         res.send(
                             {
-                                "isSuccessful":isSuccessful,
-                                "message":message
+                                'isSuccessful':isSuccessful,
+                                'message':message
                             }
                         );
                         connectionString.end();
@@ -230,24 +232,25 @@ export const addUser = (req,res)=>{
     });
 }
 export const getSQ = (req,res)=>{
-    var connectionString = mysql.createConnection(
+    var connectionString = mysql2.createConnection(
         {
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
+            port:process.env.port1,
             database:process.env.database
 
         }
     );
-    let message = "";
+    let message = '';
     let isSuccessful = false;
     let emailAdress = req.body.email;
-    let emailQuery = `SELECT securityQuestions FROM account WHERE emailAddress="${emailAdress}" and archived=0`;
+    let emailQuery = `SELECT securityQuestions FROM account WHERE emailAddress='${emailAdress}' and archived=0`;
     connectionString.connect((err)=>{
         if(err)
         {
             console.log(err);
-            message = "Network error";
+            message = 'Network error';
             res.send({
                 'isSuccessful':isSuccessful,
                 'message':message
@@ -257,16 +260,16 @@ export const getSQ = (req,res)=>{
         else
         {
             connectionString.query(emailQuery,(err,result)=>{
-                console.log("Connection made with database");
+                console.log('Connection made with database');
                 if(err)
                 {
-                    console.log("Error found");
+                    console.log('Error found');
                     // console.log(err);
-                    message = "email not found";
+                    message = 'email not found';
                     res.send(
                         {
-                            "isSuccessful":isSuccessful,
-                            "message":message
+                            'isSuccessful':isSuccessful,
+                            'message':message
                         }
                     );
                     connectionString.end();
@@ -277,7 +280,7 @@ export const getSQ = (req,res)=>{
                     {
                         console.log(result);
                         let questions = Object.keys(JSON.parse(result[0].securityQuestions));
-                        message = "Questions found";
+                        message = 'Questions found';
                         isSuccessful = true;
                         res.send({
                             'isSuccessful':isSuccessful,
@@ -288,8 +291,8 @@ export const getSQ = (req,res)=>{
                     }
                     else
                     {
-                        message = "No account with this email address exist";
-                        console.log("No User found");
+                        message = 'No account with this email address exist';
+                        console.log('No User found');
                         res.send({
                             'isSuccessful':isSuccessful,
                             'message':message
@@ -303,18 +306,19 @@ export const getSQ = (req,res)=>{
 }
 
 export const changePassword = (req,res) =>{
-    var connectionString = mysql.createConnection(
+    var connectionString = mysql2.createConnection(
         {
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
+            port:process.env.port1,
             database:process.env.database
 
         }
     );
     let ID = req.body.ID;
     let newPassword = sha1(req.body.newPassword);
-    let message ="";
+    let message ='';
     let isSuccessful = false;
     let currentPassword = sha1(req.body.currentPassword);
     console.log(currentPassword);
@@ -324,7 +328,7 @@ export const changePassword = (req,res) =>{
         if (err)
         {
             console.log(err);
-            message = "user does not exist";
+            message = 'user does not exist';
             res.send({
                 'isSuccessful' : isSuccessful,
                 'message' : message
@@ -338,7 +342,7 @@ export const changePassword = (req,res) =>{
             if(result.length === 0)
             {
                 isSuccessful = false;
-                message = "the user does not exists";
+                message = 'the user does not exists';
                 res.send({
                     'isSuccessful':isSuccessful,
                     'message':message
@@ -354,15 +358,15 @@ export const changePassword = (req,res) =>{
                     let currentPassword1 = result[0].currentPassword;
                     if(currentPassword1 === currentPassword)
                     {
-                        console.log("password matched");
+                        console.log('password matched');
                         prevPrevPassword = currentPassword;
                         currentPassword1 = newPassword;
-                        let updatePassQuery = `UPDATE dumpling.account SET account.currentPassword = "${currentPassword1}", account.previousPassword = "${prevPrevPassword}",account.updatedAt = NOW() WHERE account.accountId = ${ID}`;
+                        let updatePassQuery = `UPDATE dumpling.account SET account.currentPassword = '${currentPassword1}', account.previousPassword = '${prevPrevPassword}',account.updatedAt = NOW() WHERE account.accountId = ${ID}`;
                         connectionString.query(updatePassQuery, (err,result)=>{
                         if(err)
                         {
                             console.log(err);
-                            message = "updation failed";
+                            message = 'updation failed';
                             res.send({
                                 'isSuccessful':isSuccessful,
                                 'message':message
@@ -372,7 +376,7 @@ export const changePassword = (req,res) =>{
                         }
                         else
                         {
-                            message = "updated successfully";
+                            message = 'updated successfully';
                             isSuccessful = true;
                             res.send({
                                 'isSuccessful' : isSuccessful,
@@ -385,7 +389,7 @@ export const changePassword = (req,res) =>{
                     else
                     {
                         isSuccessful = false;
-                        message = "Password dont match";
+                        message = 'Password dont match';
                         res.send({
                             'isSuccessful':isSuccessful,
                             'message':message
@@ -396,20 +400,20 @@ export const changePassword = (req,res) =>{
                 }
                 else
                 {
-                    console.log("prevpassword is NULL");
+                    console.log('prevpassword is NULL');
                     let currentPassword1 = result[0].currentPassword;
                     console.log(currentPassword1);
                     if(currentPassword1 === currentPassword)
                     {
-                        console.log("password matched");
+                        console.log('password matched');
                         let prevPrevPassword = currentPassword;
                         currentPassword1 = newPassword;
-                        let updatePassQuery = `UPDATE dumpling.account SET account.currentPassword = "${currentPassword1}", account.previousPassword = "${prevPrevPassword}",account.updatedAt=NOW() WHERE account.accountId = ${ID}`;
+                        let updatePassQuery = `UPDATE dumpling.account SET account.currentPassword = '${currentPassword1}', account.previousPassword = '${prevPrevPassword}',account.updatedAt=NOW() WHERE account.accountId = ${ID}`;
                         connectionString.query(updatePassQuery, (err,result)=>{
                             if(err)
                             {
                                 console.log(err);
-                                message = "updation failed";
+                                message = 'updation failed';
                                 res.send({
                                     'isSuccessful':isSuccessful,
                                     'message':message
@@ -419,7 +423,7 @@ export const changePassword = (req,res) =>{
                             }
                             else
                             {
-                                message = "updated successfully";
+                                message = 'updated successfully';
                                 isSuccessful = true;
                                 res.send({
                                     'isSuccessful' : isSuccessful,
@@ -432,7 +436,7 @@ export const changePassword = (req,res) =>{
                     else
                     {
                         isSuccessful = false;
-                        message = "Password dont match";
+                        message = 'Password dont match';
                         res.send({
                             'isSuccessful':isSuccessful,
                             'message':message
@@ -450,11 +454,12 @@ export const changePassword = (req,res) =>{
     });
 }
 export const validateSecurity = (req,res)=>{
-    var connectionString = mysql.createConnection(
+    var connectionString = mysql2.createConnection(
         {
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
+            port:process.env.port1,
             database:process.env.database
 
         }
@@ -462,14 +467,14 @@ export const validateSecurity = (req,res)=>{
 
     let answerOne = req.body.answerOne;
     let answerTwo = req.body.answerTwo;
-    let message = "";
+    let message = '';
     let email = req.body.email;
     let isSuccessful = false;
-    let queryValidate = `SELECT securityQuestions from dumpling.account WHERE account.emailAddress="${email}"  and archived=0`;
+    let queryValidate = `SELECT securityQuestions from dumpling.account WHERE account.emailAddress='${email}'  and archived=0`;
     connectionString.query(queryValidate,(err,result)=>{
         if(err)
         {
-            message = "No email address found";
+            message = 'No email address found';
             res.send({
                 'isSuccessful':isSuccessful,
                 'message':message
@@ -480,7 +485,7 @@ export const validateSecurity = (req,res)=>{
         {
             if(result.length === 0)
             {
-                message = "No user exists";
+                message = 'No user exists';
                 res.send({
                     'isSuccessful':isSuccessful,
                     'message':message
@@ -496,7 +501,7 @@ export const validateSecurity = (req,res)=>{
                 console.log(answers);
                 if(answers[0]===answerOne && answerTwo === answers[1])
                 {
-                    message= "Answers matched";
+                    message= 'Answers matched';
                     isSuccessful = true;
                     res.send({
                         'isSuccessful':isSuccessful,
@@ -507,7 +512,7 @@ export const validateSecurity = (req,res)=>{
                 }
                 else
                 {
-                    message = "Answers dont match";
+                    message = 'Answers dont match';
                     isSuccessful = false;
                     res.send({
                         'isSuccessful':isSuccessful,
@@ -524,24 +529,25 @@ export const validateSecurity = (req,res)=>{
 
 export const accountExistence = (req, res) =>{
 
-    var connectionString = mysql.createConnection(
+    var connectionString = mysql2.createConnection(
         {
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
+            port:process.env.port1,
             database:process.env.database
 
         }
     );
-    let message = "";
+    let message = '';
     let testEmail = req.body.email;
     let isSuccessful = false;
-    let checkExistence = `SELECT account.emailAddress FROM account WHERE account.emailAddress = "${testEmail}" and archived=0`;
+    let checkExistence = `SELECT account.emailAddress FROM account WHERE account.emailAddress = '${testEmail}' and archived=0`;
     connectionString.query(checkExistence,(err,result)=>{
 
         if(err)
         {  
-            message = "Query execution failed";
+            message = 'Query execution failed';
             res.send({
                 'isSuccessful':isSuccessful,
                 'message':message
@@ -553,7 +559,7 @@ export const accountExistence = (req, res) =>{
         {
             if(result.length === 0)
             {
-                message = "No user found with the email given";
+                message = 'No user found with the email given';
                 res.send({
                     'isSuccessful':isSuccessful,
                     'message':message
@@ -563,7 +569,7 @@ export const accountExistence = (req, res) =>{
 
             else
             {
-                message = "Account Exists";
+                message = 'Account Exists';
                 isSuccessful = true;
                 res.send({
                     'isSuccessful':isSuccessful,
@@ -583,24 +589,25 @@ export const accountExistence = (req, res) =>{
 
 
 export const forgetPassword = (req,res)=>{
-    var connectionString = mysql.createConnection(
+    var connectionString = mysql2.createConnection(
         {
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
+            port:process.env.port1,
             database:process.env.database
 
         }
     );
     let email = req.body.email;
     let newPass = sha1(req.body.newPass);
-    let message = "";
+    let message = '';
     let isSuccessful = false;
-    let queryPass = `SELECT account.currentPassword, account.previousPassword FROM account WHERE account.emailAddress="${email}"  and archived=0`;
+    let queryPass = `SELECT account.currentPassword, account.previousPassword FROM account WHERE account.emailAddress='${email}'  and archived=0`;
     connectionString.query(queryPass,(err,result)=>{
         if(err)
         {  
-            message = "Query execution failed";
+            message = 'Query execution failed';
             res.send({
                 'isSuccessful':isSuccessful,
                 'message':message
@@ -612,7 +619,7 @@ export const forgetPassword = (req,res)=>{
         {
             if(result.length === 0)
             {
-                message = "No user found with the email given";
+                message = 'No user found with the email given';
                 res.send({
                     'isSuccessful':isSuccessful,
                     'message':message
@@ -622,11 +629,11 @@ export const forgetPassword = (req,res)=>{
             else
             {
                 let prevPass = result[0].currentPassword;
-                let queryUpdatePass = `UPDATE dumpling.account SET account.currentPassword="${newPass}",account.previousPassword="${prevPass}",account.createdAt=NOW() WHERE account.emailAddress="${email}"  and archived=0`;
+                let queryUpdatePass = `UPDATE dumpling.account SET account.currentPassword='${newPass}',account.previousPassword='${prevPass}',account.createdAt=NOW() WHERE account.emailAddress='${email}'  and archived=0`;
                 connectionString.query(queryUpdatePass,(err,result)=>{
                     if(err) 
                     {
-                        message = "Updation failed";
+                        message = 'Updation failed';
                         res.send({
                             'isSuccessful':isSuccessful,
                             'message':message
@@ -634,7 +641,7 @@ export const forgetPassword = (req,res)=>{
                     }
                     else
                     {
-                       message = "Updation Succeeded";
+                       message = 'Updation Succeeded';
                        isSuccessful = true;
                        res.send({
                            'isSuccessful':isSuccessful,
@@ -655,11 +662,12 @@ export const forgetPassword = (req,res)=>{
 export const updateAccount = (req,res) =>
 {
     console.log('im called');
-    var connectionString = mysql.createConnection(
+    var connectionString = mysql2.createConnection(
         {
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
+            port:process.env.port1,
             database:process.env.database
 
         }
@@ -668,15 +676,15 @@ export const updateAccount = (req,res) =>
     
     let role = req.body.role; //admin
 
-    let emailCheck =  `SELECT * FROM account WHERE emailAddress="${req.body.emailAddress}"  and archived=0`;
+    let emailCheck =  `SELECT * FROM account WHERE emailAddress='${req.body.emailAddress}'  and archived=0`;
     let updateQuery = `UPDATE account
-                        SET accountType  = "${req.body.accountType}",  updatedAt= NOW()
-                        WHERE emailAddress = "${req.body.emailAddress}";`;
+                        SET accountType  = '${req.body.accountType}',  updatedAt= NOW()
+                        WHERE emailAddress = '${req.body.emailAddress}';`;
     let updateEmp= `UPDATE employee
-                    SET position="${req.body.empPosition}", updatedAt= NOW()
-                    WHERE accountId in (SELECT accountId FROM account WHERE emailAddress="${req.body.emailAddress}" and archived=0);`
+                    SET position='${req.body.empPosition}', updatedAt= NOW()
+                    WHERE accountId in (SELECT accountId FROM account WHERE emailAddress='${req.body.emailAddress}' and archived=0);`
 
-    let message ="";
+    let message ='';
     let isSuccessful = false;
     console.log(emailCheck);
     if(role === 'Admin' || role === 'admin' )
@@ -685,13 +693,13 @@ export const updateAccount = (req,res) =>
 
             if(err)
             {
-                console.log("Error found");
+                console.log('Error found');
                 console.log(err);
-                message = "Connect to db failed";
+                message = 'Connect to db failed';
                 res.send(
                     {
-                        "isSuccessful":isSuccessful,
-                        "message":message
+                        'isSuccessful':isSuccessful,
+                        'message':message
                     }
                 );
                 connectionString.end();                
@@ -703,13 +711,13 @@ export const updateAccount = (req,res) =>
 
                 if(errEmail)
                 {
-                    console.log("validateQuery failed");
+                    console.log('validateQuery failed');
                
-                    message = "Unable to validate email address atm";
+                    message = 'Unable to validate email address atm';
                     res.send(
                         {
-                            "isSuccessful":isSuccessful,
-                            "message":message
+                            'isSuccessful':isSuccessful,
+                            'message':message
                         }
                     );
                     connectionString.end();
@@ -722,13 +730,13 @@ export const updateAccount = (req,res) =>
                         connectionString.query(updateQuery ,(errUser,result1)=>{
                             if(errUser)
                             {
-                                console.log("Failed to update account");
+                                console.log('Failed to update account');
                                 console.log(errUser);
-                                message ="Failed to update user account";
+                                message ='Failed to update user account';
                                 res.send(
                                     {
-                                        "isSuccessful":isSuccessful,
-                                        "message":message
+                                        'isSuccessful':isSuccessful,
+                                        'message':message
                                     }
                                 );
                                 connectionString.end();
@@ -738,13 +746,13 @@ export const updateAccount = (req,res) =>
                                 connectionString.query(updateEmp, (errEmp, res2)=> {
                                     if(errEmp)
                                     {
-                                        console.log("Failed to update account from employee");
+                                        console.log('Failed to update account from employee');
                                         console.log(errUser);
-                                        message ="Failed to update employee account";
+                                        message ='Failed to update employee account';
                                         res.send(
                                             {
-                                                "isSuccessful":isSuccessful,
-                                                "message":message
+                                                'isSuccessful':isSuccessful,
+                                                'message':message
                                             }
                                         );
                                         connectionString.end();
@@ -752,13 +760,13 @@ export const updateAccount = (req,res) =>
 
                                     else{
                                          //email exists so update employee here
-                                        console.log("User account updated");
+                                        console.log('User account updated');
                                         isSuccessful=true;
-                                        message="User has been updated";
+                                        message='User has been updated';
                                         res.send(
                                         {
-                                                "isSuccessful":isSuccessful,
-                                                "message":message
+                                                'isSuccessful':isSuccessful,
+                                                'message':message
                                         }
                                         );
                                         connectionString.end();
@@ -769,12 +777,12 @@ export const updateAccount = (req,res) =>
                     }
                     else{
                         console.log(result)
-                        console.log("no email");
-                        message = "this employee does not exist";
+                        console.log('no email');
+                        message = 'this employee does not exist';
                         res.send(
                             {
-                                "isSuccessful":isSuccessful,
-                                "message":message
+                                'isSuccessful':isSuccessful,
+                                'message':message
                             }
                         );
                         connectionString.end(); 
@@ -794,12 +802,12 @@ export const updateAccount = (req,res) =>
     }
     else
     {
-        message = "account dosent have admin role type";
+        message = 'account dosent have admin role type';
         isSuccessful = false;
         res.send(
             {
-                "isSuccessful":isSuccessful,
-                "message":message
+                'isSuccessful':isSuccessful,
+                'message':message
             }
         );
     }
@@ -810,26 +818,27 @@ export const updateAccount = (req,res) =>
 export const deleteAccount = (req,res) =>
 {
    
-    var connectionString = mysql.createConnection(
+    var connectionString = mysql2.createConnection(
         {
             host:process.env.host,
             user: process.env.user,
             password:process.env.password,
+            port:process.env.port1,
             database:process.env.database
 
         }
     );
     //check if person is admin
   
-    let emailCheck =  `SELECT * FROM account WHERE emailAddress="${req.body.emailAddress}"  and archived=0`;
+    let emailCheck =  `SELECT * FROM account WHERE emailAddress='${req.body.emailAddress}'  and archived=0`;
     let updateQuery = `UPDATE account
                     SET archived=1, updatedAt= NOW()
-                    WHERE emailAddress="${req.body.emailAddress}";`;
+                    WHERE emailAddress='${req.body.emailAddress}';`;
     let updateEmp = `UPDATE employee
                     SET archived=1, updatedAt= NOW()
-                    WHERE accountId in (SELECT accountId FROM account WHERE emailAddress="${req.body.emailAddress}" and archived=0);`
+                    WHERE accountId in (SELECT accountId FROM account WHERE emailAddress='${req.body.emailAddress}' and archived=0);`
 
-    let message ="";
+    let message ='';
     let isSuccessful = false;
     console.log(emailCheck);
    
@@ -837,13 +846,13 @@ export const deleteAccount = (req,res) =>
 
             if(err)
             {
-                console.log("Error found");
+                console.log('Error found');
                 console.log(err);
-                message = "Connect to db failed";
+                message = 'Connect to db failed';
                 res.send(
                     {
-                        "isSuccessful":isSuccessful,
-                        "message":message
+                        'isSuccessful':isSuccessful,
+                        'message':message
                     }
                 );
                 connectionString.end();                
@@ -854,13 +863,13 @@ export const deleteAccount = (req,res) =>
 
                 if(errEmail)
                 {
-                    console.log("validateQuery failed");
+                    console.log('validateQuery failed');
                
-                    message = "Unable to validate email address atm";
+                    message = 'Unable to validate email address atm';
                     res.send(
                         {
-                            "isSuccessful":isSuccessful,
-                            "message":message
+                            'isSuccessful':isSuccessful,
+                            'message':message
                         }
                     );
                     connectionString.end();
@@ -872,13 +881,13 @@ export const deleteAccount = (req,res) =>
                         connectionString.query(updateQuery ,(errUser,result1)=>{
                             if(errUser)
                             {
-                                console.log("Failed to delete account");
+                                console.log('Failed to delete account');
                                 console.log(errUser);
-                                message ="Failed to delete user account";
+                                message ='Failed to delete user account';
                                 res.send(
                                     {
-                                        "isSuccessful":isSuccessful,
-                                        "message":message
+                                        'isSuccessful':isSuccessful,
+                                        'message':message
                                     }
                                 );
                                 connectionString.end();
@@ -888,13 +897,13 @@ export const deleteAccount = (req,res) =>
                                     connectionString.query(updateEmp, (errEmp, res2)=> {
                                         if(errEmp)
                                         {
-                                            console.log("Failed to delete account from employee");
+                                            console.log('Failed to delete account from employee');
                                             console.log(errUser);
-                                            message ="Failed to delete employee account";
+                                            message ='Failed to delete employee account';
                                             res.send(
                                                 {
-                                                    "isSuccessful":isSuccessful,
-                                                    "message":message
+                                                    'isSuccessful':isSuccessful,
+                                                    'message':message
                                                 }
                                             );
                                             connectionString.end();
@@ -902,13 +911,13 @@ export const deleteAccount = (req,res) =>
 
                                         else{
                                              //email exists so update employee here
-                                            console.log("User account deleted");
+                                            console.log('User account deleted');
                                             isSuccessful=true;
-                                            message="User has been deleted";
+                                            message='User has been deleted';
                                             res.send(
                                             {
-                                                    "isSuccessful":isSuccessful,
-                                                    "message":message
+                                                    'isSuccessful':isSuccessful,
+                                                    'message':message
                                             }
                                             );
                                             connectionString.end();
@@ -919,12 +928,12 @@ export const deleteAccount = (req,res) =>
                     }
                     else{
                         console.log(result)
-                        console.log("no email");
-                        message = "this employee does not exist";
+                        console.log('no email');
+                        message = 'this employee does not exist';
                         res.send(
                             {
-                                "isSuccessful":isSuccessful,
-                                "message":message
+                                'isSuccessful':isSuccessful,
+                                'message':message
                             }
                         );
                         connectionString.end(); 
@@ -944,16 +953,17 @@ export const getEmployeeDetails = (req,res)=>
     let query = `SELECT employee.employeeid,employee.employeeName,account.emailAddress,employee.position,account.accountType
                  From employee
                  JOIN account ON employee.accountId=account.accountId
-                 where account.archived=0 and account.accountType!="admin"`;
-    var connectionString = mysql.createConnection(
+                 where account.archived=0 and account.accountType!='admin'`;
+    var connectionString = mysql2.createConnection(
     {
         host:process.env.host,
         user: process.env.user,
         password:process.env.password,
+        port:process.env.port1,
         database:process.env.database
 
     });
-    let message = "";
+    let message = '';
     let isSuccessful = false;
     connectionString.query(query,(err,result)=>
     {
@@ -962,8 +972,8 @@ export const getEmployeeDetails = (req,res)=>
             console.log(err)
             res.send(
                 {
-                    "isSuccesful":isSuccessful,
-                    "message":message
+                    'isSuccesful':isSuccessful,
+                    'message':message
                 }
             );
             connectionString.end();
@@ -972,24 +982,24 @@ export const getEmployeeDetails = (req,res)=>
             if(result.length===0)
             {
                 isSuccessful=false;
-                console.log("no record found");
-                message = "No User account in database to display please create some";
+                console.log('no record found');
+                message = 'No User account in database to display please create some';
                 res.send(
                     {
-                        "isSuccesful":isSuccessful,
-                        "message":message,
+                        'isSuccesful':isSuccessful,
+                        'message':message,
                     });
                 connectionString.end();
             }
             else
             {   isSuccessful=true;
-                message = "User details found";
-                console.log("records sent");
+                message = 'User details found';
+                console.log('records sent');
                 res.send(
                     {
-                        "isSuccesful":isSuccessful,
-                        "message":message,
-                        "employeeDetails":result
+                        'isSuccesful':isSuccessful,
+                        'message':message,
+                        'employeeDetails':result
                     }
                 );
                 connectionString.end();

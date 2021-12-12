@@ -39,7 +39,7 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "start": "export PORT=3001 && react-scripts start",
+    "start": "SET PORT=3001 && react-scripts start",
     "dev": "concurrently \"npm run server\" \"npm run start\"",
     "build": "react-scripts build",
     "test": "react-scripts test",

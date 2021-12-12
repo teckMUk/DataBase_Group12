@@ -7,9 +7,9 @@ import { Table} from "react-bootstrap";
 
 export default function TableSale(prop)
 {
-    let emp = [{"orderNo" : 1, "dishNames": ['h', 'k'], "totalBill": 200}, {"orderNo" : 2, "dishNames": ['h', 'k'], "totalBill": 230}]
-    
-    
+    //let emp = [{"orderNo" : 1, "dishNames": ['h', 'k'], "totalBill": 200}, {"orderNo" : 2, "dishNames": ['h', 'k'], "totalBill": 230}]
+    let emp = prop.saleData;
+    console.log('emp', emp);
     const retTable = () =>
     {
         return <div>

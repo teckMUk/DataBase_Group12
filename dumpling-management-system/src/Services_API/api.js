@@ -52,6 +52,11 @@ export const getSales = async (year, month) => {
     return await axios.post(`${Url}/managerController/monthYearSale`, object2)
 }
 
+export const getSalesDaily = async () => {
+    
+    return await axios.get(`${Url}/managerController/monthYearSale`)
+}
+
 export const deleteAccount = async(emailAddress) =>
 {
     const obj = {

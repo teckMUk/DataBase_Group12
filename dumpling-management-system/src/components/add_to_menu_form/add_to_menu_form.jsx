@@ -118,8 +118,6 @@ const initialState = {
 
     return(
 
- 
-
         <Container id="main-container" className="d-grid h-100">
 
                    <Form className= 'text-center' onSubmit= {submitHandle}>

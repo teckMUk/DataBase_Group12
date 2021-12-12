@@ -569,19 +569,21 @@ export const monthYearSale = (req, res) =>
     //req will have month and year
     let month = req.body.month;
     let year = req.body.year;
+    console.log('month: ', month);
+    console.log('year: ', year);
     console.log(month);
     console.log(year);
     let big_query;
     if(month != null)
     {
         let query_mon = `Select dishassignment.orderNo,GROUP_CONCAT(menu.dishName SEPARATOR ', ') as dishNames,orders.totalBill from orders inner join dishassignment on dishassignment.orderNo=orders.orderId inner join menu on dishassignment.dishNo=menu.dishId where menu.archived=0 and orders.orderId in (select salesrecord.orderId from salesrecord where MONTH(salesrecord.date)=${month} and YEAR(salesrecord.date)=${year} and salesrecord.archived=0) GROUP BY dishassignment.orderNo;`
-    
+        console.log(query_mon);
         big_query = query_mon;
     }
     else
     {
         let query_year = `Select dishassignment.orderNo,GROUP_CONCAT(menu.dishName SEPARATOR ', ') as dishNames,orders.totalBill from orders inner join dishassignment on dishassignment.orderNo=orders.orderId inner join menu on dishassignment.dishNo=menu.dishId where menu.archived=0 and orders.orderId in (select salesrecord.orderId from salesrecord where YEAR(salesrecord.date)=${year} and salesrecord.archived=0) GROUP BY dishassignment.orderNo;`
-    
+        console.log(query_year);
         big_query = query_year;
     }
 
@@ -612,6 +614,7 @@ export const monthYearSale = (req, res) =>
         }
         else
         {
+            console.log('res is', result);
             if(result.length === 0)
             {
                 message = "No sale";

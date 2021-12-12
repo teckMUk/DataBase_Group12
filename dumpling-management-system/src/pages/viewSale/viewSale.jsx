@@ -83,8 +83,10 @@ export default function Sale()
 
     const getAllSales = () =>
     {
-        let month = Number(newEmploye.month);
-        let year = Number(newEmploye.year);
+        // let month = Number(newEmploye.month);
+        // let year = Number(newEmploye.year);
+        let month = newEmploye.month;
+        let year = newEmploye.year;
         if(year !== undefined)
         {
             getSales(year, month).then((response)=>{
@@ -92,7 +94,7 @@ export default function Sale()
                     if(response.data.isSuccessful)
                     {
                         sales = response.data.result;
-                        console.log('sale is 1', response.data.message);
+                        console.log('sale is 1', response.data.result);
                         setNewEmploye({...newEmploye, isTable: "1"});
                         alert(response.data.message);
                     }

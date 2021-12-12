@@ -186,7 +186,7 @@ export const addMenuItem = async (req,res)=>
 
                         if(err){
                             // console.log(err);
-                            message = "Cannot assign dish to chef as chef did not exists";
+                            message = "Cannot assign dish to chef as chef does not exist";
                             let updateMenu = `UPDATE dumpling.menu SET archived = 1 WHERE menu.dishId="${dishId2}"`;
                             var connectionString3 =  mysql.createConnection(
                                 {
@@ -296,7 +296,7 @@ export const fetchDishIds = (req,res)=>
     );
     let isSuccessful = false;
     let message = "";
-    let fetchIds = `SELECT dishId, dishName, allergens, dishPrice, archived from dumpling.menu`;
+    let fetchIds = `SELECT dishId, dishName, allergens, dishPrice, isActive, archived from dumpling.menu`;
     connectionString.query(fetchIds,(err,result)=>
     {
         if(err)
@@ -594,6 +594,7 @@ export const dishOfTheDay = (req,res)=>
 
 {
 
+    console.log("here in dish of the day function");
     var connectionString = mysql.createConnection(
 
         {
@@ -626,6 +627,7 @@ export const dishOfTheDay = (req,res)=>
 
     {
 
+        console.log("here in the first query");
         if(err)
 
         {
@@ -657,6 +659,7 @@ export const dishOfTheDay = (req,res)=>
             if(result.length===0)
 
             {
+                console.log("here where the result length is zero");
 
                 var connectionString1 = mysql.createConnection(
 
@@ -780,6 +783,14 @@ export const dishOfTheDay = (req,res)=>
 
 
 
+            }
+            else
+            {
+                message = "Dish is already the dish of the day";
+                res.send({
+                    'isSucessful':isSuccessful,
+                    'message':message
+                });
             }
 
         }

@@ -78,13 +78,13 @@ const initialState = {
 
         e.preventDefault();
 
-       
+       const id = localStorage.getItem("dumplingUserId");
 
         addMenuItem(newDish.dishName, newDish.dishType,newDish.dishPrice,newDish.preparationTime, newDish.calories,
 
             newDish.dishOfday, newDish.allergens,
 
-            newDish.image).then((response)=>{
+            newDish.image, id).then((response)=>{
 
  
 
@@ -117,8 +117,6 @@ const initialState = {
  
 
     return(
-
- 
 
         <Container id="main-container" className="d-grid h-100">
 

@@ -44,6 +44,19 @@ export const updateAccount = async (accountType, position, emailAddress,role) =>
     return await axios.post(`${Url}/userController/updateAccount`, object2)
 }
 
+export const getSales = async (year, month) => {
+    const object2 = {
+    "year":year,
+    "month" : month,
+    }
+    return await axios.post(`${Url}/managerController/monthYearSale`, object2)
+}
+
+export const getSalesDaily = async () => {
+    
+    return await axios.get(`${Url}/cashierController/dailySaleReport`)
+}
+
 export const deleteAccount = async(emailAddress) =>
 {
     const obj = {
@@ -108,7 +121,7 @@ export const placeOrder = async(typeOfOrder,orderStatus,totalBill,listOrders) =>
     return await axios.post(`${Url}/cashierController/placeOrder`, obj,)
 }
 
-export const addMenuItem = async(dishName, dishType,dishPrice,preparationTime,calories,dishOfday, allergens, image) =>{
+export const addMenuItem = async(dishName, dishType,dishPrice,preparationTime,calories,dishOfday, allergens, image, employeeId) =>{
     const obj={
         "dishName" : dishName,
         "dishType" : dishType,
@@ -117,8 +130,8 @@ export const addMenuItem = async(dishName, dishType,dishPrice,preparationTime,ca
         "calories" : calories,
         "dishOfday" : dishOfday,
         "allergens" : allergens,
-        "image": image
-
+        "image": image,
+        "employeeId": employeeId
     }
     return await axios.post(`${Url}/chefController/addMenuItem`, obj,{
     'Accept': 'application/json',
@@ -192,9 +205,17 @@ export const viewPlacedOrders = async()=>{
     });
 }
 
+export const viewOrderSummary = async(orderId)=>{
 
-
-
+    console.log("in order summary");
+    let obj1 = {
+        "orderId":orderId
+    }
+    return await axios.post(`${Url}/cashierController/viewOrderSummary`,obj1,{
+        'Accept': 'application/json',
+        'content-type':'application/json'
+    });
+}
 
 
 

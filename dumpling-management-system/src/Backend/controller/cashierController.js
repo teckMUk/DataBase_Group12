@@ -624,7 +624,9 @@ export const placeOrder = async (req,res)=>
 
                 'isSuccessful':isSuccessful,
 
-                'message':message
+                'message':message,
+
+                'orderId':orderId
 
             });
         }
@@ -645,7 +647,7 @@ export const viewOrderSummary = (req,res)=>{
     let message = "";
     let isSuccessful = false;
     let orderId = req.body.orderId;
-    let orderSummary = `SELECT * FROM orders INNER JOIN dishassignment on orders.orderId = dishassignment.orderNo INNER JOIN menu on menu.dishId = dishassignment.dishNo WHERE orders.orderId = "${orderId}";`;
+    let orderSummary = `SELECT totalBill, GROUP_CONCAT(dishName SEPARATOR ",") as dishNames FROM orders INNER JOIN dishassignment on orders.orderId = dishassignment.orderNo INNER JOIN menu on menu.dishId = dishassignment.dishNo WHERE orders.orderId ='${orderId}' GROUP BY orderId;`;
     connectionString.query(orderSummary,(err,result)=>{
         if(err)
         {
@@ -660,10 +662,14 @@ export const viewOrderSummary = (req,res)=>{
         {
             message = "Sucessfully displaying the order summary";
             isSuccessful = true;
+            console.log(result[0]);
+            let dishNames = result[0].dishNames.split(",");
             res.send({
                 'isSuccessful':isSuccessful,
                 'message':message,
-                'result':result
+                'orderId':result[0].orderId,
+                'dishNames':dishNames,
+                'totalBill':result[0].totalBill
             });
         }
     })
@@ -676,6 +682,7 @@ export const dailySaleReport = (req,res) =>
     let day = today.getDate();
     let year = today.getFullYear();
     let querry = `Select dishassignment.orderNo,GROUP_CONCAT(menu.dishName SEPARATOR ', ') as dishNames,orders.totalBill from orders inner join dishassignment on dishassignment.orderNo=orders.orderId inner join menu on dishassignment.dishNo=menu.dishId where menu.archived=0 and orders.orderId in (select salesrecord.orderId from salesrecord where DAY(salesrecord.date)=${day} and MONTH(salesrecord.date)=${month} and YEAR(salesrecord.date)=${year} and salesrecord.archived=0) GROUP BY dishassignment.orderNo;`
+    
     console.log(querry)
     var connectionString = mysql.createConnection(
         {

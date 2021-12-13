@@ -13,7 +13,7 @@ export default function TableSale(prop)
     let sum = 0;
     const findSum = (total) =>
     {
-        sum = sum + total;
+        sum = sum + Number(total);
     }
 
     const retTable = () =>

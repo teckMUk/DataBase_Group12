@@ -641,10 +641,11 @@ export const viewOrderSummary = (req,res)=>{
     let message = '';
     let isSuccessful = false;
     let orderId = req.body.orderId;
-    let orderSummary = `SELECT totalBill, GROUP_CONCAT(dishName SEPARATOR ",") as dishNames FROM orders INNER JOIN dishassignment on orders.orderId = dishassignment.orderNo INNER JOIN menu on menu.dishId = dishassignment.dishNo WHERE orders.orderId ='${orderId}' GROUP BY orderId;`;
+    let orderSummary = `SELECT totalBill, GROUP_CONCAT(dishName SEPARATOR ',') as dishNames FROM orders INNER JOIN dishassignment on orders.orderId = dishassignment.orderNo INNER JOIN menu on menu.dishId = dishassignment.dishNo WHERE orders.orderId ='${orderId}' GROUP BY orderId;`;
     connectionString.query(orderSummary,(err,result)=>{
         if(err)
         {
+            console.log(err);
             message = 'Cannot display order summary';
             res.send({
                 'isSuccessful':isSuccessful,

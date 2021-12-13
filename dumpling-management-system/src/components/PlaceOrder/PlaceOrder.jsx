@@ -107,7 +107,7 @@ export default function Tabel4()
         orderStatus = value;
     }
     const viewOrderSummaryformodal = (orderId1) =>{
-
+        console.log("here");
         viewOrderSummary(orderId1).then((response)=>{
             if(response.data.isSuccessful)
             {
@@ -128,8 +128,8 @@ export default function Tabel4()
     }
     const checkPayment = (payment)=>
     {
-        // console.log(payment);
-        if(Number(payment) === orderSummary.totalBill)
+        console.log(payment);
+        if(payment === orderSummary.totalBill)
         {
             alert("Successfully paid");
             close();

@@ -500,7 +500,8 @@ export const applyCoupon = (req,res)=>
                                                                 res.send(
                                                                     {
                                                                         "isSuccessful":true,
-                                                                        "message":message
+                                                                        "message":message,
+                                                                        "newBill" : new_bill
                                                                     }
 
                                                                 );

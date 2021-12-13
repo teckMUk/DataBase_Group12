@@ -508,8 +508,9 @@ export const applyCoupon = (req,res)=>
                                                                 message = 'Coupon applied';
                                                                 res.send(
                                                                     {
-                                                                        'isSuccessful':true,
-                                                                        'message':message
+                                                                        "isSuccessful":true,
+                                                                        "message":message,
+                                                                        "newBill" : new_bill
                                                                     }
 
                                                                 );

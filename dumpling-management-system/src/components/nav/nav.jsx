@@ -160,8 +160,7 @@ const isChef= (role) =>{
                         isAdmin(role) &&
                         <div> 
                             <NavDropdown.Item href="/create_account"> Create Account </NavDropdown.Item>
-                            <NavDropdown.Item  onClick={getDetails}> View Employee Details </NavDropdown.Item>
-                            <NavDropdown.Item href='/addToMenu'>Add to Menu</NavDropdown.Item> 
+                            <NavDropdown.Item  onClick={getDetails}> View Employee Details </NavDropdown.Item> 
                             <NavDropdown.Item href='/placeOrder'>Place Order</NavDropdown.Item> 
                             <NavDropdown.Item href='/updateSalaryOfEmployees'>Update Salary</NavDropdown.Item>
                             <NavDropdown.Item href='/giveBonuses'>Give Bonus</NavDropdown.Item>

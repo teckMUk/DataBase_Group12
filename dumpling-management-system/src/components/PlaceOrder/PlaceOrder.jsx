@@ -6,6 +6,7 @@ import {useState, useEffect} from "react";
 import { useNavigate } from "react-router";
 import {useLocation} from "react-router-dom";
 import { useModal } from "react-hooks-use-modal";
+import {Nav2} from  "src/components/nav/nav.jsx";
 export default function Tabel4()
 {
     const search = useLocation().search;
@@ -385,6 +386,7 @@ export default function Tabel4()
 
     return (
         <>
+         <Nav2></Nav2>
             <div>
             <Table responsive>
                 <thead>

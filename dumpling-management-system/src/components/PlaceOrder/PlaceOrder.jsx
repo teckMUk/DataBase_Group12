@@ -13,7 +13,7 @@ export default function Tabel4()
     let dishId = [];
     let orderStatus = ""
     let control_bool = false;
-    let couponID = "";
+    //let couponID = "";
     let bill = 0;
     let navigate = useNavigate();
     const [placedorder,setplacedorder] = useState(false);
@@ -225,12 +225,12 @@ export default function Tabel4()
     }
 
 
-    const handle = e => {
+    // const handle = e => {
 
-        couponID = e.target.value;
+    //     couponID = e.target.value;
 
 
-    }
+    // }
 
     const renderAuthButton = () => 
     {

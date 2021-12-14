@@ -1,7 +1,6 @@
 import axios from 'axios'
 
 const Url = "https://agile-brook-83665.herokuapp.com/api"
-
 export const LogIn = async (Email, Password) => {
 
     const object = {

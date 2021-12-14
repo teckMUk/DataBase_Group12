@@ -117,14 +117,16 @@ export const addUser = (req,res)=>{
     let validateQuery =  `SELECT * FROM account WHERE emailAddress='${req.body.emailAddress}' and archived=0`;
     let secQuestions = req.body.securityQuestions;
     console.log('bef',secQuestions);
-    let stringifysecQuestions = JSON.stringify(secQuestions);
-    //stringifysecQuestions = JSON.stringify(stringifysecQuestions);
+    let stringifysecQuestions = secQuestions;
+    stringifysecQuestions = JSON.stringify(stringifysecQuestions);
+    secQuestions = stringifysecQuestions;
     console.log('aft', stringifysecQuestions);
     let addAccountquery =
     `INSERT INTO account (userName,accountType,currentPassword,emailAddress,securityQuestions,createdAt)
         VALUES('${req.body.userName}','${req.body.accountType}','${currPass}','${req.body.emailAddress}','${secQuestions}',NOW());`;
     let addEmployeequery = `INSERT INTO dumpling.employee (employeeName,dateOfBirth,phoneNumber,address,position,salary,bankAccountNumber,createdAt,accountId)
     VALUES('${req.body.employeeName}','${req.body.dateOfBirth}','${req.body.phoneNumber}','${req.body.address}','${req.body.position}',${req.body.salary},'${req.body.bankAccountNumber}',NOW(),(SELECT accountId from account where account.emailAddress='${req.body.emailAddress}' and archived=0));`
+    console.log(addAccountquery);
     connectionString.connect((err)=>
     {
         if(err)
